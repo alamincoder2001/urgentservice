@@ -90,7 +90,7 @@
         <div class="doctordetail-header mb-2" style="background: #fff; border:2px solid #035b64 !important;">
             <div class="row">
                 <div class="col-md-3 text-center">
-                    <img src="{{asset($data->image?$data->image:'frontend/nodoctorimage.png')}}" width="150" style="max-height: 170px;" class="rounded border border-1 p-2" alt="">
+                    <img src="{{asset($data->image != '0'?$data->image:'frontend/nodoctorimage.png')}}" style="width:150px;height:150px;" class="rounded border border-1 p-2" alt="">
                 </div>
                 <div class="col-md-4 d-flex align-items-center text-center justify-content-md-start justify-content-center">
                     <div class="d-flex align-items-center" style="flex-direction:column;">
@@ -121,7 +121,6 @@
             </div>
         </div>
     </div>
-
 
     <div class="container">
         <div class="row">
