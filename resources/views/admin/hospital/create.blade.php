@@ -6,7 +6,7 @@
 
 <div class="row d-flex justify-content-center">
 
-    <div class="col-md-10">
+    <div class="col-md-12">
         <div class="card">
             <div class="card-heading text-end">
                 <div class="card-title">
@@ -58,7 +58,7 @@
                             <div class="form-group">
                                 <label for="discount_amount">Discount</label>
                                 <div class="input-group">
-                                    <input type="number" name="discount_amount" id="discount_amount" class="form-control" value="0"><i class="btn btn-secondary">%</i>
+                                    <input type="number" min="0" step="0.01" name="discount_amount" id="discount_amount" class="form-control" value="0"><i class="btn btn-secondary">%</i>
                                 </div>
                                 <span class="error-discount_amount text-danger error"></span>
                             </div>

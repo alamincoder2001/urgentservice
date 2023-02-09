@@ -18,7 +18,7 @@
 @section("content")
 <section id="details-diagnostic" style="padding: 25px 0;">
     <div class="container">
-        <div class="doctordetail-header mb-2">
+        <div class="doctordetail-header mb-3">
             <div class="row d-flex justify-content-center align-items-center">
                 <div class="col-md-10 col-10">
                     <form id="filterDiagnostic" class="form">
@@ -55,9 +55,7 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="container">
+        
         <div class="row d-flex justify-content-center diagnosticbody">
             @foreach($data["diagnostic"] as $item)
             <div class="col-md-6 col-10 col-sm-6 col-lg-4">

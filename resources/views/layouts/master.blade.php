@@ -14,6 +14,10 @@
             position: static !important;
         }
 
+        .select2-container {
+            width: 100% !important;
+        }
+
         .goog-te-banner-frame {
             display: none !important
         }
@@ -26,7 +30,7 @@
             height: 36px !important;
         }
 
-        .goog-te-gadget-simple .VIpgJd-ZVi9od-xl07Ob-lTBxed{
+        .goog-te-gadget-simple .VIpgJd-ZVi9od-xl07Ob-lTBxed {
             color: white !important;
             line-height: 30px !important;
         }

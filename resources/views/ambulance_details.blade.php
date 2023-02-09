@@ -2,7 +2,7 @@
 @section("content")
 <section id="hospital-details" style="padding: 25px 0;">
     <div class="container">
-        <div class="doctordetail-header mb-2">
+        <div class="doctordetail-header mb-3">
             <div class="row d-flex justify-content-center align-items-center">
                 <div class="col-md-10 col-10">
                     <form id="filterAmbulance" class="form">
@@ -39,9 +39,6 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="container">
         <div class="row d-flex justify-content-center ambulancebody">
             @foreach($data["ambulance"] as $item)
             <div class="col-md-6 col-10 col-sm-6 col-lg-4 ">
@@ -155,7 +152,7 @@
                 },
                 success: (response) => {
                     if (response.error) {
-                        $(".ambulancebody").html(`<div class="bg-dark text-white text-center">No Data Found</div>`)
+                        $(".ambulancebody").html(`<div class="bg-dark text-white text-center">Not Found Data</div>`)
                         Error(response.error);
                     } else {
                         if (response.null) {

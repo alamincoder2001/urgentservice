@@ -1,21 +1,15 @@
 @extends("layouts.app")
-
 @section("title", "Admin Privatecar Create Page")
-@push("style")
-<style>
-    .select2-container .select2-selection--single {
-        height: 34px !important;
-    }
-    .select2-selection select2-selection--multiple{
-        height: 34px !important;
-    }
-</style>
+@push("js")
+    <style>
+        .cartype_id[data-select2-id='select2-data-cartype_id'] .select2-container{
+            width: 85% !important;
+        }
+    </style>
 @endpush
 @section("content")
-
 <div class="row d-flex justify-content-center">
-
-    <div class="col-md-10">
+    <div class="col-md-12">
         <div class="card">
             <div class="card-heading text-end">
                 <div class="card-title">
@@ -52,7 +46,7 @@
                             <div class="form-group">
                                 <label for="cartype_id">Type Of Privatecar</label>
                                 <div class="input-group">
-                                    <select multiple name="cartype_id[]" id="cartype_id" class="form-control select2">
+                                    <select multiple name="cartype_id[]" id="cartype_id" class="form-control cartype_id">
                                         @foreach(App\Models\Cartype::latest()->get() as $item)
                                             <option value="{{$item->name}}">{{$item->name}}</option>
                                         @endforeach
@@ -65,8 +59,8 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="city_id">City Name</label>
-                                <select name="city_id" id="city_id" class="form-control select2">
-                                    <option value="">Choose a city name</option>
+                                <select name="city_id" id="city_id" class="form-control cartype_id">
+                                    <option value="">Select City Name</option>
                                     @foreach($cities as $city)
                                     <option value="{{$city->id}}">{{$city->name}}</option>
                                     @endforeach
@@ -178,7 +172,7 @@
 <script src="https://cdn.ckeditor.com/4.13.0/standard/ckeditor.js"></script>
 <script>
     CKEDITOR.replace('description');
-    $('.select2').select2();
+    $('.cartype_id').select2();
     $(document).ready(() => {
         $("#addPrivatecar").on("submit", (event) => {
             event.preventDefault()

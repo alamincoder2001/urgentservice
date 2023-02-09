@@ -56,14 +56,26 @@ class FilterController extends Controller
     }
 
     public function doctor(Request $request)
-    {    
+    {
         try {
-            if (!empty($request->doctor_name) && !empty($request->city)) {
-                $data = Doctor::with("city", "time", "department", "hospital", "diagnostic", "chamber")->where('city_id', $request->city)->orWhere('name', "like" . "%" . $request->doctor_name . "%")->orderBy('name', 'ASC')->get();
+            if (!empty($request->city) && !empty($request->department)) {
+                $doctor = Specialist::with("doctor", "specialist")->where("department_id", $request->department)->get();
+                $data = [];
+                foreach($doctor as $value) {
+                    if($value->doctor->city_id == $request->city) {
+                        array_push($data, $value);
+                    }
+                }
             } else if (!empty($request->doctor_name)) {
-                $data = Doctor::with("city", "time", "department", "hospital", "diagnostic", "chamber")->where('name', 'like', '%'.$request->doctor_name.'%')->orderBy('name', 'ASC')->get();
+                $data = Doctor::with("city", "time", "department", "hospital", "diagnostic", "chamber")->where('name', 'like', '%' . $request->doctor_name . '%')->orderBy('name', 'ASC')->get();
             } else {
-                $data = Doctor::with("city", "time", "department", "hospital", "diagnostic", "chamber")->where("city_id", $request->city)->orderBy("name", 'ASC')->get();
+                $doctor = Specialist::with("doctor", "specialist")->get();
+                $data = [];
+                foreach($doctor as $value) {
+                    if($value->doctor->city_id == $request->city) {
+                        array_push($data, $value);
+                    }
+                }
             }
             if (count($data) !== 0) {
                 return response()->json($data);
@@ -71,7 +83,7 @@ class FilterController extends Controller
                 return response()->json(["null" => "Not Found Data"]);
             }
         } catch (\Throwable $e) {
-            return response()->json("Something went wrong");
+            return response()->json("Something went wrong".$e->getMessage());
         }
     }
 

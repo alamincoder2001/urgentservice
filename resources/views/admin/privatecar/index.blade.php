@@ -9,6 +9,7 @@
         <div class="card">
             <div class="card-heading text-end">
                 <div class="card-title">
+                    <a href="{{route('cartype.index')}}" class="btn btn-info text-white px-3">Add Cartype</a>
                     <a href="{{route('admin.privatecar.create')}}" class="btn btn-primary px-3">Add Privatecar</a>
                 </div>
             </div>

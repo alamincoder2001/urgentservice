@@ -2,13 +2,6 @@
 
 @section("title", "Admin Ambulance Create Page")
 
-@push("style")
-<style>
-    .select2-container .select2-selection--single {
-        height: 34px !important;
-    }
-</style>
-@endpush
 
 @section("content")
 @php
@@ -19,7 +12,7 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
 
 <div class="row d-flex justify-content-center">
 
-    <div class="col-md-10">
+    <div class="col-md-12">
         <div class="card">
             <div class="card-heading text-end">
                 @if(in_array("ambulance.index", $access))

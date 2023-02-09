@@ -1,18 +1,19 @@
 @extends("layouts.app")
 
 @section("title", "Admin Privatecar Edit Page")
-@push("style")
-<style>
-    .select2-container .select2-selection--single {
-        height: 34px !important;
+
+@push("js")
+ <style>
+    .select2-container{
+        width: 85% !important;
     }
-</style>
+ </style>
 @endpush
 @section("content")
 
 <div class="row d-flex justify-content-center">
 
-    <div class="col-md-10">
+    <div class="col-md-12">
         <div class="card">
             <div class="card-heading text-end">
                 <div class="card-title">
@@ -67,7 +68,7 @@
                             <div class="form-group">
                                 <label for="city_id">City Name</label>
                                 <select name="city_id" id="city_id" class="form-control select2">
-                                    <option value="">Choose a city name</option>
+                                    <option value="">Select City Name</option>
                                     @foreach($cities as $city)
                                     <option value="{{$city->id}}" {{$data->city_id==$city->id?"selected":""}}>{{$city->name}}</option>
                                     @endforeach
@@ -131,7 +132,7 @@
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <img src="{{asset($data->image)}}" width="100" class="img" style="border: 1px solid #ccc; height:80px;">
+                            <img src="{{asset($data->image != '0' ? $data->image : '/noimage.jpg')}}" width="100" class="img" style="border: 1px solid #ccc; height:80px;">
                         </div>
                         <div class="col-12">
                             <div class="form-group">

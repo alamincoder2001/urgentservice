@@ -2,7 +2,7 @@
 @section("content")
 <section id="hospital-details" style="padding: 25px 0;">
     <div class="container">
-        <div class="doctordetail-header">
+        <div class="doctordetail-header mb-3">
             <div class="row d-flex justify-content-center align-items-center">
                 <div class="col-md-10 col-10">
                     <form id="filterPrivatecar" class="form">
@@ -39,31 +39,28 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="container">
         <div class="row d-flex justify-content-center privatecarbody">
             @foreach($data["privatecar"] as $item)
-            <div class="col-md-6 col-10 col-sm-6 col-lg-4 ">
-                <div class="card border-0 mb-4" style="background: #ffffff;box-shadow:0px 0px 7px 2px #c1c1c1;">
-                    <div class="img card-img-top m-auto mt-2 w-50 overflow-hidden d-flex justify-content-center border border-2">
-                        <img src="{{asset($item->image ? $item->image:'/frontend/img/privatecar.png' )}}" style="width: 100%; height:160px;">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title text-center" style="font-size: 15px;">{{$item->name}}</h5>
-                        <p class="card-text text-primary text-center mb-2"><span>{{str_replace(","," | ", $item->cartype_id)}}</span></p>
-                        <ul style="list-style: none;padding:0 0 0 5px;">
-                            <li><i style="width: 15px;height:15px;" class="fa fa-phone text-info"></i> <span style="font-size: 13px;">+880 {{substr($item->phone, 1)}}</span></li>
-                            <li><i style="width: 15px;height:15px;" class="fa fa-map-marker text-info"></i> <span style="font-size: 13px;">{{$item->address}}, {{$item->city->name}}</span></li>
-                            <li><i style="width: 15px;height:15px;font-size:13px;" class="fa fa-envelope-o text-info"></i> <span style="font-size: 13px;">{{$item->email}}</span></li>
-                        </ul>
-                    </div>
-                    <a href="{{route('singlepageprivatecar', $item->id)}}" target="_blank" class="text-uppercase text-white text-decoration-none text-center">
-                        <div class="card-footer border-0 py-3">
+            <div class="col-md-6 col-10 col-sm-6 col-lg-4">
+                <a style="text-decoration: none;" target="_blank" href="{{route('singlepageprivatecar', $item->id)}}" title="{{$item->name}}">
+                    <div class="card border-0 mb-4" style="height:360px;background: #ffffff;box-shadow:0px 0px 5px 1px #c1c1c1;">
+                        <div class="img card-img-top m-auto mt-2 w-50 overflow-hidden d-flex justify-content-center border border-2">
+                            <img src="{{asset($item->image ? $item->image:'/frontend/img/privatecar.png' )}}" style="width: 100%; height:110px;">
+                        </div>
+                        <div class="card-body text-dark">
+                            <h5 class="card-title text-center" style="font-size: 15px;">{{$item->name}}</h5>
+                            <p class="card-text text-primary text-center mb-2"><span>{{str_replace(","," | ", $item->cartype_id)}}</span></p>
+                            <ul style="list-style: none;padding:0 0 0 5px;">
+                                <li><i style="width: 15px;height:15px;" class="fa fa-phone text-info"></i> <span style="font-size: 13px;">{{$item->phone}}</span></li>
+                                <li><i style="width: 15px;height:15px;" class="fa fa-map-marker text-info"></i> <span style="font-size: 11px;">{{$item->address}}, {{$item->city->name}}</span></li>
+                                <li><i style="width: 15px;height:15px;font-size:13px;" class="fa fa-envelope-o text-info"></i> <span style="font-size: 13px;">{{$item->email}}</span></li>
+                            </ul>
+                        </div>
+                        <div class="card-footer text-uppercase text-white text-center border-0 py-3">
                             View Details
                         </div>
-                    </a>
-                </div>
+                    </div>
+                </a>
             </div>
             @endforeach
 
@@ -108,25 +105,25 @@
         function Row(index, value) {
             var row = `
             <div class="col-md-6 col-10 col-sm-6 col-lg-4 ">
-                <div class="card border-0 mb-4" style="background: #ffffff;box-shadow:0px 0px 7px 2px #c1c1c1;">
-                    <div class="img card-img-top m-auto mt-2 w-50 overflow-hidden d-flex justify-content-center border border-2">
-                        <img src="${value.image != 0?location.origin+'/'+value.image:location.origin+'frontend/img/privatecar.jpg'}" style="width: 100%; height:160px;">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title text-center" style="font-size: 15px;">${value.name}</h5>
-                        <p class="card-text text-primary text-center mb-2"><span>${value.cartype_id.replaceAll(",", " | ")}</span></p>
-                        <ul style="list-style: none;padding:0 0 0 5px;">
-                            <li><i style="width: 15px;height:15px;" class="fa fa-phone text-info"></i> <span style="font-size: 13px;">+880 ${value.phone.substr(1)}</span></li>
-                            <li><i style="width: 15px;height:15px;" class="fa fa-map-marker text-info"></i> <span style="font-size: 13px;">${value.address}, ${value.city.name}</span></li>
-                            <li><i style="width: 15px;height:15px;font-size:13px;" class="fa fa-envelope-o text-info"></i> <span style="font-size: 13px;">${value.email}</span></li>
-                        </ul>
-                    </div>
-                    <a href="${'single-details-privatecar/'+value.id}" target="_blank" class="text-uppercase text-white text-decoration-none text-center">
-                        <div class="card-footer border-0 py-3">
+                <a style="text-decoration: none;" target="_blank" href="${'single-details-privatecar/'+value.id}" title="${value.name}">
+                    <div class="card border-0 mb-4" style="height:360px;background: #ffffff;box-shadow:0px 0px 5px 1px #c1c1c1;">
+                        <div class="img card-img-top m-auto mt-2 w-50 overflow-hidden d-flex justify-content-center border border-2">
+                            <img src="${value.image != '0'?location.origin+'/'+value.image:location.origin+'/frontend/img/privatecar.png'}" style="width: 100%; height:110px;">
+                        </div>
+                        <div class="card-body text-dark">
+                            <h5 class="card-title text-center" style="font-size: 15px;">${value.name}</h5>
+                            <p class="card-text text-primary text-center mb-2"><span>${value.cartype_id.replaceAll(",", " | ")}</span></p>
+                            <ul style="list-style: none;padding:0 0 0 5px;">
+                                <li><i style="width: 15px;height:15px;" class="fa fa-phone text-info"></i> <span style="font-size: 13px;"> ${value.phone}</span></li>
+                                <li><i style="width: 15px;height:15px;" class="fa fa-map-marker text-info"></i> <span style="font-size: 11px;">${value.address}, ${value.city.name}</span></li>
+                                <li><i style="width: 15px;height:15px;font-size:13px;" class="fa fa-envelope-o text-info"></i> <span style="font-size: 13px;">${value.email}</span></li>
+                            </ul>
+                        </div>
+                        <div class="card-footer text-uppercase text-white text-center border-0 py-3">
                             View Details
                         </div>
-                    </a>
-                </div>
+                    </div>
+                </a>
             </div>
             `;
             $(".privatecarbody").append(row)

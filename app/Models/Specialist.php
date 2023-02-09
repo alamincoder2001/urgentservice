@@ -17,7 +17,7 @@ class Specialist extends Model
     }
     public function doctor()
     {
-        return $this->belongsTo(Doctor::class, "doctor_id", "id");
+        return $this->belongsTo(Doctor::class, "doctor_id", "id")->with("city");
     }
     
 }

@@ -19,7 +19,7 @@ class CartypeController extends Controller
         return view("admin.cartype.index");
     }
 
-    public function getData()
+    public function fetch()
     {
         $data = Cartype::latest()->get();
         return response()->json(["data"=>$data]);
@@ -34,7 +34,7 @@ class CartypeController extends Controller
             if($validator->fails()){
                 return response()->json(["error" => $validator->errors()]);
             }else{
-                if($request->car_id == "" || $request->car_id == null){
+                if(empty($request->id)){
                     $data = new Cartype();
                 }else{
                     $data = Cartype::find($request->id);
@@ -42,10 +42,10 @@ class CartypeController extends Controller
                 $data->name = $request->name;
                 $data->save();
                 $id = $data->id;
-                if($request->car_id == null){
-                    return response()->json(["msg"=>"Cartype added successfully", "id" => $id]);
+                if(empty($request->id)){
+                    return response()->json(["msg"=>"Cartype added successfully"]);
                 }else{
-                    return response()->json("Cartype added successfully");
+                    return response()->json(["msg"=>"Cartype updated successfully"]);
                 }
             }
         }catch(\Throwable $e){

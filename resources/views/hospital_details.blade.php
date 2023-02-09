@@ -18,7 +18,7 @@
 @section("content")
 <section id="hospital-details" style="padding: 25px 0;">
     <div class="container">
-        <div class="doctordetail-header mb-2">
+        <div class="doctordetail-header mb-3">
             <div class="row d-flex justify-content-center align-items-center">
                 <div class="col-md-10 col-10">
                     <form id="formHospital" class="form">
@@ -55,9 +55,7 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="container">
+        
         <div class="row d-flex justify-content-center hospitalbody">
             @foreach($data['hospital'] as $item)
             <div class="col-md-6 col-10 col-sm-6 col-lg-4 ">
@@ -133,7 +131,7 @@
                                 <img src="${value.image != '0'?location.origin+'/'+value.image:location.origin+'/frontend/img/hospital.png'}" style="width: 100%; height:100%;">
                             </div>
                             <div class="card-body">
-                                <h5 class="card-title text-uppercase text-center" style="font-size: 15px;">${value.name}</h5>
+                                <h5 class="card-title text-uppercase text-center text-dark" style="font-size: 15px;">${value.name}</h5>
                                 <p class="card-text text-primary text-center mb-2"><span>${value.hospital_type.toUpperCase()}</span> | <span>${value.phone}</span></p>
                                 <ul style="list-style: none;padding:0 0 0 5px;">
                                     <li><i style="width: 15px;height:15px;" class="fa fa-map-marker text-info"></i> <span class="text-dark" style="font-size: 13px;">${value.address}, ${value.city.name}</span></li>

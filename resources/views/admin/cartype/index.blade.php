@@ -1,22 +1,17 @@
 @extends("layouts.app")
 
-@section("title", "Admin City Page")
+@section("title", "Admin Car Type Page")
 
 @section("content")
-@php
-$access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->id)
-->pluck('permissions')
-->toArray();
-@endphp
+
 <div class="row d-flex justify-content-center">
     <div class="col-md-4">
         <div class="card mb-0">
-            @if(in_array("city.edit", $access))
             <div class="card-body">
-                <form id="addCity">
+                <form id="addCartype">
                     <input type="hidden" name="id" id="id">
                     <div class="form-group">
-                        <label for="name">City Name</label>
+                        <label for="name">Car Type</label>
                         <input type="text" id="name" name="name" class="form-control">
                         <span class="error-name error text-danger"></span>
                     </div>
@@ -25,13 +20,11 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
                     </div>
                 </form>
             </div>
-            @endif
         </div>
     </div>
     <div class="col-md-8">
         <div class="card">
             <div class="card-body">
-                @if(in_array("city.index", $access))
                 <table id="example" class="table">
                     <thead>
                         <tr>
@@ -42,7 +35,6 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
                     </thead>
                     <tbody></tbody>
                 </table>
-                @endif
             </div>
         </div>
     </div>
@@ -52,13 +44,10 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
 
 @push("js")
 <script>
-    var editaccess = "{{in_array('city.edit', $access)}}"
-    var deleteaccess = "{{in_array('city.destroy', $access)}}"
-
     $(document).ready(() => {
         var table = $('#example').DataTable({
             // processing: true,
-            ajax: "{{route('city.get')}}",
+            ajax: "{{route('cartype.fetch')}}",
             columns: [{
                     data: 'id',
                 },
@@ -69,35 +58,35 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
                     data: null,
                     render: (data) => {
                         return `
-                            ${editaccess?'<button type="button" class="btn btn-primary btn-sm editCity" value="'+data.id+'">Edit</button>':''}            
-                            ${deleteaccess?'<button type="button" class="btn btn-danger btn-sm deleteCity" value="'+data.id+'">Delete</button>':''}
+                            <button type="button" class="btn btn-primary btn-sm editCartype" value="${data.id}">Edit</button>           
+                            <button type="button" class="btn btn-danger btn-sm deleteCartype" value="${data.id}">Delete</button>
                         `;
                     }
                 }
             ],
         });
 
-        $("#addCity").on("submit", (event) => {
+        $("#addCartype").on("submit", (event) => {
             event.preventDefault()
             var formdata = new FormData(event.target)
             $.ajax({
-                url: location.origin+"/admin/city",
-                data: formdata,
+                url: location.origin + "/admin/cartype",
                 method: "POST",
-                dataType: "JSON",
+                data: formdata,
                 contentType: false,
                 processData: false,
+                dataType: "JSON",
                 beforeSend: () => {
-                    $("#addCity").find(".error").text("");
+                    $("#addCartype").find(".error").text("");
                 },
                 success: (response) => {
                     if (response.error) {
                         $.each(response.error, (index, value) => {
-                            $("#addCity").find(".error-" + index).text(value);
+                            $("#addCartype").find(".error-" + index).text(value);
                         })
                     } else {
                         table.ajax.reload()
-                        $("#addCity").trigger('reset')
+                        $("#addCartype").trigger('reset')
                         $(".Save").text("Save").removeClass("bg-primary")
                         $.notify(response.msg, "success");
                     }
@@ -105,28 +94,28 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
             })
         })
         //edit department
-        $(document).on("click", ".editCity", (event) => {
+        $(document).on("click", ".editCartype", (event) => {
             $(".Save").text("Update").addClass("bg-primary")
             $.ajax({
-                url: location.origin+"/admin/city-edit/"+event.target.value,
+                url: location.origin + "/admin/cartype/" + event.target.value+"/edit",
                 method: "GET",
                 beforeSend: () => {
-                    $("#addCity").find("span").text("");
+                    $("#addCartype").find("span").text("");
                 },
                 success: (response) => {
                     $.each(response, (index, value) => {
-                        $("#addCity").find("#" + index).val(value);
+                        $("#addCartype").find("#" + index).val(value);
                     })
                 }
             })
         })
         // delete department
-        $(document).on("click", ".deleteCity", (event) => {
+        $(document).on("click", ".deleteCartype", (event) => {
             if (confirm("Are you sure want to delete this data!")) {
                 $.ajax({
-                    url: location.origin+"/admin/city-delete/"+event.target.value,
-                    method: "GET",
-                    dataType: "JSON",
+                    url: location.origin + "/admin/cartype/delete",
+                    method: "POST",
+                    data:{id:event.target.value},
                     success: (response) => {
                         $.notify(response, "success");
                         table.ajax.reload();

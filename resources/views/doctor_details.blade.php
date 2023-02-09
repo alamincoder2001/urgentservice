@@ -21,12 +21,12 @@
 @section("content")
 <section id="doctor-details">
     <div class="container">
-        <div class="doctordetail-header">
+        <div class="doctordetail-header mb-3">
             <div class="row d-flex justify-content-center align-items-center">
                 <div class="col-md-10 col-10">
                     <form id="filterDoctor" class="form">
                         <div class="row justify-content-center d-flex">
-                            <div class="col-md-4 col-10">
+                            <div class="col-md-3 col-10">
                                 <div class="form-group mb-4 mb-md-0">
                                     <label for="city" class="d-md-block d-none">City</label>
                                     <select class="rounded-pill city" name="city" id="city">
@@ -38,7 +38,19 @@
                                     <span class="error-city error text-white"></span>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-10">
+                            <div class="col-md-3 col-10">
+                                <div class="form-group mb-4 mb-md-0">
+                                    <label for="department" class="d-md-block d-none">Department</label>
+                                    <select class="rounded-pill department" name="department" id="department">
+                                        <option value="">Select Department</option>
+                                        @foreach($departments as $item)
+                                        <option value="{{$item->id}}">{{$item->name}}</option>
+                                        @endforeach
+                                    </select>
+                                    <span class="error-department error text-white"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-10">
                                 <div class="form-group d-none doctor-select">
                                     <label for="doctor_select" class="d-md-block d-none">Doctor Name</label>
                                     <select class="rounded-pill doctor_select" id="doctor_select">
@@ -52,7 +64,7 @@
                                     <span class="error-doctor_name error text-white"></span>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-6">
+                            <div class="col-md-3 col-6">
                                 <div class="form-group text-center">
                                     <label for="country"></label>
                                     <button class="btn text-white rounded-pill">Search</button>
@@ -70,12 +82,12 @@
                     <div class="card-header" style="border: none;border-radius: 0;background: #e3e3e3;">
                         <h6 class="card-title text-uppercase" style="color:#832a00;">Department List</h6>
                     </div>
-                    @php                   
-                        $pathname = str_replace("doctor-details/", "",Request::path());
-                        $path = str_replace("%20", " ", $pathname);                        
+                    @php
+                    $pathname = str_replace("doctor-details/", "",Request::path());
+                    $path = str_replace("%20", " ", $pathname);
                     @endphp
                     <div class="card-body" style="padding-top: 3px;">
-                        @foreach($departments as $item)                        
+                        @foreach($departments as $item)
                         <a title="{{$item->name}}" href="{{route('doctor.details',strtolower($item->name))}}" class="doctor_department {{strtolower($item->name) == $path ? 'text-danger' : ''}}">{{mb_strimwidth($item->name, 0, 28, "...")}} <span class="text-danger" style="font-weight:700;">({{$item->specialistdoctor->count()}})</span></a>
                         @endforeach
                     </div>
@@ -117,6 +129,9 @@
     $(document).ready(() => {
         $(".city").select2({
             placeholder: "Select city"
+        });
+        $(".department").select2({
+            placeholder: "Select department"
         });
 
         $(".doctor_select").select2({
@@ -181,7 +196,7 @@
                                     $(".doctor_name").addClass("d-none")
                                     $(".doctor-select").removeClass("d-none")
                                     $.each(response, (index, value) => {
-                                        var raw = `<option value="${value.id}">${value.name}</option>`;
+                                        var raw = `<option value="${value.doctor.id}">${value.doctor.name}</option>`;
                                         $(".doctor_select").append(raw)
                                         Row(index, value)
                                     })
@@ -189,7 +204,7 @@
                                     $(".doctor_name").removeClass("d-none")
                                     $(".doctor-select").addClass("d-none")
                                     $.each(response, (index, value) => {
-                                        Row(index, value)
+                                        SingleRow(index, value)
                                     })
                                 }
                             }
@@ -218,7 +233,7 @@
                 success: (response) => {
                     console.log(response);
                     $.each(response, (index, value) => {
-                        Row(index, value);
+                        SingleRow(index, value);
                     })
                 },
                 complete: () => {
@@ -231,15 +246,37 @@
     function Row(index, value) {
         var row = `
             <div class="col-12 col-lg-6 mb-3">
+                <a href="/single-details-doctor/${value.doctor.id}" target="_blank" class="text-decoration-none text-secondary" title="${value.doctor.name}">
+                    <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
+                        <div class="card-body d-flex" style="padding: 5px;gap: 8px;">
+                            <div class="image" style="border: 1px dotted #ababab;height: 110px;margin-top: 4px;">
+                                <img height="100%" src="${value.doctor.image != '0'?location.origin+"/"+value.doctor.image:location.origin+'/uploads/nouserimage.png'}" width="100">
+                            </div>
+                            <div class="info" style="padding-right:5px;">
+                                <h6>${value.doctor.name}</h6>
+                                <p style="color:#c99913;">${value.specialist.name}, ${value.doctor.city.name}</p>
+                                <p style="border-top: 2px dashed #dddddd85;text-align:justify;">${value.doctor.education}</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            `;
+        $(".doctorbody").append(row)
+    }
+
+    function SingleRow(index, value) {
+        var row = `
+            <div class="col-12 col-lg-6 mb-3">
                 <a href="/single-details-doctor/${value.id}" target="_blank" class="text-decoration-none text-secondary" title="${value.name}">
                     <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
                         <div class="card-body d-flex" style="padding: 5px;gap: 8px;">
                             <div class="image" style="border: 1px dotted #ababab;height: 110px;margin-top: 4px;">
-                                <img height="100%" src="${value.image != 0?location.origin+"/"+value.image:location.origin+'/uploads/nouserimage.png'}" width="100">
+                                <img height="100%" src="${value.image != '0'?location.origin+"/"+value.image:location.origin+'/uploads/nouserimage.png'}" width="100">
                             </div>
                             <div class="info" style="padding-right:5px;">
                                 <h6>${value.name}</h6>
-                                <p style="color:#c99913;">${value.department.length > 0 ? value.department[0].specialist.name:''}, ${value.city.name}</p>
+                                <p style="color:#c99913;">${value.department[0].specialist.name}, ${value.city.name}</p>
                                 <p style="border-top: 2px dashed #dddddd85;text-align:justify;">${value.education}</p>
                             </div>
                         </div>
