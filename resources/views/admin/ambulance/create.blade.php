@@ -77,7 +77,7 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="city_id">City Name</label>
-                                <select name="city_id" id="city_id" class="form-control select2">
+                                <select onchange="getUpazila(event)" name="city_id" id="city_id" class="form-control select2">
                                     <option value="">Choose a city name</option>
                                     @foreach($cities as $city)
                                     <option value="{{$city->id}}">{{$city->name}}</option>
@@ -85,6 +85,15 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
                                 </select>
                             </div>
                             <span class="error-city_id text-danger error"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="upazila_id">Upazila Name</label>
+                                <select name="upazila_id" id="upazila_id" class="form-control">
+                                    <option value="">Select Upazila Name</option>
+                                </select>
+                            </div>
+                            <span class="error-upazila_id text-danger error"></span>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
@@ -135,7 +144,7 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <img width="100" class="img" style="border: 1px solid #ccc; height:80px;">
+                            <img src="{{asset('noimage.jpg')}}" class="img" style="width:100px;border: 1px solid #ccc; height:80px;">
                         </div>
                         <div class="col-12">
                             <div class="form-group">
@@ -188,5 +197,20 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
             })
         })
     })
+
+    function getUpazila(event){
+        $.ajax({
+            url: location.origin+"/getupazila/"+event.target.selectedOptions[0].value,
+            method: "GET",
+            beforeSend: () => {
+                $("#upazila_id").html(`<option value="">Select Upazila Name</option>`)
+            },
+            success: res => {
+                $.each(res, (index, value) => {
+                    $("#upazila_id").append(`<option value="${value.id}">${value.name}</option>`)
+                })
+            }
+        })
+    }
 </script>
 @endpush

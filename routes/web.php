@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\PrivatecarController;
 use App\Http\Controllers\Admin\UserAccessController;
 use App\Http\Controllers\HospitalDiagnosticController;
 use App\Http\Controllers\Admin\InvestigationController;
+use App\Http\Controllers\Admin\UpazilaController;
 use App\Http\Controllers\Hospital\AppointmentController;
 use App\Http\Controllers\Doctor\DoctorController as DoctorDoctorController;
 use App\Http\Controllers\Hospital\DoctorController as HospitalDoctorController;
@@ -61,6 +62,7 @@ Route::post("/filter-ambulance", [FilterController::class, "ambulance"])->name("
 Route::post("/filter-privatecar", [FilterController::class, "privatecar"])->name("filter.privatecar");
 Route::get("/get/city/all", [FilterController::class, "cityall"])->name("get.city.all");
 Route::post("/home-filter", [HomeController::class, "filter"])->name("home.filter");
+Route::get("/getupazila/{id}", [HomeController::class, "getupazila"]);
 Route::post("/donor-filter", [FilterController::class, "filterdonor"])->name("filter.donor");
 
 // =========== Frontend route ========= //
@@ -219,6 +221,12 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post("/city", [CityController::class, 'store'])->name("city.store");
     Route::get("/city-edit/{id}", [CityController::class, 'edit'])->name("city.edit");
     Route::get("/city-delete/{id}", [CityController::class, 'destroy'])->name("city.destroy");
+    // city add
+    Route::get("/upazila", [UpazilaController::class, 'index'])->name("upazila.index");
+    Route::get("/upazila-get", [UpazilaController::class, 'fetch'])->name("upazila.get");
+    Route::post("/upazila", [UpazilaController::class, 'store'])->name("upazila.store");
+    Route::get("/upazila-edit/{id}", [UpazilaController::class, 'edit'])->name("upazila.edit");
+    Route::get("/upazila-delete/{id}", [UpazilaController::class, 'destroy'])->name("upazila.destroy");
 
     //user permission
     Route::get('/user', [UserAccessController::class, 'create'])->name('admin.user.create');

@@ -77,6 +77,15 @@ class PermissionSeeder extends Seeder
                 ]
             ],
             [
+                'group_name' => 'upazila',
+                'permission_name' => [
+                    "upazila.index",
+                    "upazila.create",
+                    "upazila.edit",
+                    "upazila.destroy"
+                ]
+            ],
+            [
                 'group_name' => 'department',
                 'permission_name' => [
                     "department.index",

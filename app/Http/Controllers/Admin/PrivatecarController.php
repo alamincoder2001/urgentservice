@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class PrivatecarController extends Controller
@@ -26,7 +27,7 @@ class PrivatecarController extends Controller
             return view("admin.unauthorize");
         }
 
-        $privatecars = Privatecar::latest()->get();
+        $privatecars = Privatecar::with('upazila')->latest()->get();
         return view("admin.privatecar.index", compact("privatecars"));
     }
 
@@ -40,9 +41,12 @@ class PrivatecarController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 "name"           => "required",
+                "username"       => "required|unique:privatecars",
+                "password"       => "required",
                 "email"          => "required|email",
-                "phone"          => "required|min:11|max:15",
+                "phone"          => "required",
                 "city_id"        => "required",
+                "upazila_id"     => "required",
                 "cartype_id"     => "required",
                 "address"        => "required",
                 "car_license"    => "required",
@@ -57,10 +61,13 @@ class PrivatecarController extends Controller
                 $data                 = new Privatecar;
                 $data->image          = $this->imageUpload($request, 'image', 'uploads/privatecar') ?? '';
                 $data->name           = $request->name;
+                $data->username       = $request->username;
+                $data->password       = Hash::make($request->password);
                 $data->email          = $request->email;
                 $data->cartype_id     = implode(",", $request->cartype_id);
                 $data->phone          = $request->phone;
                 $data->city_id        = $request->city_id;
+                $data->upazila_id     = $request->upazila_id;
                 $data->address        = $request->address;
                 $data->map_link       = $request->map_link;
                 $data->car_license    = $request->car_license;
@@ -89,9 +96,12 @@ class PrivatecarController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 "name"           => "required",
+                "username"       => "required|unique:privatecars,username,".$request->id,
+                "password"       => "required",
                 "email"          => "required|email",
-                "phone"          => "required|min:11|max:15",
+                "phone"          => "required",
                 "city_id"        => "required",
+                "upazila_id"     => "required",
                 "cartype_id"     => "required",
                 "address"        => "required",
                 "car_license"    => "required",
@@ -112,10 +122,15 @@ class PrivatecarController extends Controller
                     $data->image = $this->imageUpload($request, 'image', 'uploads/privatecar') ?? '';
                 }
                 $data->name           = $request->name;
+                $data->username       = $request->username;
+                if (!empty($request->password)) {
+                    $data->password       = Hash::make($request->password);
+                }
                 $data->email          = $request->email;
                 $data->cartype_id     = implode(",", $request->cartype_id);
                 $data->phone          = $request->phone;
                 $data->city_id        = $request->city_id;
+                $data->upazila_id     = $request->upazila_id;
                 $data->address        = $request->address;
                 $data->map_link       = $request->map_link;
                 $data->car_license    = $request->car_license;

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Devfaysal\BangladeshGeocode\Models\District;
+use Devfaysal\BangladeshGeocode\Models\Upazila;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -29,6 +30,10 @@ class Ambulance extends Authenticatable
     
     public function city()
     {
-        return $this->belongsTo(District::class, "city_id");
+        return $this->belongsTo(District::class, "city_id", "id");
+    }
+    public function upazila()
+    {
+        return $this->belongsTo(Upazila::class, "upazila_id", "id");
     }
 }

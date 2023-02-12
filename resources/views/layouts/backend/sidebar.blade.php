@@ -135,6 +135,13 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
                     </a>
                 </li>
                 @endif
+                @if(in_array("upazila.index", $access) || in_array("upazila.create", $access) || in_array("upazila.edit", $access) || in_array("upazila.destroy", $access))
+                <li class="{{Route::is('upazila.index')?'active-page':''}}">
+                    <a href="{{route('upazila.index')}}">
+                        <i class="menu-icon fa fa-list-alt"></i><span>Upazila Entry</span>
+                    </a>
+                </li>
+                @endif
                 @if(in_array("slider.index", $access) || in_array("slider.create", $access) || in_array("slider.edit", $access) || in_array("slider.destroy", $access))
                 <li class="{{Route::is('slider.index')?'active-page':''}}">
                     <a href="{{route('slider.index')}}">

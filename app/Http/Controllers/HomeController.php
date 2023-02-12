@@ -13,6 +13,7 @@ use App\Models\Diagnostic;
 use App\Models\Prescription;
 use App\Models\Privatecar;
 use App\Models\Specialist;
+use Devfaysal\BangladeshGeocode\Models\Upazila;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -145,5 +146,10 @@ class HomeController extends Controller
         }catch(\Throwable $e){
             return "Opps! something went wrong";
         }
+    }
+
+    public function getupazila($id)
+    {
+        return Upazila::where("district_id", $id)->get();
     }
 }

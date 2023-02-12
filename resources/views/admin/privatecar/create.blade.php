@@ -22,8 +22,22 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="name">Privatecar Service Name</label>
-                                <input type="text" name="name" id="name" class="form-control" placeholder="Ex: SA Privatecar">
+                                <input type="text" name="name" id="name" class="form-control">
                                 <span class="error-name text-danger error"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" name="username" id="username" class="form-control">
+                                <span class="error-username text-danger error"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" name="password" id="password" class="form-control">
+                                <span class="error-password text-danger error"></span>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -59,7 +73,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="city_id">City Name</label>
-                                <select name="city_id" id="city_id" class="form-control cartype_id">
+                                <select onchange="getUpazila(event)" name="city_id" id="city_id" class="form-control cartype_id">
                                     <option value="">Select City Name</option>
                                     @foreach($cities as $city)
                                     <option value="{{$city->id}}">{{$city->name}}</option>
@@ -67,6 +81,15 @@
                                 </select>
                             </div>
                             <span class="error-city_id text-danger error"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="upazila_id">Upazila Name</label>
+                                <select  name="upazila_id" id="upazila_id" class="form-control">
+                                    <option value="">Select Upazila Name</option>
+                                </select>
+                            </div>
+                            <span class="error-upazila_id text-danger error"></span>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
@@ -124,7 +147,7 @@
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <img width="100" class="img" style="border: 1px solid #ccc; height:80px;">
+                            <img src="{{asset('noimage.jpg')}}" class="img" style="width:100px;border: 1px solid #ccc; height:80px;">
                         </div>
                         <div class="col-12">
                             <div class="form-group">
@@ -232,5 +255,20 @@
             }
         })
     })
+
+    function getUpazila(event){
+        $.ajax({
+            url: location.origin+"/getupazila/"+event.target.selectedOptions[0].value,
+            method: "GET",
+            beforeSend: () => {
+                $("#upazila_id").html(`<option value="">Select Upazila Name</option>`)
+            },
+            success: res => {
+                $.each(res, (index, value) => {
+                    $("#upazila_id").append(`<option value="${value.id}">${value.name}</option>`)
+                })
+            }
+        })
+    }
 </script>
 @endpush

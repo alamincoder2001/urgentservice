@@ -16,12 +16,14 @@ class CreatePrivatecarsTable extends Migration
         Schema::create('privatecars', function (Blueprint $table) {
             $table->id();
             $table->string("name", 150);
+            $table->string("username");
+            $table->string("password");
             $table->string("cartype_id");
             $table->string("phone");
             $table->string("email");
             $table->text("map_link")->nullable();
-            $table->bigInteger('city_id')->unsigned();
-            $table->foreign('city_id')->references('id')->on('districts')->onDelete('cascade');
+            $table->integer('city_id');
+            $table->integer('upazila_id');
             $table->string("address");
             $table->string("car_license")->nullable();
             $table->string("driver_license")->nullable();

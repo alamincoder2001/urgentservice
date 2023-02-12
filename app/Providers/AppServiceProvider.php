@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Devfaysal\BangladeshGeocode\Models\District;
+use Devfaysal\BangladeshGeocode\Models\Upazila;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -38,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
         View::share('setting', Setting::first());
         View::share('contact', Contact::first());
         View::share('cities', District::orderBy("name")->get());
+        View::share('upazilas', Upazila::orderBy("name")->get());
         View::share('departments', Department::with('specialistdoctor')->orderBy("name", 'ASC')->get());
         View::share('doctors', Doctor::orderBy("name", 'ASC')->get());
     }

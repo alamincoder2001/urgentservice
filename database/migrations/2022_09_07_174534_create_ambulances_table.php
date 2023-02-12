@@ -22,8 +22,8 @@ class CreateAmbulancesTable extends Migration
             $table->string("email");
             $table->string("password");
             $table->text("map_link")->nullable();
-            $table->bigInteger('city_id')->unsigned();
-            $table->foreign('city_id')->references('id')->on('districts')->onDelete('cascade');
+            $table->integer('city_id');
+            $table->integer('upazila_id');
             $table->string("address");
             $table->string("car_license")->nullable();
             $table->string("driver_license")->nullable();

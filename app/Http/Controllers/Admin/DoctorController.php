@@ -61,38 +61,38 @@ class DoctorController extends Controller
         }
         try {
             $validator = Validator::make($request->all(), [
-                'name' => "required|max:255",
-                'email' => "required|email",
-                'education' => "required",
-                'password' => "required",
-                'username' => "required|unique:hospitals",
+                'name'          => "required|max:255",
+                'email'         => "required|email",
+                'education'     => "required",
+                'password'      => "required",
+                'username'      => "required|unique:hospitals",
                 'department_id' => "required",
-                'city_id' => "required",
-                'day' => "required",
-                'phone' => "required",
+                'city_id'       => "required",
+                'day'           => "required",
+                'phone'         => "required",
                 'concentration' => "required",
-                'first_fee' => "required|numeric",
-                'second_fee' => "required|numeric",
+                'first_fee'     => "required|numeric",
+                'second_fee'    => "required|numeric",
             ]);
 
             if ($validator->fails()) {
                 return response()->json(["error" => $validator->errors()]);
             } else {
-                $data = new Doctor;
-                $data->image = $this->imageUpload($request, 'image', 'uploads/doctor') ?? '';
-                $data->name = $request->name;
+                $data           = new Doctor;
+                $data->image    = $this->imageUpload($request, 'image', 'uploads/doctor') ?? '';
+                $data->name     = $request->name;
                 $data->username = $request->username;
-                $data->email = $request->email;
+                $data->email    = $request->email;
                 $data->password = Hash::make($request->password);
 
                 $data->education = $request->education;
 
-                $data->city_id = $request->city_id;
-                $data->phone = implode(",", $request->phone);
-                $data->first_fee = $request->first_fee;
-                $data->second_fee = $request->second_fee;
+                $data->city_id       = $request->city_id;
+                $data->phone         = implode(",", $request->phone);
+                $data->first_fee     = $request->first_fee;
+                $data->second_fee    = $request->second_fee;
                 $data->concentration = $request->concentration;
-                $data->description = $request->description;
+                $data->description   = $request->description;
 
                 if (!empty($request->hospital_id)) {
                     $data->hospital_id = implode(",", $request->hospital_id);
@@ -180,19 +180,19 @@ class DoctorController extends Controller
                     }
                     $data->image = $this->imageUpload($request, 'image', 'uploads/doctor') ?? '';
                 }
-                $data->name = $request->name;
+                $data->name     = $request->name;
                 $data->username = $request->username;
-                $data->email = $request->email;
+                $data->email    = $request->email;
                 if (!empty($request->password)) {
                     $data->password = Hash::make($request->password);
                 }
-                $data->education = $request->education;
-                $data->city_id = $request->city_id;
-                $data->phone = implode(",", $request->phone);
-                $data->first_fee = $request->first_fee;
-                $data->second_fee = $request->second_fee;
+                $data->education     = $request->education;
+                $data->city_id       = $request->city_id;
+                $data->phone         = implode(",", $request->phone);
+                $data->first_fee     = $request->first_fee;
+                $data->second_fee    = $request->second_fee;
                 $data->concentration = $request->concentration;
-                $data->description = $request->description;
+                $data->description   = $request->description;
                 if (!empty($request->hospital_id)) {
                     $data->hospital_id = implode(",", $request->hospital_id);
                 }

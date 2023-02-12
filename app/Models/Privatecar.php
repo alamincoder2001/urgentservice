@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
+use Devfaysal\BangladeshGeocode\Models\Upazila;
 use Devfaysal\BangladeshGeocode\Models\District;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Privatecar extends Authenticatable
@@ -21,5 +22,10 @@ class Privatecar extends Authenticatable
     public function city()
     {
         return $this->belongsTo(District::class);
+    }
+
+    public function upazila()
+    {
+        return $this->belongsTo(Upazila::class, "upazila_id", "id");
     }
 }

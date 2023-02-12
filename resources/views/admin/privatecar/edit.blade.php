@@ -3,11 +3,11 @@
 @section("title", "Admin Privatecar Edit Page")
 
 @push("js")
- <style>
-    .select2-container{
+<style>
+    .cartype_id[data-select2-id='select2-data-cartype_id'] .select2-container {
         width: 85% !important;
     }
- </style>
+</style>
 @endpush
 @section("content")
 
@@ -30,6 +30,21 @@
                                 <input type="text" name="name" id="name" class="form-control" value="{{$data->name}}">
                                 <span class="error-name text-danger error"></span>
                             </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" name="username" id="username" value="{{$data->username}}" class="form-control">
+                                <span class="error-username text-danger error"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="password">Password</label>
+                            <div class="input-group">
+                                <input type="checkbox" onchange="passwordToggle(event)" />
+                                <input type="password" readonly name="password" id="password" class="form-control">
+                            </div>
+                            <span class="error-password text-danger error"></span>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
@@ -67,7 +82,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="city_id">City Name</label>
-                                <select name="city_id" id="city_id" class="form-control select2">
+                                <select onchange="getUpazila(event)" name="city_id" id="city_id" class="form-control select2">
                                     <option value="">Select City Name</option>
                                     @foreach($cities as $city)
                                     <option value="{{$city->id}}" {{$data->city_id==$city->id?"selected":""}}>{{$city->name}}</option>
@@ -75,6 +90,18 @@
                                 </select>
                             </div>
                             <span class="error-city_id text-danger error"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="upazila_id">Upazila Name</label>
+                                <select name="upazila_id" id="upazila_id" class="form-control">
+                                    <option value="">Select Upazila Name</option>
+                                    @foreach($upazilas as $upazila)
+                                    <option value="{{$upazila->id}}" {{$data->upazila_id==$upazila->id?"selected":""}}>{{$upazila->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <span class="error-upazila_id text-danger error"></span>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
@@ -244,5 +271,28 @@
             }
         })
     })
+
+    function getUpazila(event) {
+        $.ajax({
+            url: location.origin + "/getupazila/" + event.target.selectedOptions[0].value,
+            method: "GET",
+            beforeSend: () => {
+                $("#upazila_id").html(`<option value="">Select Upazila Name</option>`)
+            },
+            success: res => {
+                $.each(res, (index, value) => {
+                    $("#upazila_id").append(`<option value="${value.id}">${value.name}</option>`)
+                })
+            }
+        })
+    }
+
+    function passwordToggle(event) {
+        if (event.target.checked) {
+            $("#password").prop("readonly", false)
+        } else {
+            $("#password").prop("readonly", true)
+        }
+    }
 </script>
 @endpush

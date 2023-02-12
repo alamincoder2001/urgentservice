@@ -28,6 +28,7 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
                             <th>Email</th>
                             <th>Phone</th>
                             <th>Ambulance type</th>
+                            <th>Upazila</th>
                             <th>Address</th>
                             <th>Image</th>
                             <th>Action</th>
@@ -42,6 +43,7 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
                             <td>{{$item->email}}</td>
                             <td>{{$item->phone}}</td>
                             <td>{{$item->ambulance_type}}</td>
+                            <td>{{$item->upazila ? $item->upazila->name: ''}}</td>
                             <td>{{$item->address}}</td>
                             <td>
                                 <img src="{{asset($item->image != '0' ? $item->image : '/noimage.jpg')}}" width="50">

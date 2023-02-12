@@ -13,15 +13,17 @@
                     <a href="{{route('admin.privatecar.create')}}" class="btn btn-primary px-3">Add Privatecar</a>
                 </div>
             </div>
-            <div class="card-body">
+            <div class="card-body" style="overflow-x: auto;">
                 <table id="example" class="table table-hover">
                     <thead>
                         <tr>
                             <th>Sl</th>
                             <th>Privatecar Name</th>
+                            <th>User Name</th>
                             <th>Email</th>
                             <th>Phone</th>
                             <th>Privatecar type</th>
+                            <th>Upazila</th>
                             <th>Address</th>
                             <th>Image</th>
                             <th>Action</th>
@@ -32,11 +34,13 @@
                             <tr>
                                 <td>{{++$key}}</td>
                                 <td>{{$item->name}}</td>
+                                <td>{{$item->username}}</td>
                                 <td>{{$item->email}}</td>
                                 <td>{{$item->phone}}</td>
                                 <td>
                                     {{$item->cartype_id}}
                                 </td>
+                                <td>{{$item->upazila ? $item->upazila->name: ''}}</td>
                                 <td>{{$item->address}}</td>
                                 <td>
                                     <img src="{{asset($item->image != '0' ? $item->image : '/noimage.jpg')}}" width="50">

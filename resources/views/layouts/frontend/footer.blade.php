@@ -5,9 +5,9 @@
                 <h2 class="text-uppercase text-secondary">About Urgent Service</h2>
                 <div class="footer-body">
                     <ul>
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">Laboratory</a></li>
-                        <li><a href="#">Medical treatment</a></li>
+                        <li><a href="{{route('website')}}">Home</a></li>
+                        <li><a href="{{route('contactus')}}">About us</a></li>
+                        <li><a href="{{route('aboutus')}}">Contact us</a></li>
                         <li><a href="#">Terms & conditions</a></li>
                     </ul>
                 </div>
