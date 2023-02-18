@@ -38,22 +38,6 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="email">Ambulance Email</label>
-                                <input type="email" name="email" id="email" class="form-control" value="{{Auth::guard('ambulance')->user()->email}}">
-                                <span class="error-email error text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="phone">Ambulance Phone</label>
-                                <div class="input-group">
-                                    <i class="btn btn-secondary">+88</i><input type="text" name="phone" id="phone" class="form-control" value="{{Auth::guard('ambulance')->user()->phone}}">
-                                </div>
-                                <span class="error-phone error text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
                             @php
                             $data = Auth::guard('ambulance')->user();
                             $ambulance = explode(",", $data->ambulance_type);
