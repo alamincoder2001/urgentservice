@@ -28,4 +28,9 @@ class Privatecar extends Authenticatable
     {
         return $this->belongsTo(Upazila::class, "upazila_id", "id");
     }
+
+    public function typewisecategory()
+    {
+        return $this->hasMany(CategoryWisePrivatecar::class)->with("cartype");
+    }
 }

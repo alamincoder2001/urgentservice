@@ -40,20 +40,21 @@
             </div>
         </div>
         <div class="row d-flex justify-content-center privatecarbody">
+            @if(count($data["privatecar"]) > 0)
             @foreach($data["privatecar"] as $item)
             <div class="col-md-6 col-10 col-sm-6 col-lg-4">
-                <a style="text-decoration: none;" target="_blank" href="{{route('singlepageprivatecar', $item->id)}}" title="{{$item->name}}">
+                <a style="text-decoration: none;" target="_blank" href="{{route('singlepageprivatecar', $item->privatecar->id)}}" title="{{$item->name}}">
                     <div class="card border-0 mb-4" style="height:360px;background: #ffffff;box-shadow:0px 0px 5px 1px #c1c1c1;">
                         <div class="img card-img-top m-auto mt-2 w-50 overflow-hidden d-flex justify-content-center border border-2">
-                            <img src="{{asset($item->image ? $item->image:'/frontend/img/privatecar.png' )}}" style="width: 100%; height:110px;">
+                            <img src="{{asset($item->privatecar->image ? $item->privatecar->image:'/frontend/img/privatecar.png' )}}" style="width: 100%; height:110px;">
                         </div>
                         <div class="card-body text-dark">
-                            <h5 class="card-title text-center" style="font-size: 15px;">{{$item->name}}</h5>
-                            <p class="card-text text-primary text-center mb-2"><span>{{str_replace(","," | ", $item->cartype_id)}}</span></p>
+                            <h5 class="card-title text-center" style="font-size: 15px;">{{$item->privatecar->name}}</h5>
+                            <p class="card-text text-primary text-center mb-2"><span>{{$item->cartype->name}}</span></p>
                             <ul style="list-style: none;padding:0 0 0 5px;">
-                                <li><i style="width: 15px;height:15px;" class="fa fa-phone text-info"></i> <span style="font-size: 13px;">{{$item->phone}}</span></li>
-                                <li><i style="width: 15px;height:15px;" class="fa fa-map-marker text-info"></i> <span style="font-size: 11px;">{{$item->address}}, {{$item->city->name}}</span></li>
-                                <li><i style="width: 15px;height:15px;font-size:13px;" class="fa fa-envelope-o text-info"></i> <span style="font-size: 13px;">{{$item->email}}</span></li>
+                                <li><i style="width: 15px;height:15px;" class="fa fa-phone text-info"></i> <span style="font-size: 13px;">{{$item->privatecar->phone}}</span></li>
+                                <li><i style="width: 15px;height:15px;" class="fa fa-map-marker text-info"></i> <span style="font-size: 11px;">{{$item->privatecar->address}}, {{$item->privatecar->city->name}}</span></li>
+                                <li><i style="width: 15px;height:15px;font-size:13px;" class="fa fa-envelope-o text-info"></i> <span style="font-size: 13px;">{{$item->privatecar->email}}</span></li>
                             </ul>
                         </div>
                         <div class="card-footer text-uppercase text-white text-center border-0 py-3">
@@ -63,8 +64,10 @@
                 </a>
             </div>
             @endforeach
-
-            {{$data['privatecar']->links('vendor.pagination.simple-bootstrap-4')}}
+            {{$data["privatecar"]->links('vendor.pagination.simple-bootstrap-4')}}
+            @else
+            <div class="bg-dark text-white text-center">Not Found Data</div>
+            @endif
         </div>
     </div>
 </section>
@@ -112,7 +115,7 @@
                         </div>
                         <div class="card-body text-dark">
                             <h5 class="card-title text-center" style="font-size: 15px;">${value.name}</h5>
-                            <p class="card-text text-primary text-center mb-2"><span>${value.cartype_id.replaceAll(",", " | ")}</span></p>
+                            <p class="card-text text-primary text-center mb-2"><span>${value.typewisecategory.length > 0 ? value.typewisecategory[0].cartype.name : ''}</span></p>
                             <ul style="list-style: none;padding:0 0 0 5px;">
                                 <li><i style="width: 15px;height:15px;" class="fa fa-phone text-info"></i> <span style="font-size: 13px;"> ${value.phone}</span></li>
                                 <li><i style="width: 15px;height:15px;" class="fa fa-map-marker text-info"></i> <span style="font-size: 11px;">${value.address}, ${value.city.name}</span></li>

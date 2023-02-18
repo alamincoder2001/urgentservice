@@ -194,7 +194,12 @@
                 </div>
                 <div class="text-center">
                     <span style="font-size: 22px;font-family: cursive;">Or Make a call</span>
-                    <p style="font-size: 18px;font-family: cursive;">{{$contact->phone}}</p>
+                    @php
+                    $phoneall = explode(",", $contact->phone);
+                    @endphp
+                    @foreach($phoneall as $item)
+                    <p style="font-size: 18px;font-family: cursive;">{{$item}}</p>
+                    @endforeach
                 </div>
             </div>
 
@@ -225,7 +230,7 @@
                             </div>
                             @endforeach
                             @else
-                                <div class="text-center">Not Found Data</div>
+                            <div class="text-center">Not Found Data</div>
                             @endif
                         </div>
                     </div>
@@ -235,7 +240,7 @@
     </div>
 
     <div class="row d-flex justify-content-center mt-4">
-        <div class="col-md-6 d-none showDoctorAppointment" style="position: fixed;top: 0;z-index: 99999;left: 25%;">
+        <div class="col-md-6 d-none showDoctorAppointment" style="position: fixed;top: 25px;z-index: 99999;left: 25%;">
             <div class="card p-3" style="border-radius:0;background:#f5f5f5;box-shadow:1px 1px 1px 2px #035b64;">
                 <div class="card-header border-0 text-white d-flex justify-content-between" style="background: #035b64 !important;">
                     <h4 class="fs-6 text-uppercase">Appointment</h4>

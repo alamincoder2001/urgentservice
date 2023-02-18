@@ -18,20 +18,15 @@ class ContactController extends Controller
 
     public function index()
     {
-        return view("admin.contact.index");
-    }
-    public function getData()
-    {
         $data = Contact::first();
-        return response()->json($data);
+        return view("admin.contact.index", compact('data'));
     }
-
     public function store(Request $request)
     {
         try{
             $validator = Validator::make($request->all(), [
                 "email" => "required|email",
-                "phone" => "required|min:11|max:15",
+                "phone" => "required",
                 "address" => "required",
                 "map_link" => "required"
             ]);
@@ -47,7 +42,7 @@ class ContactController extends Controller
                     $data->image = $this->imageUpload($request, 'image', 'uploads/contact') ?? '';
                 }
                 $data->email = $request->email;
-                $data->phone = $request->phone;
+                $data->phone = implode(",", $request->phone);
                 $data->address = $request->address;
                 $data->map_link = $request->map_link;
                 $data->update();

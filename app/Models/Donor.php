@@ -26,4 +26,9 @@ class Donor extends Model
     {
         return $this->belongsTo(District::class);
     }
+
+    public function group()
+    {
+        return $this->belongsTo(BloodGroup::class, 'blood_group', 'id');
+    }
 }

@@ -94,7 +94,9 @@
                 </div>
             </div>
             <div class="col-12 col-lg-9 doctor_details">
+                <h5 class="m-0 totalDoctorcount" style="text-align: right;font-family: auto;font-style: italic;">Total: <span>{{\App\Models\Doctor::all()->count()}}</span></h5>
                 <div class="row py-2 doctorbody">
+                    
                     @foreach($data['specialist'] as $item)
                     <div class="col-12 col-lg-6 mb-3">
                         <a href="{{route('singlepagedoctor', $item->doctor->id)}}" target="_blank" class="text-decoration-none text-secondary" title="{{$item->doctor->name}}">
@@ -190,8 +192,10 @@
                             Error(response.error);
                         } else {
                             if (response.null) {
+                                $(".totalDoctorcount span").text(0)
                                 $(".doctorbody").html(`<div class="bg-dark text-white text-center">${response.null}</div>`)
                             } else {
+                                $(".totalDoctorcount span").text(response.length)
                                 if ($("#city").val()) {
                                     $(".doctor_name").addClass("d-none")
                                     $(".doctor-select").removeClass("d-none")

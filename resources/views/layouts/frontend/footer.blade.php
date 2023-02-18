@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4 col-6">
-                <h2 class="text-uppercase text-secondary">About Urgent Service</h2>
+                <h2 class="text-uppercase text-secondary">About Urgent Service BD</h2>
                 <div class="footer-body">
                     <ul>
                         <li><a href="{{route('website')}}">Home</a></li>
@@ -13,7 +13,7 @@
                 </div>
             </div>
             <div class="col-md-4 col-6">
-                <h2 class="text-uppercase text-secondary">Urgent Service Center</h2>
+                <h2 class="text-uppercase text-secondary">Urgent Service BD Center</h2>
                 <div class="footer-body">
                     <ul>
                         <li style="margin-bottom: 5px;">

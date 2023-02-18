@@ -58,14 +58,9 @@
                                     <label for="blood_group">Blood Group</label>
                                     <select name="blood_group" id="blood_group" class="form-control" placeholder="Nullable" style="box-shadow: none;border-radius:0;">
                                         <option value="">Select Blood Group</option>
-                                        <option value="A+">A+</option>
-                                        <option value="B+">B+</option>
-                                        <option value="O+">O+</option>
-                                        <option value="AB+">AB+</option>
-                                        <option value="A-">A-</option>
-                                        <option value="B-">B-</option>
-                                        <option value="O-">O-</option>
-                                        <option value="AB-">AB-</option>
+                                        @foreach($bloodgroup as $item)
+                                        <option value="{{$item->id}}">{{$item->blood_group}}</option>
+                                        @endforeach
                                     </select>
                                     <span class="error-blood_group error text-warning"></span>
                                 </div>
@@ -106,20 +101,15 @@
             </div>
         </div>
     </div>
-    <div class="container" style="margin-top: 145px;">
+    <div class="container" style="margin-top: 100px;">
         <div class="row d-flex align-items-center justify-content-end">
             <div class="col-lg-2 col-2 text-end">
                 <div class="form-group">
                     <select class="GroupwiseDonor" style="width: 80%;box-shadow:none;outline:none;border: 1px solid #061160;padding: 3px;border-bottom: 0;">
                         <option value="">Filter Donor</option>
-                        <option value="A+">A+</option>
-                        <option value="B+">B+</option>
-                        <option value="O+">O+</option>
-                        <option value="AB+">AB+</option>
-                        <option value="A-">A-</option>
-                        <option value="B-">B-</option>
-                        <option value="O-">O-</option>
-                        <option value="AB-">AB-</option>
+                        @foreach($bloodgroup as $item)
+                        <option value="{{$item->id}}">{{$item->blood_group}}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>
@@ -135,7 +125,7 @@
                     </div>
                     <div class="card-body py-1">
                         <p><span style="font-weight:500;">Name:</span> {{$item->name}}</p>
-                        <p><span style="font-weight:500;">Blood Group:</span> {{$item->blood_group}}</p>
+                        <p><span style="font-weight:500;">Blood Group:</span> {{$item->group->blood_group}}</p>
                         <p><span style="font-weight:500;">Phone:</span> {{$item->phone}}</p>
                         <p><span style="font-weight:500;">Gender:</span> {{ucwords($item->gender)}}</p>
                         <p><span style="font-weight:500;">Address: </span>{{$item->address}}, {{$item->city->name}}</p>
@@ -218,7 +208,7 @@
                 },
                 success: response => {
                     if (!response.null) {
-                        $.each(response, (index, value) => {                            
+                        $.each(response, (index, value) => {
                             let row = `
                                 <div class="col-md-2 col-lg-2 col-12">
                                     <div class="card" title="${value.name}">
@@ -227,7 +217,7 @@
                                         </div>
                                         <div class="card-body py-1">
                                             <p><span style="font-weight:500;">Name:</span> ${value.name}</p>
-                                            <p><span style="font-weight:500;">Blood Group:</span> ${value.blood_group}</p>
+                                            <p><span style="font-weight:500;">Blood Group:</span> ${value.group.blood_group}</p>
                                             <p><span style="font-weight:500;">Phone:</span> ${value.phone}</p>
                                             <p><span style="font-weight:500;">Gender:</span> ${value.gender.charAt().toUpperCase()+value.gender.slice(1)}</p>
                                             <p><span style="font-weight:500;">Address: </span>${value.address}, ${value.city.name}</p>

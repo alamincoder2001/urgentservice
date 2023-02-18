@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\BloodGroup;
 use App\Models\City;
 use App\Models\Contact;
 use App\Models\Test;
@@ -42,5 +43,6 @@ class AppServiceProvider extends ServiceProvider
         View::share('upazilas', Upazila::orderBy("name")->get());
         View::share('departments', Department::with('specialistdoctor')->orderBy("name", 'ASC')->get());
         View::share('doctors', Doctor::orderBy("name", 'ASC')->get());
+        View::share("bloodgroup", BloodGroup::with('donor')->get());
     }
 }

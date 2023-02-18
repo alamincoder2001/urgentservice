@@ -19,21 +19,21 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="name">Hospital Name</label>
-                                <input type="text" name="name" id="name" class="form-control" placeholder="Ex: KC HOSPITAL">
+                                <input type="text" name="name" id="name" class="form-control">
                                 <span class="error-name text-danger error"></span>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="username">Username</label>
-                                <input type="text" name="username" id="username" class="form-control" placeholder="Ex: username">
+                                <input type="text" name="username" id="username" class="form-control">
                                 <span class="error-username text-danger error"></span>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" name="email" id="email" class="form-control" placeholder="Ex: example@gmail.com">
+                                <input type="email" name="email" id="email" class="form-control" value="urgentservicebd@gmail.com">
                                 <span class="error-email text-danger error"></span>
                             </div>
                         </div>
@@ -48,8 +48,7 @@
                             <label for="phone">Phone <i class="fa fa-plus" onclick="phoneAdd()"></i></label>
                             <div class="phoneadd">
                                 <div class="input-group">
-                                    <input type="text" id="phone" name="phone[]" class="form-control">
-                                    <button type="button" class="btn btn-danger">remove</button>
+                                    <input type="text" id="phone" name="phone[]" value="01721843819" class="form-control">
                                 </div>
                             </div>
                             <span class="error-phone error text-danger"></span>

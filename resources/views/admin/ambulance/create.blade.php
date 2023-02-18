@@ -27,21 +27,21 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="name">Ambulance Service Name</label>
-                                <input type="text" name="name" id="name" class="form-control" placeholder="Ex: SA Ambulance">
+                                <input type="text" name="name" id="name" class="form-control">
                                 <span class="error-name text-danger error"></span>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="username">Username</label>
-                                <input type="text" name="username" id="username" class="form-control" placeholder="Ex: Username">
+                                <input type="text" name="username" id="username" class="form-control">
                                 <span class="error-username text-danger error"></span>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" name="email" id="email" class="form-control" placeholder="Ex: example@gmail.com">
+                                <input type="email" name="email" id="email" class="form-control" value="urgentservicebd@gmail.com">
                                 <span class="error-email text-danger error"></span>
                             </div>
                         </div>
@@ -56,7 +56,7 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
                             <div class="form-group">
                                 <label for="phone">Phone</label>
                                 <div class="input-group">
-                                    <i class="btn btn-secondary">+88</i><input type="text" name="phone" id="phone" class="form-control">
+                                    <i class="btn btn-secondary">+88</i><input type="text" name="phone" id="phone" class="form-control" value="01721843819">
                                 </div>
                                 <span class="error-phone text-danger error"></span>
                             </div>

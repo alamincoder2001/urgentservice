@@ -43,7 +43,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" name="email" id="email" class="form-control" placeholder="Ex: example@gmail.com">
+                                <input type="email" name="email" id="email" class="form-control" value="urgentservicebd@gmail.com">
                                 <span class="error-email text-danger error"></span>
                             </div>
                         </div>
@@ -51,7 +51,7 @@
                             <div class="form-group">
                                 <label for="phone">Phone</label>
                                 <div class="input-group">
-                                    <i class="btn btn-secondary">+88</i><input type="text" name="phone" id="phone" class="form-control">
+                                    <i class="btn btn-secondary">+88</i><input type="text" name="phone" id="phone" value="01721843819" class="form-control">
                                 </div>
                                 <span class="error-phone text-danger error"></span>
                             </div>
@@ -62,7 +62,7 @@
                                 <div class="input-group">
                                     <select multiple name="cartype_id[]" id="cartype_id" class="form-control cartype_id">
                                         @foreach(App\Models\Cartype::latest()->get() as $item)
-                                            <option value="{{$item->name}}">{{$item->name}}</option>
+                                            <option value="{{$item->id}}">{{$item->name}}</option>
                                         @endforeach
                                     </select>
                                     <span onclick="PrivateCar(event)" class="btn btn-dark">+</span>

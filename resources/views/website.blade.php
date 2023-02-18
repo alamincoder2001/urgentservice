@@ -118,6 +118,7 @@
         background: none;
         border-radius: 5px;
         transition: all ease-in-out;
+        box-shadow: 0px 0px 0px 1px #d9d9d9;
     }
 
     .blooddonor .card:hover .card-img {
@@ -343,110 +344,22 @@
             <h2 class="text-uppercase mb-5">Blood Donor</h2>
         </div>
         <div class="row">
+            @foreach($bloodgroup as $item)
             <div class="col-12 col-lg-3 mb-3">
-                <a href="{{route('donor', 'A+')}}" class="text-decoration-none">
-                    <div class="card border-0">
+                <a href="{{route('donor', $item->id)}}" class="text-decoration-none">
+                    <div class="position-relative card border-0">
                         <div class="card-img">
                             <img src="{{asset('frontend/img/donor.png')}}" width="90" />
                         </div>
+                        <span style="position: absolute;top:0;right:0;padding:1px 8px;border-radius:50%;background:red;color:white;">{{count($item->donor)}}</span>
                         <div class="card-body text-center">
-                            <h6 class="text-uppercase">A(+)</h6>
-                            <p class="text-uppercase" style="font-style:italic;font-size:10px;">Find A(+) blood donor list</p>
+                            <h6>{{$item->blood_group}}ve</h6>
+                            <p class="text-uppercase" style="font-style:italic;font-size:10px;">Find {{$item->blood_group}}ve blood donor list</p>
                         </div>
                     </div>
                 </a>
             </div>
-            <div class="col-12 col-lg-3 mb-3">
-                <a href="{{route('donor', 'A-')}}" class="text-decoration-none">
-                    <div class="card border-0">
-                        <div class="card-img">
-                            <img src="{{asset('frontend/img/donor.png')}}" width="90" />
-                        </div>
-                        <div class="card-body text-center">
-                            <h6 class="text-uppercase">A(-)</h6>
-                            <p class="text-uppercase" style="font-style:italic;font-size:10px;">Find A(-) blood donor list</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-12 col-lg-3 mb-3">
-                <a href="{{route('donor', 'B+')}}" class="text-decoration-none">
-                    <div class="card border-0">
-                        <div class="card-img">
-                            <img src="{{asset('frontend/img/donor.png')}}" width="90" />
-                        </div>
-                        <div class="card-body text-center">
-                            <h6 class="text-uppercase">B(+)</h6>
-                            <p class="text-uppercase" style="font-style:italic;font-size:10px;">Find B(+) blood donor list</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-12 col-lg-3 mb-3">
-                <a href="{{route('donor', 'B-')}}" class="text-decoration-none">
-                    <div class="card border-0">
-                        <div class="card-img">
-                            <img src="{{asset('frontend/img/donor.png')}}" width="90" />
-                        </div>
-                        <div class="card-body text-center">
-                            <h6 class="text-uppercase">B(-)</h6>
-                            <p class="text-uppercase" style="font-style:italic;font-size:10px;">Find B(-) blood donor list</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-12 col-lg-3 mb-3">
-                <a href="{{route('donor', 'AB+')}}" class="text-decoration-none">
-                    <div class="card border-0">
-                        <div class="card-img">
-                            <img src="{{asset('frontend/img/donor.png')}}" width="90" />
-                        </div>
-                        <div class="card-body text-center">
-                            <h6 class="text-uppercase">AB(+)</h6>
-                            <p class="text-uppercase" style="font-style:italic;font-size:10px;">Find AB(+) blood donor list</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-12 col-lg-3 mb-3">
-                <a href="{{route('donor', 'AB-')}}" class="text-decoration-none">
-                    <div class="card border-0">
-                        <div class="card-img">
-                            <img src="{{asset('frontend/img/donor.png')}}" width="90" />
-                        </div>
-                        <div class="card-body text-center">
-                            <h6 class="text-uppercase">AB(-)</h6>
-                            <p class="text-uppercase" style="font-style:italic;font-size:10px;">Find AB(-) blood donor list</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-12 col-lg-3 mb-3">
-                <a href="{{route('donor', 'O+')}}" class="text-decoration-none">
-                    <div class="card border-0">
-                        <div class="card-img">
-                            <img src="{{asset('frontend/img/donor.png')}}" width="90" />
-                        </div>
-                        <div class="card-body text-center">
-                            <h6 class="text-uppercase">O(+)</h6>
-                            <p class="text-uppercase" style="font-style:italic;font-size:10px;">Find O(+) blood donor list</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-12 col-lg-3 mb-3">
-                <a href="{{route('donor', 'O-')}}" class="text-decoration-none">
-                    <div class="card border-0">
-                        <div class="card-img">
-                            <img src="{{asset('frontend/img/donor.png')}}" width="90" />
-                        </div>
-                        <div class="card-body text-center">
-                            <h6 class="text-uppercase">O(-)</h6>
-                            <p class="text-uppercase" style="font-style:italic;font-size:10px;">Find O(-) blood donor list</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
+            @endforeach
         </div>
     </div>
 </section>

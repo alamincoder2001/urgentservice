@@ -71,7 +71,7 @@ Route::get("/doctor-details/{id?}", [HomeController::class, "doctor"])->name("do
 Route::get("/hospital-details", [HomeController::class, "hospital"])->name("hospital.details");
 Route::get("/diagnostic-details", [HomeController::class, "diagnostic"])->name("diagnostic.details");
 Route::get("/ambulance-details", [HomeController::class, "ambulance"])->name("ambulance.details");
-Route::get("/privatecar-details", [HomeController::class, "privatecar"])->name("privatecar.details");
+Route::get("/privatecar-details/{id?}", [HomeController::class, "privatecar"])->name("privatecar.details");
 Route::get("/single-details-doctor/{id}", [HomeController::class, "singledoctor"])->name("singlepagedoctor");
 Route::get("/single-details-hospital/{id}", [HomeController::class, "singlehospital"])->name("singlepagehospital");
 Route::get("/single-details-diagnostic/{id}", [HomeController::class, "singlediagnostic"])->name("singlepagediagnostic");
@@ -177,7 +177,6 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post("/privatecar-delete", [PrivatecarController::class, 'destroy'])->name("admin.privatecar.destroy");
     //contact route
     Route::get("/contact", [ContactController::class, "index"])->name("admin.contact.index");
-    Route::get("/contact-get", [ContactController::class, "getData"])->name("admin.contact.get");
     Route::post("/contact", [ContactController::class, "store"])->name("admin.contact.store");
     // department route
     Route::get("/department", [DepartmentController::class, 'index'])->name("department.index");

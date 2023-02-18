@@ -64,14 +64,14 @@
                         </div>
                         <div class="col-md-4">
                             @php
-                            $car = explode(",", $data->cartype_id);
+                            $car = \App\Models\CategoryWisePrivatecar::where('privatecar_id', $data->id)->pluck('cartype_id')->toArray();
                             @endphp
                             <div class="form-group">
                                 <label for="cartype_id">Type Of Privatecar</label>
                                 <div class="input-group">
                                     <select multiple name="cartype_id[]" id="cartype_id" class="form-control select2">
                                         @foreach(App\Models\Cartype::latest()->get() as $item)
-                                        <option value="{{$item->name}}" {{in_array($item->name, $car)?"selected":""}}>{{$item->name}}</option>
+                                        <option value="{{$item->id}}" {{in_array($item->id, $car)?"selected":""}}>{{$item->name}}</option>
                                         @endforeach
                                     </select>
                                     <span onclick="PrivateCar(event)" class="btn btn-dark">+</span>

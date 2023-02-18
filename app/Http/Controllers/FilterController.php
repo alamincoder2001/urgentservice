@@ -165,9 +165,9 @@ class FilterController extends Controller
             } else {
                 $dataArry = ["city_id" => $request->city, "name" => $request->privatecar_name];
                 if (!empty($request->privatecar_name)) {
-                    $data = Privatecar::with("city")->where($dataArry)->orderBy('name')->get();
+                    $data = Privatecar::with("city", "typewisecategory")->where($dataArry)->orderBy('name')->get();
                 } else {
-                    $data = Privatecar::with("city")->where("city_id", $request->city)->orderBy('name')->get();
+                    $data = Privatecar::with("city", "typewisecategory")->where("city_id", $request->city)->orderBy('name')->get();
                 }
                 if (count($data) !== 0) {
                     return response()->json($data);
@@ -176,7 +176,7 @@ class FilterController extends Controller
                 }
             }
         } catch (\Throwable $e) {
-            return response()->json("Something went wrong");
+            return response()->json("Something went wrong".$e->getMessage());
         }
     }
     public function hospital(Request $request)

@@ -47,7 +47,7 @@ $data = App\Models\Contact::first();
             <div class="col-md-4 text-center mt-3 mt-md-0">
                 <i class="fa fa-phone"></i>
                 <h4>Call Us</h4>
-                <small>Phone: +880 {{substr($data->phone, 1)}}</small>
+                <small>Phone: {{$data->phone}}</small>
             </div>
             <div class="col-md-4 text-center mt-3 mt-md-0">
                 <i class="fa fa-map-marker"></i>

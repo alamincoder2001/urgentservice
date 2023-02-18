@@ -18,15 +18,23 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" class="form-control" id="email" name="email">
+                                <input type="email" class="form-control" id="email" name="email" value="{{$data->email}}">
                                 <span class="error-email text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="phone">Phone</label>
-                                <div class="input-group">
-                                    <p class="btn btn-secondary m-0">+88</p><input type="text" name="phone" id="phone" class="form-control">
+                                <label for="phone">Phone <i class="fa fa-plus" onclick="phoneAdd()"></i></label>
+                                <div class="phoneadd">
+                                    @php
+                                        $phoneall = explode(",", $data->phone);
+                                    @endphp
+                                    @foreach($phoneall as $item)
+                                    <div class="input-group">
+                                        <input type="text" id="phone" name="phone[]" value="{{$item}}" class="form-control">
+                                        <button type="button" class="btn btn-danger removePhone"><i class="fa fa-trash"></i></button>
+                                    </div>
+                                    @endforeach
                                 </div>
                                 <span class="error-phone text-danger"></span>
                             </div>
@@ -34,19 +42,19 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="address">Address</label>
-                                <textarea id="address" class="form-control" name="address"></textarea>
+                                <textarea id="address" class="form-control" name="address">{{$data->address}}</textarea>
                                 <span class="error-address text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-5">
                             <div class="form-group">
                                 <label for="map_link">Map Link</label>
-                                <textarea id="map_link" class="form-control" name="map_link"></textarea>
+                                <textarea id="map_link" class="form-control" name="map_link">{{$data->map_link}}</textarea>
                                 <span class="error-map_link text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-3 text-center">
-                            <img class="img border" style="width: 100%;height:100%;">
+                            <img src="{{asset($data->image != '0' ? $data->image : 'noimage.jpg')}}" class="img border" style="width: 100%;height:100%;">
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
@@ -67,52 +75,46 @@
 
 @push("js")
 <script>
-    $(document).ready(() => {
-        function getData() {
-            $.ajax({
-                url: "{{route('admin.contact.get')}}",
-                method: "GET",
-                dataType: "JSON",
-                success: (response) => {
-                    $("#contactAdd").find("#email").val(response.email)
-                    $("#contactAdd").find("#phone").val(response.phone)
-                    $("#contactAdd").find("#address").val(response.address)
-                    $("#contactAdd").find("#map_link").val(response.map_link)
-                    $("#contactAdd").find(".img").attr("src", window.location.protocol+"/"+ response.image)
-                }
-            })
-        }
-        getData();
+    $("#contactAdd").on("submit", (event) => {
+        event.preventDefault()
 
-        $("#contactAdd").on("submit", (event) => {
-            event.preventDefault()
-
-            var formdata = new FormData(event.target);
-            // console.log(event);
-            $.ajax({
-                url: "{{route('admin.contact.store')}}",
-                method: "POST",
-                dataType: "JSON",
-                data: formdata,
-                contentType: false,
-                processData: false,
-                cache: false,
-                beforeSend: () => {
-                    $("#contactAdd").find("span").text("");
-                },
-                success: (response) => {
-                    if (response.error) {
-                        $.each(response.error, (index, value) => {
-                            $("#contactAdd").find(".error-" + index).text(value);
-                        })
-                    } else {
-                        getData();
-                        $("#contactAdd").trigger('reset')
-                        $.notify(response, "success");
-                    }
+        var formdata = new FormData(event.target);
+        // console.log(event);
+        $.ajax({
+            url: "{{route('admin.contact.store')}}",
+            method: "POST",
+            dataType: "JSON",
+            data: formdata,
+            contentType: false,
+            processData: false,
+            cache: false,
+            beforeSend: () => {
+                $("#contactAdd").find("span").text("");
+            },
+            success: (response) => {
+                if (response.error) {
+                    $.each(response.error, (index, value) => {
+                        $("#contactAdd").find(".error-" + index).text(value);
+                    })
+                } else {
+                    $.notify(response, "success");
                 }
-            })
+            }
         })
+    })
+
+    function phoneAdd() {
+        var row = `
+            <div class="input-group">
+                <input type="text" id="phone" name="phone[]" class="form-control">
+                <button type="button" class="btn btn-danger removePhone"><i class="fa fa-trash"></i></button>
+            </div>
+        `
+        $(".phoneadd").append(row)
+    }
+
+    $(document).on("click", ".removePhone", event => {
+        event.target.offsetParent.remove();
     })
 </script>
 @endpush

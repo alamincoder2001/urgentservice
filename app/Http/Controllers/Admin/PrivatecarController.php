@@ -6,6 +6,7 @@ use App\Models\Privatecar;
 use App\Models\UserAccess;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\CategoryWisePrivatecar;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -47,7 +48,6 @@ class PrivatecarController extends Controller
                 "phone"          => "required",
                 "city_id"        => "required",
                 "upazila_id"     => "required",
-                "cartype_id"     => "required",
                 "address"        => "required",
                 "car_license"    => "required",
                 "driver_license" => "required",
@@ -64,7 +64,6 @@ class PrivatecarController extends Controller
                 $data->username       = $request->username;
                 $data->password       = Hash::make($request->password);
                 $data->email          = $request->email;
-                $data->cartype_id     = implode(",", $request->cartype_id);
                 $data->phone          = $request->phone;
                 $data->city_id        = $request->city_id;
                 $data->upazila_id     = $request->upazila_id;
@@ -76,8 +75,14 @@ class PrivatecarController extends Controller
                 $data->driver_address = $request->driver_address;
                 $data->number_of_seat = $request->number_of_seat;
                 $data->description    = $request->description;
-
                 $data->save();
+
+                foreach ($request->cartype_id as $item) {
+                    $categorywiseprivate                = new CategoryWisePrivatecar;
+                    $categorywiseprivate->privatecar_id = $data->id;
+                    $categorywiseprivate->cartype_id    = $item->id;
+                    $categorywiseprivate->save();
+                }
                 return response()->json("Privatecar added successfully");
             }
         } catch (\Throwable $e) {
@@ -96,13 +101,11 @@ class PrivatecarController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 "name"           => "required",
-                "username"       => "required|unique:privatecars,username,".$request->id,
-                "password"       => "required",
+                "username"       => "required|unique:privatecars,username," . $request->id,
                 "email"          => "required|email",
                 "phone"          => "required",
                 "city_id"        => "required",
                 "upazila_id"     => "required",
-                "cartype_id"     => "required",
                 "address"        => "required",
                 "car_license"    => "required",
                 "driver_license" => "required",
@@ -127,7 +130,6 @@ class PrivatecarController extends Controller
                     $data->password       = Hash::make($request->password);
                 }
                 $data->email          = $request->email;
-                $data->cartype_id     = implode(",", $request->cartype_id);
                 $data->phone          = $request->phone;
                 $data->city_id        = $request->city_id;
                 $data->upazila_id     = $request->upazila_id;
@@ -139,12 +141,19 @@ class PrivatecarController extends Controller
                 $data->driver_address = $request->driver_address;
                 $data->number_of_seat = $request->number_of_seat;
                 $data->description    = $request->description;
-
                 $data->update();
+
+                CategoryWisePrivatecar::where("privatecar_id", $request->id)->delete();
+                foreach ($request->cartype_id as $item) {
+                    $categorywiseprivate                = new CategoryWisePrivatecar;
+                    $categorywiseprivate->privatecar_id = $data->id;
+                    $categorywiseprivate->cartype_id    = $item;
+                    $categorywiseprivate->save();
+                }
                 return response()->json("Privatecar updated successfully");
             }
         } catch (\Throwable $e) {
-            return response()->json("something went wrong");
+            return response()->json("something went wrong".$e->getMessage());
         }
     }
 

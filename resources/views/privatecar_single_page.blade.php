@@ -62,11 +62,8 @@
                                     <label for="privatecar_type">Privatecar Type: <span class="text-danger">*</span></label>
                                     <select id="privatecar_type" name="privatecar_type" class="form-control" style="cursor: pointer;">
                                         <option label="Select privatecar Type"></option>
-                                        @php
-                                            $type = explode(",",$data->cartype_id);
-                                        @endphp
-                                        @foreach($type as $private)
-                                            <option value="{{$private}}">{{$private}}</option>
+                                        @foreach($data->typewisecategory as $private)
+                                            <option value="{{$private->cartype->id}}">{{$private->cartype->name}}</option>
                                         @endforeach
                                     </select>
                                     <span class="error-privatecar_type error text-danger"></span>

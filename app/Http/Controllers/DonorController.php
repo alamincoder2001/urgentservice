@@ -23,15 +23,15 @@ class DonorController extends Controller
     {
         try{
             $validator = Validator::make($request->all(), [
-                'name' => "required",
-                "phone" => "required|min:11|max:15",
-                "dob" => "nullable",
-                "gender" => "required",
+                'name'        => "required",
+                "phone"       => "required|min:11|max:15",
+                "dob"         => "nullable",
+                "gender"      => "required",
                 "blood_group" => "required",
-                "city_id" => "required",
-                "address" => "required",
-                "email" => "nullable|email",
-                "image" => "mimes:jpg,jpeg,JPEG,png,PNG"
+                "city_id"     => "required",
+                "address"     => "required",
+                "email"       => "nullable|email",
+                "image"       => "mimes:jpg,jpeg,JPEG,png,PNG"
             ]);
             if($validator->fails()){
                 return response()->json(["error"=>$validator->errors()]);

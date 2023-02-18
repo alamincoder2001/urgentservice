@@ -28,18 +28,18 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="name">Name <small class="text-danger">*</small></label>
-                                    <input type="text" name="name" class="form-control" placeholder="Ex: Dr. Rayhan">
+                                    <input type="text" name="name" class="form-control">
                                     <span class="error-name error text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <label for="username">Username<small class="text-danger">*</small></label>
-                                <input type="text" id="username" name="username" class="form-control" placeholder="Ex: username">
+                                <input type="text" id="username" name="username" class="form-control">
                                 <span class="error-username text-danger"></span>
                             </div>
                             <div class="col-md-4">
                                 <label for="email">Email</label>
-                                <input type="email" id="email" name="email" class="form-control" placeholder="Enter Email">
+                                <input type="email" id="email" name="email" class="form-control" value="urgentservicebd@gmail.com">
                                 <span class="error-email text-danger"></span>
                             </div>
                             <div class="col-md-4">
@@ -52,7 +52,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="education">Education<small class="text-danger">*</small></label>
-                                    <input type="text" name="education" class="form-control" placeholder="Ex: MPH In Public Health Nutrition (NUB)">
+                                    <input type="text" name="education" class="form-control">
                                     <span class="error-education error text-danger"></span>
                                 </div>
                             </div>
@@ -117,8 +117,7 @@
                                 <label for="phone">Phone <i class="fa fa-plus" onclick="phoneAdd()"></i></label>
                                 <div class="phoneadd">
                                     <div class="input-group">
-                                        <input type="text" id="phone" name="phone[]" class="form-control">
-                                        <button type="button" class="btn btn-danger">remove</button>
+                                        <input type="text" id="phone" name="phone[]" class="form-control" value="01721843819"/>
                                     </div>
                                 </div>
                                 <span class="error-phone error text-danger"></span>

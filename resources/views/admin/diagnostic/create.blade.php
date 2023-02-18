@@ -33,7 +33,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" name="email" id="email" class="form-control" placeholder="Ex: example@gmail.com">
+                                <input type="email" name="email" id="email" class="form-control" value="urgentservicebd@gmail.com">
                                 <span class="error-email text-danger error"></span>
                             </div>
                         </div>
@@ -49,7 +49,7 @@
                                 <label for="phone">Phone</label><span class="text-danger" onclick="numberAdd(event)"><i class="fa fa-plus"></i></span>
                                 <div class="phoneAdd">
                                     <div class="input-group">
-                                        <input type="text" name="phone[]" id="phone" class="form-control" autocomplete="off">
+                                        <input type="text" name="phone[]" id="phone" class="form-control" value="01721843819" autocomplete="off">
                                     </div>
                                 </div>
                                 <span class="error-phone text-danger error"></span>

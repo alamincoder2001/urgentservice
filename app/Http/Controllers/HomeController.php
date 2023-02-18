@@ -7,6 +7,8 @@ use App\Models\Slider;
 use App\Models\Partner;
 use App\Models\Hospital;
 use App\Models\Ambulance;
+use App\Models\Cartype;
+use App\Models\CategoryWisePrivatecar;
 use App\Models\Chamber;
 use App\Models\Department;
 use App\Models\Diagnostic;
@@ -19,7 +21,7 @@ use Illuminate\Support\Facades\Validator;
 
 class HomeController extends Controller
 {
-    
+
     // frontend section
     public function index()
     {
@@ -31,11 +33,10 @@ class HomeController extends Controller
     //doctor
     public function doctor($id = null)
     {
-        if($id != null){
+        if ($id != null) {
             $dept_id = Department::where("name", $id)->first()->id;
             $data["specialist"] = Specialist::where("department_id", $dept_id)->with("doctor", "specialist")->groupBy("doctor_id")->latest()->paginate(24);
-            
-        }else{
+        } else {
             $data["specialist"] = Specialist::with("doctor", "specialist")->groupBy("doctor_id")->latest()->paginate(24);
         }
         return view('doctor_details', compact("data"));
@@ -58,13 +59,18 @@ class HomeController extends Controller
         $data['ambulance'] = Ambulance::latest("id")->paginate(15);
         return view('ambulance_details', compact("data"));
     }
-    //ambulance
-    public function privatecar()
-    {
-        $data['privatecar'] = Privatecar::latest("id")->paginate(15);
-        return view('privatecar_details', compact("data"));
-    }
 
+    //ambulance
+    public function privatecar($id = null)
+    {
+        if($id == null){
+            $category = Cartype::with('typewiseprivatecar')->latest()->get();
+            return view("privatecar_category", compact('category'));
+        }else{
+            $data['privatecar'] = CategoryWisePrivatecar::with('privatecar', 'cartype')->where('cartype_id', $id)->paginate(15);
+            return view('privatecar_details', compact("data"));
+        }
+    }
 
     // single doctor
     public function singledoctor($id = null)
@@ -73,15 +79,45 @@ class HomeController extends Controller
         $related = Specialist::with('doctor')->where("department_id", $data->department[0]->department_id)->get();
         $filtered = [];
 
-        foreach($related as $value) {
-            if($value->doctor_id != $id) {
+        foreach ($related as $value) {
+            if ($value->doctor_id != $id) {
                 array_push($filtered, $value);
             }
-            if(count($filtered) == 4){
+            if (count($filtered) == 4) {
                 break;
             }
         }
         return view("doctor_single_page", compact("data", "filtered"));
+    }
+    // get hospital and diagnostic by doctor id
+    public function SingleHospitalDignostic(Request $request)
+    {
+        try {
+            if ($request->name == "hospital") {
+                $doctor = Doctor::find($request->id);
+                $hosp_id = explode(",", $doctor->hospital_id);
+                $data = [];
+                foreach ($hosp_id as $key => $h) {
+                    $data[$key] = Hospital::where("id", $h)->first();
+                }
+            } else if ($request->name == "diagnostic") {
+                $doctor = Doctor::find($request->id);
+                $diag_id = explode(",", $doctor->diagnostic_id);
+                $data = [];
+                foreach ($diag_id as $key => $d) {
+                    $data[$key] = Diagnostic::where("id", $d)->first();
+                }
+            } else {
+                return Chamber::where("doctor_id", $request->id)->get();
+            }
+            if ($data[0] !== null) {
+                return response()->json($data);
+            } else {
+                return response()->json(["null" => "Not Found Data"]);
+            }
+        } catch (\Throwable $e) {
+            return response()->json("Something went wrong");
+        }
     }
     // single hospital
     public function singlehospital($id = null)
@@ -104,7 +140,7 @@ class HomeController extends Controller
     // single ambulance
     public function singleprivatecar($id = null)
     {
-        $data = Privatecar::find($id);
+        $data = Privatecar::with('typewisecategory')->find($id);
         return view("privatecar_single_page", compact("data"));
     }
 
@@ -131,19 +167,19 @@ class HomeController extends Controller
 
     public function prescription(Request $request)
     {
-        try{
+        try {
             $validator = Validator::make($request->all(), [
                 "image" => "required|mimes:jpg,png,pdf"
             ]);
 
-            if($validator->fails()){
+            if ($validator->fails()) {
                 return response()->json(["error" => $validator->errors()]);
             }
             $data = new Prescription();
             $data->image = $this->imageUpload($request, 'image', 'uploads/patient') ?? '';
             $data->save();
             return "Prescription send successfully";
-        }catch(\Throwable $e){
+        } catch (\Throwable $e) {
             return "Opps! something went wrong";
         }
     }

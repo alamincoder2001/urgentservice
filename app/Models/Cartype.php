@@ -9,5 +9,10 @@ class Cartype extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["*"];
+    protected $guarded = ["id"];
+
+    public function typewiseprivatecar()
+    {
+        return $this->hasMany(CategoryWisePrivatecar::class)->with("privatecar", "cartype");
+    }
 }
