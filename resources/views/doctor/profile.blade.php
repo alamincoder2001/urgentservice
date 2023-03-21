@@ -10,7 +10,7 @@
                 <h6 class="text-info"><span>Profile</span> of~ {{Auth::guard('doctor')->user()->name}}</h6>
             </div>
             <div class="card-body user-profile-card">
-                <img src="{{asset(Auth::guard('doctor')->user()->image)}}" class="user-profile-image rounded-circle" alt="{{Auth::guard('doctor')->user()->name}}">
+                <img src="{{asset(Auth::guard('doctor')->user()->image != 0 ? Auth::guard('doctor')->user()->image:'/uploads/nouserimage.png')}}" class="user-profile-image rounded-circle" alt="{{Auth::guard('doctor')->user()->name}}">
                 <h4 class="text-center m-t-lg">{{Auth::guard('doctor')->user()->name}}</h4>
                 <h5 class="text-center"><i class="fas fa-book pe-1" style="font-size: 15px;color:#0014ff;"></i>{{Auth::guard('doctor')->user()->education}}</h5>
                 <p class="text-center">{{Auth::guard('doctor')->user()->speciality}}</p>

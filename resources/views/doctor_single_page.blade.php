@@ -150,7 +150,7 @@
                             <h5 style="font-size:14px; font-family:cursive;">
                                 @if(count($data->chamber) != 0)
                                 @foreach($data->chamber->take(1) as $chamber)
-                                <i class="fa fa-home"></i> {{$chamber->name}}, $chamber->address
+                                <i class="fa fa-home"></i> {{$chamber->name}}, {{$chamber->address}}
                                 @endforeach
                                 @endif
                                 @if($data->hospital_id)

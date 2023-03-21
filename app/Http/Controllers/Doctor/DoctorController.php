@@ -27,7 +27,7 @@ class DoctorController extends Controller
     {
         $doctor = Auth::guard("doctor")->user();
         $data["all"] = Appointment::where(["doctor_id" => $doctor->id])->get();
-        $data["new"] = Appointment::where(["doctor_id" => $doctor->id, "appointment_date" => date("d/m/Y")])->get();
+        $data["new"] = Appointment::where(["doctor_id" => $doctor->id, "appointment_date" => date("d-m-Y")])->get();
         return view("doctor.dashboard", compact("data"));
     }
     public function doctor()
@@ -38,7 +38,7 @@ class DoctorController extends Controller
         $data['diagnostic_id'] = explode(",", $doctor->diagnostic_id);
         $hospitals = Hospital::all();
         $diagnostics = Diagnostic::all();
-        $data["new"] = Appointment::where(["doctor_id" => $doctor->id, "appointment_date" => date("d/m/Y")])->get();
+        $data["new"] = Appointment::where(["doctor_id" => $doctor->id, "appointment_date" => date("d-m-Y")])->get();
         return view("doctor.profile", compact("data", "diagnostics", "hospitals"));
     }
 
