@@ -39,6 +39,22 @@
                                 <span class="error-username error text-danger"></span>
                             </div>
                         </div>
+                        <!--<div class="col-md-6">-->
+                        <!--    <div class="form-group">-->
+                        <!--        <label for="email">Hospital Email</label>-->
+                        <!--        <input type="email" name="email" id="email" class="form-control" value="{{Auth::guard('hospital')->user()->email}}">-->
+                        <!--        <span class="error-email error text-danger"></span>-->
+                        <!--    </div>-->
+                        <!--</div>-->
+                        <!--<div class="col-md-6">-->
+                        <!--    <div class="form-group">-->
+                        <!--        <label for="phone">Hospital Phone</label>-->
+                        <!--        <div class="input-group">-->
+                        <!--            <i class="btn btn-secondary">+88</i><input type="text" name="phone" id="phone" class="form-control" value="{{Auth::guard('hospital')->user()->phone}}">-->
+                        <!--        </div>-->
+                        <!--        <span class="error-phone error text-danger"></span>-->
+                        <!--    </div>-->
+                        <!--</div>-->
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="discount_amount">Discount</label>

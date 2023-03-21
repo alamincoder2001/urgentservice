@@ -25,7 +25,7 @@
             <div class="col-12 col-lg-12 col-md-12">
                 <div class="row">
                     @foreach($category as $item)
-                    <div class="col-lg-3">
+                    <div class="col-lg-3 mb-4">
                         <a class="text-decoration-none" href="{{route('privatecar.details', $item->id)}}" title="{{$item->name}}">
                             <div class="card text-center position-relative" style="background: #63cbff;border: 0;">
                                 <span style="color:white;position: absolute;top:-25px;right:0;background:red;padding:1px 8px;border-radius:50%;">{{$item->typewiseprivatecar->count()}}</span>
