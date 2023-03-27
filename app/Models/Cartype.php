@@ -13,6 +13,6 @@ class Cartype extends Model
 
     public function typewiseprivatecar()
     {
-        return $this->hasMany(CategoryWisePrivatecar::class)->with("privatecar", "cartype");
+        return $this->hasMany(CategoryWisePrivatecar::class)->with("cartype");
     }
 }

@@ -67,7 +67,7 @@ class HomeController extends Controller
             $category = Cartype::with('typewiseprivatecar')->latest()->get();
             return view("privatecar_category", compact('category'));
         }else{
-            $data['privatecar'] = CategoryWisePrivatecar::with('privatecar', 'cartype')->where('cartype_id', $id)->paginate(15);
+            $data['privatecar'] = CategoryWisePrivatecar::with('privatecar')->where('cartype_id', $id)->paginate(2);
             return view('privatecar_details', compact("data"));
         }
     }

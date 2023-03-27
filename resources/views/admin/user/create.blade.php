@@ -70,7 +70,7 @@
 <script>
     $(document).ready(() => {
         var table = $('#example').DataTable({
-            ajax: location.origin+"/admin/user-fetch",
+            ajax: location.origin + "/admin/user-fetch",
             columns: [{
                     data: 'id',
                 },
@@ -99,7 +99,7 @@
             event.preventDefault()
             var formdata = new FormData(event.target)
             $.ajax({
-                url: location.origin+"/admin/user/store",
+                url: location.origin + "/admin/user/store",
                 data: formdata,
                 method: "POST",
                 contentType: false,
@@ -126,7 +126,7 @@
         $(document).on("click", ".editUser", (event) => {
             $("button[type='submit']").text("Update").addClass("btn-primary").removeClass("btn-success");
             $.ajax({
-                url: location.origin+"/admin/user/edit/"+event.target.value,
+                url: location.origin + "/admin/user/edit/" + event.target.value,
                 method: "GET",
                 beforeSend: () => {
                     $("#addUser").find("span").text("");
@@ -139,11 +139,11 @@
                 }
             })
         })
-         // delete department
-         $(document).on("click", ".deleteUser", (event) => {
+        // delete department
+        $(document).on("click", ".deleteUser", (event) => {
             if (confirm("Are you sure want to delete this data!")) {
                 $.ajax({
-                    url: location.origin+"/admin/user/delete",
+                    url: location.origin + "/admin/user/delete",
                     method: "POST",
                     data: {
                         id: event.target.value

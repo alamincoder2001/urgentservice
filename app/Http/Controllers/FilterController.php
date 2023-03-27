@@ -234,9 +234,11 @@ class FilterController extends Controller
     {
         try {
             if ($request->group) {
-                $data = Donor::with('city')->where("blood_group", $request->group)->orderBy('name')->get();
+                $data = Donor::with('city', 'group')->where("blood_group", $request->group)->orderBy('name')->get();
+            }elseif($request->city){
+                $data = Donor::with('city', 'group')->where('city_id', $request->city)->latest()->get();
             } else {
-                $data = Donor::with('city')->latest()->get();
+                $data = Donor::with('city', 'group')->latest()->get();
             }
             if (count($data) !== 0) {
                 return response()->json($data);

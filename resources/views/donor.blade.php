@@ -103,12 +103,31 @@
     </div>
     <div class="container" style="margin-top: 100px;">
         <div class="row d-flex align-items-center justify-content-end">
-            <div class="col-lg-2 col-2 text-end">
+            <div class="col-lg-2 col-6 text-end">
                 <div class="form-group">
-                    <select class="GroupwiseDonor" style="width: 80%;box-shadow:none;outline:none;border: 1px solid #061160;padding: 3px;border-bottom: 0;">
+                    <select onchange="changeOptions(event)" style="width: 100%;box-shadow:none;outline:none;border: 1px solid #061160;padding: 3px;border-bottom: 0;">
+                        <option value="">Select Options</option>
+                        <option value="city">City Wise</option>
+                        <option value="group">Blood Group Wise</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-2 col-6 text-end d-none Group">
+                <div class="form-group">
+                    <select onchange="GroupwiseDonor(event, 'group')" style="width: 100%;box-shadow:none;outline:none;border: 1px solid #061160;padding: 3px;border-bottom: 0;">
                         <option value="">Filter Donor</option>
                         @foreach($bloodgroup as $item)
                         <option value="{{$item->id}}">{{$item->blood_group}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6 text-end d-none City">
+                <div class="form-group">
+                    <select onchange="GroupwiseDonor(event, 'city')" style="width: 100%;box-shadow:none;outline:none;border: 1px solid #061160;padding: 3px;border-bottom: 0;">
+                        <option value="">Select City</option>
+                        @foreach($cities as $item)
+                        <option value="{{$item->id}}">{{$item->name}} ({{count($item->donor)}})</option>
                         @endforeach
                     </select>
                 </div>
@@ -118,8 +137,8 @@
         <div class="row d-flex justify-content-center groupWiseDonorShow">
             @if(count($data) > 0)
             @foreach($data as $item)
-            <div class="col-md-2 col-lg-2 col-12">
-                <div class="card" title="{{$item->name}}">
+            <div class="col-md-2 col-lg-2 col-12 mb-2">
+                <div style="height:250px;" class="card" title="{{$item->name}}">
                     <div class="card-header p-0" style="background: 0;">
                         <img style="width: 100%; height:110px;padding:6px;" src="{{asset($item->image?$item->image:'uploads/nouserimage.png')}}" class="card-img-top">
                     </div>
@@ -128,7 +147,7 @@
                         <p><span style="font-weight:500;">Blood Group:</span> {{$item->group->blood_group}}</p>
                         <p><span style="font-weight:500;">Phone:</span> {{$item->phone}}</p>
                         <p><span style="font-weight:500;">Gender:</span> {{ucwords($item->gender)}}</p>
-                        <p><span style="font-weight:500;">Address: </span>{{$item->address}}, {{$item->city->name}}</p>
+                        <p><span style="font-weight:500;">Address: </span> {{$item->address}}, {{$item->city->name}} </p>
                     </div>
                 </div>
             </div>
@@ -149,69 +168,76 @@
 
 @push("js")
 <script>
-    $(document).ready(() => {
-        $("#showAddDonor").on("click", event => {
-            if (event.target.checked) {
-                $("#showDonor").removeClass("d-none").animate({
-                    height: "350px",
-                    padding: "10px"
-                });
-                $("#maindonor").removeClass("d-none");
-            } else {
-                $("#showDonor").animate({
-                    height: "0",
-                    padding: "0"
-                });
-                $("#maindonor").addClass("d-none");
+    $("#showAddDonor").on("click", event => {
+        if (event.target.checked) {
+            $("#showDonor").removeClass("d-none").animate({
+                height: "350px",
+                padding: "10px"
+            });
+            $("#maindonor").removeClass("d-none");
+        } else {
+            $("#showDonor").animate({
+                height: "0",
+                padding: "0"
+            });
+            $("#maindonor").addClass("d-none");
+        }
+    })
+
+    $("#formDonor").on("submit", event => {
+        event.preventDefault()
+        var formdata = new FormData(event.target)
+        $.ajax({
+            url: "{{route('donor.store')}}",
+            method: "POST",
+            data: formdata,
+            contentType: false,
+            processData: false,
+            beforeSend: () => {
+                $("#formDonor").find(".error").text("")
+            },
+            success: response => {
+                if (response.error) {
+                    $.each(response.error, (index, value) => {
+                        $("#formDonor").find(".error-" + index).text(value)
+                    })
+                } else {
+                    $("#formDonor").trigger("reset");
+                    $.notify(response, "success");
+                    setTimeout(function() {
+                        location.reload();
+                    }, 500)
+                }
             }
         })
+    })
 
-        $("#formDonor").on("submit", event => {
-            event.preventDefault()
-            var formdata = new FormData(event.target)
-            $.ajax({
-                url: "{{route('donor.store')}}",
-                method: "POST",
-                data: formdata,
-                contentType: false,
-                processData: false,
-                beforeSend: () => {
-                    $("#formDonor").find(".error").text("")
-                },
-                success: response => {
-                    if (response.error) {
-                        $.each(response.error, (index, value) => {
-                            $("#formDonor").find(".error-" + index).text(value)
-                        })
-                    } else {
-                        $("#formDonor").trigger("reset");
-                        $.notify(response, "success");
-                        setTimeout(function() {
-                            location.reload();
-                        }, 500)
-                    }
-                }
-            })
-        })
-
-        $(".GroupwiseDonor").on("change", event => {
-            $.ajax({
-                url: "{{route('filter.donor')}}",
-                method: "POST",
-                dataType: "JSON",
-                data: {
-                    group: event.target.value
-                },
-                beforeSend: () => {
-                    $(".groupWiseDonorShow").html("")
-                    $(".Loading").removeClass("d-none")
-                },
-                success: response => {
-                    if (!response.null) {
-                        $.each(response, (index, value) => {
-                            let row = `
-                                <div class="col-md-2 col-lg-2 col-12">
-                                    <div class="card" title="${value.name}">
+    function GroupwiseDonor(event, val) {
+        let formdata;
+        if (val == 'group') {
+            formdata = {
+                group: event.target.value
+            }
+        } else {
+            formdata = {
+                city: event.target.value
+            }
+        }
+        $.ajax({
+            url: "{{route('filter.donor')}}",
+            method: "POST",
+            dataType: "JSON",
+            data: formdata,
+            beforeSend: () => {
+                $(".groupWiseDonorShow").html("")
+                $(".Loading").removeClass("d-none")
+            },
+            success: response => {
+                if (!response.null) {
+                    $.each(response, (index, value) => {
+                        let row = `
+                                <div class="col-md-2 col-lg-2 col-12 mb-2">
+                                    <div style="height:250px;" class="card" title="${value.name}">
                                         <div class="card-header p-0" style="background: 0;">
                                             <img style="width: 100%; height:110px;padding:6px;" src="${value.image > '0'?location.origin+"/"+value.image:"/uploads/nouserimage.png"}" class="card-img-top">
                                         </div>
@@ -225,10 +251,10 @@
                                     </div>
                                 </div>
                             `;
-                            $(".groupWiseDonorShow").append(row)
-                        })
-                    } else {
-                        let row = `
+                        $(".groupWiseDonorShow").append(row)
+                    })
+                } else {
+                    let row = `
                             <div class="col-md-12">
                                 <div class="card">
                                     <div class="card-body text-center">
@@ -237,14 +263,27 @@
                                 </div>
                             </div>
                         `;
-                        $(".groupWiseDonorShow").html(row)
-                    }
-                },
-                complete: () => {
-                    $(".Loading").addClass("d-none")
+                    $(".groupWiseDonorShow").html(row)
                 }
-            })
+            },
+            complete: () => {
+                $(".Loading").addClass("d-none")
+            }
         })
-    })
+    }
+
+    function changeOptions(event) {
+        if (event.target.value == 'group') {
+            $(".Group").removeClass("d-none");
+            $(".City").addClass("d-none");
+        } else if (event.target.value == 'city') {
+            $(".Group").addClass("d-none");
+            $(".City").removeClass("d-none");
+        } else {
+            GroupwiseDonor(event, 'city');
+            $(".Group").addClass("d-none");
+            $(".City").addClass("d-none");
+        }
+    }
 </script>
 @endpush

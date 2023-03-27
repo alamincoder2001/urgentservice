@@ -29,9 +29,9 @@
                                     $end = end($isPdf);
                                 @endphp
                                 @if($end == "pdf" || $end == "PDF")
-                                    <a href="{{asset($item->image)}}"><i style="font-size: 35px;" class="fas fa-file-pdf"></i></a>
+                                    <a href="{{asset($item->image)}}" target="_blank"><i style="font-size: 35px;" class="fas fa-file-pdf"></i></a>
                                 @else
-                                    <a href="{{asset($item->image)}}">
+                                    <a href="{{asset($item->image)}}" target="_blank">
                                         <img src="{{asset($item->image)}}" style="width: 90px;border:1px solid forestgreen;">
                                     </a>
                                 @endif

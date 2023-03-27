@@ -11,13 +11,12 @@ class CategoryWisePrivatecar extends Model
 
     protected $guarded = ['id'];
 
-    public function privatecar()
-    {
-        return $this->belongsTo(Privatecar::class, 'privatecar_id', 'id');
-    }
-
     public function cartype()
     {
         return $this->belongsTo(Cartype::class);
+    }
+    public function privatecar()
+    {
+        return $this->belongsTo(Privatecar::class, 'privatecar_id', 'id');
     }
 }

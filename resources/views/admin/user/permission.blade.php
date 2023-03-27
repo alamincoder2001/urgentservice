@@ -13,7 +13,6 @@
                 <a href="{{ route('admin.user.create') }}" class="btn btn-info px-3">
                     Users List
                 </a>
-                <!-- <p class="card-category">Manage customer page</p> -->
             </div>
             <div class="card-body">
 
@@ -86,6 +85,5 @@
             checkbox.prop('checked', false);
         }
     }
-    
 </script>
 @endpush

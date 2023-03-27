@@ -15,7 +15,7 @@ class CreateCategoryWisePrivatecarsTable extends Migration
     {
         Schema::create('category_wise_privatecars', function (Blueprint $table) {
             $table->id();
-            $table->integer("privatecar_id");
+            $table->foreignId("privatecar_id")->constrained('privatecars', 'id')->onDelete('cascade');
             $table->integer("cartype_id");
             $table->timestamps();
         });
