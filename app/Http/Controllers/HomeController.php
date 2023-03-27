@@ -87,38 +87,28 @@ class HomeController extends Controller
                 break;
             }
         }
-        return view("doctor_single_page", compact("data", "filtered"));
-    }
-    // get hospital and diagnostic by doctor id
-    public function SingleHospitalDignostic(Request $request)
-    {
-        try {
-            if ($request->name == "hospital") {
-                $doctor = Doctor::find($request->id);
-                $hosp_id = explode(",", $doctor->hospital_id);
-                $data = [];
-                foreach ($hosp_id as $key => $h) {
-                    $data[$key] = Hospital::where("id", $h)->first();
-                }
-            } else if ($request->name == "diagnostic") {
-                $doctor = Doctor::find($request->id);
-                $diag_id = explode(",", $doctor->diagnostic_id);
-                $data = [];
-                foreach ($diag_id as $key => $d) {
-                    $data[$key] = Diagnostic::where("id", $d)->first();
-                }
-            } else {
-                return Chamber::where("doctor_id", $request->id)->get();
+
+        $hospitals = [];
+        $diagnostics = [];
+        if ($data->hospital_id != null) {
+            //hospital
+            $hosp_id = explode(",", $data->hospital_id);
+            foreach ($hosp_id as $key => $h) {
+                array_push($hospitals, Hospital::where("id", $h)->first());
             }
-            if ($data[0] !== null) {
-                return response()->json($data);
-            } else {
-                return response()->json(["null" => "Not Found Data"]);
-            }
-        } catch (\Throwable $e) {
-            return response()->json("Something went wrong");
         }
+        if($data->diagnostic_id != null){
+            //diagnostic
+            $diag_id = explode(",", $data->diagnostic_id);
+            foreach ($diag_id as $key => $d) {
+                array_push($diagnostics, Diagnostic::where("id", $d)->first());
+            }
+        }
+        $chambers = Chamber::where("doctor_id", $id)->get();
+
+        return view("doctor_single_page", compact("data", "filtered", "hospitals", "diagnostics", "chambers"));
     }
+
     // single hospital
     public function singlehospital($id = null)
     {

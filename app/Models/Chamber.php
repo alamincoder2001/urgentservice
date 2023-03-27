@@ -9,5 +9,5 @@ class Chamber extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["*"];
+    protected $guarded = ["id"];
 }

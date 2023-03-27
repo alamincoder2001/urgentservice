@@ -263,44 +263,24 @@
                                     <input type="text" name="email" id="email" class="form-control" autocomplete="off" placeholder="example@gmail.com">
                                 </div>
                             </div>
-                            <div class="col-md-7 col-6">
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="changeName" class="py-2">Select Chamber or Hospital or Diagnostic</label>
-                                    <select id="changeName" data-id="{{$data->id}}" name="changeName" class="form-control">
-                                        <option value="">Select Name</option>
-                                        <option value="chamber">Chamber</option>
-                                        <option value="hospital">Hospital</option>
-                                        <option value="diagnostic">Diagnostic</option>
+                                    <label for="email" class="py-2">Organization</label>
+                                    <select name="" id="" class="form-control">
+                                        <option value="">Select Organization</option>
+                                        @foreach($hospitals as $item)
+                                        <option data-id="hospital" value="{{$item->id}}">{{$item->name}}</option>
+                                        @endforeach
+
+                                        @foreach($diagnostics as $item)
+                                        <option data-id="diagnostic" value="{{$item->id}}">{{$item->name}}</option>
+                                        @endforeach
+
+                                        @foreach($chambers as $item)
+                                        <option data-id="chamber" value="{{$item->id}}">{{$item->name}}</option>
+                                        @endforeach
+
                                     </select>
-                                    <span class="error-changeName error text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-5 d-none Chamber_Name">
-                                <label for="chamber_name" class="py-2">Select Chamber Name</label>
-                                <select id="chamber_name" disabled name="chamber_name" class="form-control">
-                                    <option value="">Select Chamber</option>
-                                </select>
-                                <span class="chamber_id text-danger"></span>
-                            </div>
-                            <div class="col-md-5 d-none Hospital_Name">
-                                <label for="hospital_id" class="py-2">Select Hospital Name</label>
-                                <select id="hospital_id" disabled name="hospital_id" class="form-control">
-                                    <option value="">Select Hospital</option>
-                                </select>
-                                <span class="hospital_id text-danger"></span>
-                            </div>
-                            <div class="col-md-5 d-none Diagnostic_Name">
-                                <label for="diagnostic_id" class="py-2">Select Diagnostic Name</label>
-                                <select id="diagnostic_id" disabled name="diagnostic_id" class="form-control">
-                                    <option value="">Select Diagnostic</option>
-                                </select>
-                                <span class="diagnostic_id text-danger"></span>
-                            </div>
-                            <div class="col-md-6 col-6">
-                                <div class="form-group">
-                                    <label for="appointment_date" class="py-2">Appointment Date</label>
-                                    <input type="text" name="appointment_date" id="appointment_date" class="form-control" value="{{date('d-m-Y')}}">
-                                    <span class="error-appointment_date error text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6 col-6">
@@ -365,69 +345,6 @@
             orientation: 'bottom'
         })
 
-        function gethosdig(id, name, selector) {
-            $.ajax({
-                url: "{{route('filter.singlehospitaldiagnostic')}}",
-                method: "POST",
-                data: {
-                    id: id,
-                    name: name
-                },
-                beforeSend: () => {
-                    $("#chamber_name").html(`<option value="">Select Chamber</option>`)
-                    $("#diagnostic_id").html(`<option value="">Select Diagnostic</option>`)
-                    $("#hospital_id").html(`<option value="">Select Hospital</option>`)
-                },
-                success: (response) => {
-                    if (response.null) {} else {
-                        $.each(response, (index, value) => {
-                            if (value.null == 0) {
-                                $(selector).append(`<option value="${value.id}">${value.name}</option>`)
-                            } else {
-                                $(selector).append(`<option value="${value.id}">${value.name}</option>`)
-                            }
-                        })
-                    }
-                }
-            })
-        }
-        $("#changeName").on("change", (event) => {
-            if (event.target.value == "chamber") {
-                $(".Chamber_Name").removeClass("d-none");
-                $(".Hospital_Name").addClass("d-none");
-                $(".Diagnostic_Name").addClass("d-none");
-                $("#chamber_name").attr("disabled", false);
-                $("#diagnostic_id").attr("disabled", true);
-                $("#hospital_id").attr("disabled", true);
-                var id = $("#changeName").attr("data-id");
-                gethosdig(id, event.target.value, "#chamber_name")
-            } else if (event.target.value == "hospital") {
-                $(".Chamber_Name").addClass("d-none");
-                $(".Hospital_Name").removeClass("d-none");
-                $(".Diagnostic_Name").addClass("d-none");
-                $("#chamber_name").attr("disabled", true);
-                $("#diagnostic_id").attr("disabled", true);
-                $("#hospital_id").attr("disabled", false);
-                var id = $("#changeName").attr("data-id");
-                gethosdig(id, event.target.value, "#hospital_id")
-            } else if (event.target.value == "diagnostic") {
-                $(".Chamber_Name").addClass("d-none");
-                $(".Hospital_Name").addClass("d-none");
-                $(".Diagnostic_Name").removeClass("d-none");
-                $("#chamber_name").attr("disabled", true);
-                $("#diagnostic_id").attr("disabled", false);
-                $("#hospital_id").attr("disabled", true);
-                var id = $("#changeName").attr("data-id");
-                gethosdig(id, event.target.value, "#diagnostic_id")
-            } else {
-                $(".Chamber_Name").addClass("d-none");
-                $(".Hospital_Name").addClass("d-none");
-                $(".Diagnostic_Name").addClass("d-none");
-                $("#chamber_name").attr("disabled", true);
-                $("#diagnostic_id").attr("disabled", true);
-                $("#hospital_id").attr("disabled", true);
-            }
-        })
         // get city
         $("#district").on("change", (event) => {
             if (event.target.value) {

@@ -49,7 +49,6 @@ Route::post("/user-update", [RegisterController::class, "userupdate"])->name("us
 Route::delete("/logout", [RegisterController::class, "userlogout"])->name("logout.user");
 
 // Filter route
-Route::post("/singlehospitaldiagnostic", [HomeController::class, "SingleHospitalDignostic"])->name("filter.singlehospitaldiagnostic");
 Route::post("/filtersingleservice", [FilterController::class, "filtersingleservice"])->name("filtersingleservice"); 
 Route::post("/city", [FilterController::class, "cityappointment"])->name("filter.cityappoinment");
 Route::post("/filter-city", [FilterController::class, "City"])->name("filter.city");
