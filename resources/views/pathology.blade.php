@@ -136,60 +136,32 @@ $data = App\Models\Test::orderBy("name")->get();
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="email" class="py-2">Email</label>
-                                            <input type="text" name="email" id="email" class="form-control" autocomplete="off" placeholder="example@gmail.com">
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-lg-6">
-                                        <label for="doctor">Select Doctor</label>
-                                        <select class="form-control" name="doctor_id" id="doctorNamechange">
-                                            <option value="">Select Doctor Name</option>
-                                            @foreach($doctors as $item)
-                                            <option value="{{$item->id}}">{{$item->name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6 col-6 d-none changeSection">
-                                        <div class="form-group">
-                                            <label for="changeName" class="py-2">Select Chamber or Hospital or Diagnostic</label>
-                                            <select id="changeName" name="changeName" class="form-control">
-                                                <option value="">Select Name</option>
-                                                <option value="chamber">Chamber</option>
-                                                <option value="hospital">Hospital</option>
-                                                <option value="diagnostic">Diagnostic</option>
-                                            </select>
-                                            <span class="error-changeName error text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 d-none Chamber_Name">
-                                        <label for="chamber_name" class="py-2">Select Chamber Name</label>
-                                        <select id="chamber_name" disabled name="chamber_name" class="form-control">
-                                            <option value="">Select Chamber</option>
-                                        </select>
-                                        <span class="chamber_id text-danger"></span>
-                                    </div>
-                                    <div class="col-md-6 d-none Hospital_Name">
-                                        <label for="hospital_id" class="py-2">Select Hospital Name</label>
-                                        <select id="hospital_id" disabled name="hospital_id" class="form-control">
-                                            <option value="">Select Hospital</option>
-                                        </select>
-                                        <span class="hospital_id text-danger"></span>
-                                    </div>
-                                    <div class="col-md-6 d-none Diagnostic_Name">
-                                        <label for="diagnostic_id" class="py-2">Select Diagnostic Name</label>
-                                        <select id="diagnostic_id" disabled name="diagnostic_id" class="form-control">
-                                            <option value="">Select Diagnostic</option>
-                                        </select>
-                                        <span class="diagnostic_id text-danger"></span>
-                                    </div>
-                                    <div class="col-md-6 col-6">
-                                        <div class="form-group">
                                             <label for="appointment_date" class="py-2">Appointment Date</label>
                                             <input type="text" name="appointment_date" id="appointment_date" class="form-control" value="{{date('d-m-Y')}}">
                                             <span class="error-appointment_date error text-danger"></span>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-6">
+                                    <div class="col-12 col-lg-6">
+                                        <label for="doctor" class="py-2">Select Doctor</label>
+                                        <select class="form-control" name="doctor_id" id="doctorNamechange" onchange="getOrganization(event)">
+                                            <option value="">Select Doctor Name</option>
+                                            @foreach($doctors as $item)
+                                            <option value="{{$item->id}}">{{$item->name}}</option>
+                                            @endforeach
+                                        </select>
+                                        <span class="error-doctor_id error text-danger"></span>
+                                    </div>
+
+                                    <div class="col-md-6 d-none showhideOrganization">
+                                        <div class="form-group">
+                                            <label for="organization_id" class="py-2">Organization</label>
+                                            <select class="form-control" name="organization_id" id="organization_id">
+                                                <option value="">Select Organization</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 rowIncrement">
                                         <div class="form-group">
                                             <label for="problem" class="py-2">Problem</label>
                                             <textarea name="problem" class="form-control" id="problem" placeholder="Decribe your problem"></textarea>
@@ -301,77 +273,41 @@ $data = App\Models\Test::orderBy("name")->get();
         startDate: new Date(),
         orientation: 'bottom'
     })
-    $("#doctorNamechange").on("change", event => {
-        if (event.target.value) {
-            $(".changeSection").removeClass("d-none")
-        } else {
-            $(".changeSection").addClass("d-none")
-        }
-    })
 
-    function gethosdig(id, name, selector) {
-        $.ajax({
-            url: "{{route('filter.singlehospitaldiagnostic')}}",
-            method: "POST",
-            data: {
-                id: id,
-                name: name
-            },
-            beforeSend: () => {
-                $("#chamber_name").html(`<option value="">Select Chamber</option>`)
-                $("#diagnostic_id").html(`<option value="">Select Diagnostic</option>`)
-                $("#hospital_id").html(`<option value="">Select Hospital</option>`)
-            },
-            success: (response) => {
-                if (response.null) {} else {
-                    $.each(response, (index, value) => {
-                        if (value.null == 0) {
-                            $(selector).append(`<option value="${value.id}">${value.name}</option>`)
-                        } else {
-                            $(selector).append(`<option value="${value.id}">${value.name}</option>`)
-                        }
-                    })
+    function getOrganization(event) {
+
+        if (event.target.value) {
+            $(".showhideOrganization").removeClass("d-none");
+            $(".rowIncrement").removeClass("col-md-6").addClass("col-md-12");
+            $.ajax({
+                url: location.origin + "/doctorwise-organization/" + event.target.value,
+                method: "GET",
+                beforeSend: () => {
+                    $("#organization_id").html(`<option>Select Organization</option>`);
+                },
+                success: res => {
+                    if (res.chambers.length > 0) {
+                        $.each(res.chambers, (index, value) => {
+                            let row = `<option data-id="chamber" value="${value.name}">${value.name}</option>`;
+                            $("#organization_id").append(row);
+                        })
+                    }
+                    if (res.hospitals.length > 0) {
+                        $.each(res.hospitals, (index, value) => {
+                            let row = `<option data-id="hospital" value="${value.id}">${value.name}</option>`;
+                            $("#organization_id").append(row);
+                        })
+                    }
+                    if (res.diagnostics.length > 0) {
+                        $.each(res.diagnostics, (index, value) => {
+                            let row = `<option data-id="diagnostic" value="${value.id}">${value.name}</option>`;
+                            $("#organization_id").append(row);
+                        })
+                    }
                 }
-            }
-        })
-    }
-    $("#changeName").on("change", (event) => {
-        if (event.target.value == "chamber") {
-            $(".Chamber_Name").removeClass("d-none");
-            $(".Hospital_Name").addClass("d-none");
-            $(".Diagnostic_Name").addClass("d-none");
-            $("#chamber_name").attr("disabled", false);
-            $("#diagnostic_id").attr("disabled", true);
-            $("#hospital_id").attr("disabled", true);
-            var id = $("#doctorNamechange option:selected").val();
-            gethosdig(id, event.target.value, "#chamber_name")
-        } else if (event.target.value == "hospital") {
-            $(".Chamber_Name").addClass("d-none");
-            $(".Hospital_Name").removeClass("d-none");
-            $(".Diagnostic_Name").addClass("d-none");
-            $("#chamber_name").attr("disabled", true);
-            $("#diagnostic_id").attr("disabled", true);
-            $("#hospital_id").attr("disabled", false);
-            var id = $("#doctorNamechange option:selected").val();
-            gethosdig(id, event.target.value, "#hospital_id")
-        } else if (event.target.value == "diagnostic") {
-            $(".Chamber_Name").addClass("d-none");
-            $(".Hospital_Name").addClass("d-none");
-            $(".Diagnostic_Name").removeClass("d-none");
-            $("#chamber_name").attr("disabled", true);
-            $("#diagnostic_id").attr("disabled", false);
-            $("#hospital_id").attr("disabled", true);
-            var id = $("#doctorNamechange option:selected").val();
-            gethosdig(id, event.target.value, "#diagnostic_id")
-        } else {
-            $(".Chamber_Name").addClass("d-none");
-            $(".Hospital_Name").addClass("d-none");
-            $(".Diagnostic_Name").addClass("d-none");
-            $("#chamber_name").attr("disabled", true);
-            $("#diagnostic_id").attr("disabled", true);
-            $("#hospital_id").attr("disabled", true);
+            })
         }
-    })
+    }
 
     // get city
     $("#district").on("change", (event) => {
@@ -454,18 +390,20 @@ $data = App\Models\Test::orderBy("name")->get();
     // appointment send
     $("#Appointment").on("submit", (event) => {
         event.preventDefault();
-
+        $(".error-doctor_id").text("")
+        
         var contact = $("#Appointment").find("#contact").val()
         if (!Number(contact)) {
             $("#Appointment").find(".error-contact").text("Must be a number value")
             return;
         }
         if ($("#doctorNamechange option:selected").val() == "") {
-            alert("select doctor name")
+            $(".error-doctor_id").text("Select doctor name")
             return
         }
         var changeName = $("#Appointment").find("#changeName").val()
         var formdata = new FormData(event.target)
+        formdata.append("organization_name", $("#organization_id option:selected").attr("data-id"))
         $.ajax({
             url: "{{route('appointment')}}",
             data: formdata,
@@ -474,9 +412,6 @@ $data = App\Models\Test::orderBy("name")->get();
             processData: false,
             beforeSend: () => {
                 $("#Appointment").find(".error").text("");
-                $("#Appointment").find(".chamber_id").text("");
-                $("#Appointment").find(".hospital_id").text("");
-                $("#Appointment").find(".diagnostic_id").text("");
             },
             success: (response) => {
                 if (response.error) {
@@ -484,13 +419,8 @@ $data = App\Models\Test::orderBy("name")->get();
                         $("#Appointment").find(".error-" + index).text(value);
                     })
                 } else if (response.errors) {
-                    if (changeName === "chamber") {
-                        $("#Appointment").find(".chamber_id").text("Select Chamber Name")
-                    } else if (changeName === "hospital") {
-                        $("#Appointment").find(".hospital_id").text("Select Hospital Name")
-                    } else {
-                        $("#Appointment").find(".diagnostic_id").text("Select Diagnostic Name")
-                    }
+                    $.notify(response.errors, "error");
+                    location.reload()
                 } else {
                     $("#Appointment").trigger('reset')
                     $.notify(response, "success");

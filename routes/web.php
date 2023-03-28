@@ -95,6 +95,7 @@ Route::get("/contact-us", function () {
 
 // Appointment route
 Route::post("/appointment", [AppoinmentController::class, "appointment"])->name("appointment");
+Route::get("/doctorwise-organization/{id}", [AppoinmentController::class, "organization"])->name("organization");
 Route::post("/get-patient-details", [AppoinmentController::class, "getDetails"])->name("get.patient.details");
 // Hire Ambulance
 Route::post("/hire-ambulance", [HireAmbulanceController::class, "store"])->name("hire.ambulance");
@@ -250,6 +251,7 @@ Route::group(['prefix' => 'doctor'], function () {
     Route::post("/doctor-password-update", [DoctorDoctorController::class, "passwordUpdate"])->name("doctor.doctor.passwordupdate");
     Route::post("/doctor-image-update", [DoctorDoctorController::class, "imageUpdate"])->name("doctor.doctor.imageUpdate");
     // patient appointment
+    Route::get("/doctor-appointment-today", [DoctorDoctorController::class, "todayAppointment"])->name("today.doctor.appointment");
     Route::get("/doctor-appointment", [DoctorDoctorController::class, "doctorAppointment"])->name("doctor.appointment");
     Route::get("/doctor-patient-show/{id}", [DoctorDoctorController::class, "doctorPatient"])->name("doctor.patient");
     Route::post("/comment/store", [DoctorDoctorController::class, "comment"])->name("comment.store");

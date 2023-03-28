@@ -265,7 +265,7 @@ class DoctorController extends Controller
     {
         $admin_id = Auth::guard("admin")->user()->id;
         $tests = Test::where("admin_id", $admin_id)->orderBy("name", "ASC")->get();
-        $appointments = Appointment::where("doctor_id", $id)->get();
+        $appointments = Appointment::with('chamber', 'hospital', 'diagnostic')->where("doctor_id", $id)->get();
         return view("admin.doctor.appointment", compact("appointments", "tests"));
     }
 }

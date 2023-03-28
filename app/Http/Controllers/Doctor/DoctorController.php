@@ -62,16 +62,16 @@ class DoctorController extends Controller
             if ($validator->fails()) {
                 return response()->json(["error" => $validator->errors()]);
             } else {
-                $data->name = $request->name;
-                $data->username = $request->username;
-                $data->email = $request->email;
-                $data->education = $request->education;
-                $data->first_fee = $request->first_fee;
-                $data->second_fee = $request->second_fee;
-                $data->description = $request->description;
+                $data->name          = $request->name;
+                $data->username      = $request->username;
+                $data->email         = $request->email;
+                $data->education     = $request->education;
+                $data->first_fee     = $request->first_fee;
+                $data->second_fee    = $request->second_fee;
+                $data->description   = $request->description;
                 $data->concentration = $request->concentration;
-                $data->phone = implode(",", $request->phone);
-                $data->availability = implode(",", $request->availability);
+                $data->phone         = implode(",", $request->phone);
+
                 if (!empty($request->hospital_id)) {
                     $data->hospital_id = implode(",", $request->hospital_id);
                 }
@@ -102,10 +102,10 @@ class DoctorController extends Controller
                 Sittime::where("doctor_id", $data->id)->delete();
                 if (!empty($request->from)) {
                     foreach ($request->from as $key => $item) {
-                        $t = new Sittime();
+                        $t            = new Sittime();
                         $t->doctor_id = $data->id;
-                        $t->from = $item;
-                        $t->to = $request->to[$key];
+                        $t->from      = $item;
+                        $t->to        = $request->to[$key];
                         $t->save();
                     }
                 }
@@ -114,7 +114,7 @@ class DoctorController extends Controller
                 return response()->json("Doctor Profile updated");
             }
         } catch (\Throwable $e) {
-            return response()->json("Something went wrong");
+            return response()->json("Something went wrong".$e->getMessage());
         }
     }
 
@@ -174,9 +174,16 @@ class DoctorController extends Controller
     public function doctorAppointment()
     {
         $id = Auth::guard("doctor")->user()->id;
-        $data["all"] = Appointment::where(["doctor_id" => $id])->get();
-        $data["new"] = Appointment::where(["doctor_id" => $id, "appointment_date" => date("d/m/Y")])->get();
+        $data["all"] = Appointment::with('chamber', 'hospital', 'diagnostic')->where(["doctor_id" => $id])->get();
+        $data["new"] = Appointment::with('chamber', 'hospital', 'diagnostic')->where(["doctor_id" => $id, "appointment_date" => date("d-m-Y")])->get();
         return view("doctor.appointment.index", compact("data"));
+    }
+
+    public function todayAppointment()
+    {
+        $id = Auth::guard("doctor")->user()->id;
+        $data["new"] = Appointment::with('chamber', 'hospital', 'diagnostic')->where(["doctor_id" => $id, "appointment_date" => date("d-m-Y")])->get();
+        return view("doctor.appointment.today_patient", compact("data"));
     }
 
     public function doctorPatient($id)

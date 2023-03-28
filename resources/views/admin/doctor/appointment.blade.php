@@ -17,7 +17,7 @@
                             <th>Age</th>
                             <th>Address</th>
                             <th>Phone</th>
-                            <th>Email</th>
+                            <th>Is Appointment</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -30,7 +30,15 @@
                             <td>{{$item->age}}</td>
                             <td>{{$item->upazila->name}}, {{$item->city->name}}</td>
                             <td>{{$item->contact}}</td>
-                            <td>{{$item->email}}</td>
+                            <td>
+                                @if($item->chamber_name != null)
+                                <i class="fa fa-home"></i> {{$item->chamber_name}}
+                                @elseif($item->hospital != null)
+                                <i class="fa fa-hospital-o"></i> {{$item->hospital->name}}
+                                @else
+                                <i class="fa fa-plus-square-o"></i> {{$item->diagnostic->name}}
+                                @endif
+                            </td>
                             <td>
                                 <div class="d-flex align-items-center gap-2">
                                     action

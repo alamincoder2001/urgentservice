@@ -1,6 +1,6 @@
 @extends("layouts.doctor.app")
 
-@section("title", "Doctor Appointment Page")
+@section("title", "Today Doctor Appointment List Page")
 
 @section("content")
 
@@ -8,7 +8,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-heading">
-                <div class="card-title">Patient List</div>
+                <div class="card-title">Today Patient List</div>
             </div>
             <div class="card-body">
                 <table id="example" class="table table-responsive">
@@ -25,7 +25,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($data['all'] as $key=>$p)
+                        @foreach($data['new'] as $key=>$p)
                         <tr>
                             <td>{{++$key}}</td>
                             <td>{{$p->name}}</td>

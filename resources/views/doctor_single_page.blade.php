@@ -257,16 +257,23 @@
                                     <span class="error-contact error text-danger"></span>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="email" class="py-2">Email</label>
                                     <input type="text" name="email" id="email" class="form-control" autocomplete="off" placeholder="example@gmail.com">
+                                </div>
+                            </div> -->
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="appointment_date" class="py-2">Appointment Date</label>
+                                    <input type="text" name="appointment_date" id="appointment_date" class="form-control" value="28-03-2023">
+                                    <span class="error-appointment_date error text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="email" class="py-2">Organization</label>
-                                    <select name="" id="" class="form-control">
+                                    <select name="organization_id" id="organization_id" class="form-control">
                                         <option value="">Select Organization</option>
                                         @foreach($hospitals as $item)
                                         <option data-id="hospital" value="{{$item->id}}">{{$item->name}}</option>
@@ -277,10 +284,10 @@
                                         @endforeach
 
                                         @foreach($chambers as $item)
-                                        <option data-id="chamber" value="{{$item->id}}">{{$item->name}}</option>
+                                        <option data-id="chamber" value="{{$item->name}}">{{$item->name}}</option>
                                         @endforeach
-
                                     </select>
+                                    <span class="error-organization_id error text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6 col-6">
@@ -371,14 +378,17 @@
         // appointment send
         $("#Appointment").on("submit", (event) => {
             event.preventDefault();
-
-            var contact = $("#Appointment").find("#contact").val()
-            if (!Number(contact)) {
+            
+            let contact = $("#Appointment").find("#contact").val()
+            if(contact == ''){
+                $("#Appointment").find(".error-contact").text("Contact Number is empty")
+                return;
+            } else if (!Number(contact)) {
                 $("#Appointment").find(".error-contact").text("Must be a number value")
                 return;
             }
-            var changeName = $("#Appointment").find("#changeName").val()
-            var formdata = new FormData(event.target)
+            let formdata = new FormData(event.target)
+            formdata.append("organization_name", $("#organization_id option:selected").attr("data-id"))
             $.ajax({
                 url: "{{route('appointment')}}",
                 data: formdata,
@@ -387,23 +397,15 @@
                 processData: false,
                 beforeSend: () => {
                     $("#Appointment").find(".error").text("");
-                    $("#Appointment").find(".chamber_id").text("");
-                    $("#Appointment").find(".hospital_id").text("");
-                    $("#Appointment").find(".diagnostic_id").text("");
                 },
                 success: (response) => {
                     if (response.error) {
                         $.each(response.error, (index, value) => {
                             $("#Appointment").find(".error-" + index).text(value);
                         })
-                    } else if (response.errors) {
-                        if (changeName === "chamber") {
-                            $("#Appointment").find(".chamber_id").text("Select Chamber Name")
-                        } else if (changeName === "hospital") {
-                            $("#Appointment").find(".hospital_id").text("Select Hospital Name")
-                        } else {
-                            $("#Appointment").find(".diagnostic_id").text("Select Diagnostic Name")
-                        }
+                    } else if(response.errors){
+                        $.notify(response.errors, "error");
+                        location.reload()
                     } else {
                         $("#Appointment").trigger('reset')
                         DoctorAppointmentClose()
@@ -413,12 +415,6 @@
                             'কিছুক্ষণের মধ্যে আমাদের একজন প্রতিনিধী আপনার সাথে যোগাযোগ করবে।',
                             'success'
                         )
-                        $(".Chamber_Name").addClass("d-none");
-                        $(".Hospital_Name").addClass("d-none");
-                        $(".Diagnostic_Name").addClass("d-none");
-                        $("#chamber_name").attr("disabled", true);
-                        $("#diagnostic_id").attr("disabled", true);
-                        $("#hospital_id").attr("disabled", true);
                     }
                 }
             })

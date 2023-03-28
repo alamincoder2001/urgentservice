@@ -29,7 +29,7 @@
         </a>
     </div>
     <div class="col-md-3 col-lg-3 col-xlg-3">
-        <a href="{{route('doctor.appointment')}}" class="text-decoration-none">
+        <a href="{{route('today.doctor.appointment')}}" class="text-decoration-none">
             <div class="card" style="position: relative;">
                 <span style="border-bottom-left-radius: 25%;position: absolute;top: 0;right: 0;background: green;color: white;padding: 1px 10px;">{{$data['new']->count()}}</span>
                 <div class="text-center dashboard">
