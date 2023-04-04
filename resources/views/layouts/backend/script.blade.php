@@ -6,7 +6,7 @@
 
 <!-- slimscroll -->
 <script src="{{asset('backend')}}/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
-<script src="{{asset('backend')}}/plugins/uniform/js/jquery.uniform.standalone.js"></script>
+<!-- <script src="{{asset('backend')}}/plugins/uniform/js/jquery.uniform.standalone.js"></script> -->
 <script src="{{asset('backend')}}/js/main.js"></script>
 <!-- datatables -->
 <script src="{{asset('backend')}}/plugins/datatables/js/jquery.datatables.min.js"></script>

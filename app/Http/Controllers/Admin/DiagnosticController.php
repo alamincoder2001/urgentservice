@@ -171,4 +171,10 @@ class DiagnosticController extends Controller
             return response()->json("something went wrong");
         }
     }
+
+    public function getDiagnostic()
+    {
+        $data = Diagnostic::get();
+        return response()->json(["data" => $data]);
+    }
 }

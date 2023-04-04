@@ -3,16 +3,25 @@
 @section("title", "Doctor Profile")
 
 @push("style")
+<link rel="stylesheet" href="https://unpkg.com/vue-select@latest/dist/vue-select.css">
 <style>
-    .select2-container .select2-selection--single {
-        height: 33px !important;
+    .table>tbody>tr>td {
+        padding: 0 !important;
+    }
+
+    .table>thead>tr>th {
+        padding: 0 !important;
+    }
+
+    .table>:not(:first-child) {
+        border-top: 0;
     }
 </style>
 @endpush
 
 @section("content")
 
-<div class="row">
+<div class="row" id="doctor">
     <div class="col-md-12">
         <div class="card">
             <div class="card-heading text-end">
@@ -21,389 +30,424 @@
                 </div>
             </div>
             <div class="card-body">
-                <form id="saveDoctor">
+                <form @submit.prevent="saveDoctor">
                     <div class="personal-info px-3">
                         <h5>Personal Information</h5>
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="name">Name <small class="text-danger">*</small></label>
-                                    <input type="text" name="name" class="form-control">
+                                    <input type="text" v-model="doctor.name" name="name" class="form-control" autocomplete="off">
                                     <span class="error-name error text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <label for="username">Username<small class="text-danger">*</small></label>
-                                <input type="text" id="username" name="username" class="form-control">
+                                <input type="text" v-model="doctor.username" id="username" name="username" class="form-control" autocomplete="off">
                                 <span class="error-username text-danger"></span>
                             </div>
                             <div class="col-md-4">
                                 <label for="email">Email</label>
-                                <input type="email" id="email" name="email" class="form-control" value="urgentservicebd@gmail.com">
+                                <input type="email" v-model="doctor.email" id="email" name="email" class="form-control" autocomplete="off">
                                 <span class="error-email text-danger"></span>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="password">Password<small class="text-danger">*</small></label>
-                                    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                                    <input type="password" v-model="doctor.password" class="form-control" id="password" name="password" autocomplete="off">
                                     <span class="error-password text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="education">Education<small class="text-danger">*</small></label>
-                                    <input type="text" name="education" class="form-control">
+                                    <input type="text" v-model="doctor.education" name="education" class="form-control" autocomplete="off">
                                     <span class="error-education error text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="city_id">City Name<small class="text-danger">*</small></label>
-                                    <select name="city_id" id="city_id" class="form-control select2">
-                                        <option value="">Choose a city name</option>
-                                        @foreach($cities as $city)
-                                        <option value="{{$city->id}}">{{$city->name}}</option>
-                                        @endforeach
-                                    </select>
+                                    <v-select :options="cities" v-model="selectedCity" label="name"></v-select>
                                 </div>
                                 <span class="error-city_id text-danger error"></span>
                             </div>
                             <div class="col-md-2">
                                 <label for="first_fee">First Fee<small class="text-danger">*</small></label>
-                                <input type="number" id="first_fee" name="first_fee" class="form-control" placeholder="Ex: 800 Tk">
+                                <input type="number" id="first_fee" name="first_fee" class="form-control" autocomplete="off">
                                 <span class="error-first_fee error text-danger"></span>
                             </div>
                             <div class="col-md-2">
                                 <label for="second_fee">Second Fee<small class="text-danger">*</small></label>
-                                <input type="number" id="second_fee" name="second_fee" class="form-control" placeholder="Ex: 800 Tk">
+                                <input type="number" id="second_fee" name="second_fee" class="form-control" autocomplete="off">
                                 <span class="error-second_fee error text-danger"></span>
                             </div>
-                            <div class="col-md-8">
-                                <div class="form-group">
-                                    <label for="day">Availability Day <small class="text-danger">*</small></label>
-                                    <div class="input-group gap-2">
-                                        <input type="checkbox" id="sat" onchange="DayWiseTime(event)" name="day[]" value="Saturday" /><label for="sat">Saturday</label>
-                                        <input type="checkbox" id="sun" onchange="DayWiseTime(event)" name="day[]" value="Sunday" /><label for="sun">Sunday</label>
-                                        <input type="checkbox" id="mon" onchange="DayWiseTime(event)" name="day[]" value="Monday" /><label for="mon">Monday</label>
-                                        <input type="checkbox" id="tue" onchange="DayWiseTime(event)" name="day[]" value="Tuesday" /><label for="tue">Tuesday</label><br>
-                                        <input type="checkbox" id="wed" onchange="DayWiseTime(event)" name="day[]" value="Wednessday" /><label for="wed">Wednessday</label>
-                                        <input type="checkbox" id="thu" onchange="DayWiseTime(event)" name="day[]" value="Thursday" /><label for="thu">Thursday</label>
-                                        <input type="checkbox" id="fri" onchange="DayWiseTime(event)" name="day[]" value="Friday" /><label for="fri">Friday</label>
-                                    </div>
-                                    <span class="error-day error text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-4">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="department_id">Specialist<small class="text-danger">*</small></label>
-                                    <div class="input-group">
-                                        <select multiple name="department_id[]" id="department_id" class="form-control select2">
-                                            @foreach($departments as $department)
-                                            <option value="{{$department->id}}">{{$department->name}}</option>
-                                            @endforeach
-                                        </select>
-                                        <i class="btn btn-secondary addDepartment">+</i>
-                                    </div>
+                                    <v-select multiple :options="departments" v-model="selectedDepartment" label="name"></v-select>
                                     <span class="error-department_id error text-danger"></span>
                                 </div>
                             </div>
-                            <div class="col-4">
-                                <label for="">Time</label>
-                                <div class="timeadd">
+                            <div class="col-md-4">
+                                <label for="phone">Phone</label>
+                                <div class="form-group" v-for="item in phone">
+                                    <input type="text" class="form-control" :value="item"/>
                                 </div>
-                                <span class="error-time error text-danger"></span>
-                            </div>
-                            <div class="col-4">
-                                <label for="phone">Phone <i class="fa fa-plus" onclick="phoneAdd()"></i></label>
-                                <div class="phoneadd">
-                                    <div class="input-group">
-                                        <input type="text" id="phone" name="phone[]" class="form-control" value="01721843819"/>
-                                    </div>
-                                </div>
+                                <button @click="addPhone" type="button" class="btn btn-secondary btn-sm shadow-none"><i class="fa fa-plus"></i></button>
                                 <span class="error-phone error text-danger"></span>
                             </div>
                         </div>
-
-                        <!-- hospital && diagnostic && chamber -->
-                        <div class="chamber-info">
-                            <h5>Select Chamber Or Hospital Or Diagnostic</h5>
-                            <hr>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="">Choose a module</label>
-                                        <select class="form-control changeModule">
-                                            <option value="">Select Chamber Or Hospital Or Diagnostic</option>
-                                            <option value="chamber">Chamber</option>
-                                            <option value="hospital">Hospital</option>
-                                            <option value="diagnostic">Diagnostic</option>
-                                        </select>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <select v-model="selectby" class="form-select shadow-none mb-2">
+                                                <option value="">Select Module</option>
+                                                <option value="chamber">Chamber</option>
+                                                <option value="hospital">Hospital</option>
+                                                <option value="diagnostic">Diagnostic</option>
+                                            </select>
+                                            <!-- chamber details -->
+                                            <input v-if="selectby == 'chamber'" type="text" v-model="selectedChamber.chamber_name" class="form-control shadow-none mb-2" placeholder="chamber name">
+                                            <textarea v-if="selectby == 'chamber'" v-model="selectedChamber.chamber_address" class="form-control shadow-none mb-2" placeholder="chamber address"></textarea>
+                                            <!-- hospital details -->
+                                            <v-select v-if="selectby == 'hospital'" :options="hospitals" v-model="selectedHospital" label="name"></v-select>
+                                            <!-- diagnostic details -->
+                                            <v-select v-if="selectby == 'diagnostic'" :options="diagnostics" v-model="selectedDiagnostic" label="name"></v-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7" v-if="selectby != ''">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="input-group">
+                                                    <select v-model="daytime.day" class="form-control shadow-none">
+                                                        <option value="">Select Day</option>
+                                                        <option value="Sat">Sat</option>
+                                                        <option value="Sun">Sun</option>
+                                                        <option value="Mon">Mon</option>
+                                                        <option value="Tue">Tue</option>
+                                                        <option value="Wed">Wed</option>
+                                                        <option value="Thu">Thu</option>
+                                                        <option value="Fri">Fri</option>
+                                                    </select>
+                                                    <input type="time" v-model="daytime.fromTime" class="form-control shadow-none">
+                                                    <input type="time" v-model="daytime.toTime" class="form-control shadow-none">
+                                                    <button type="button" @click="addDayTime" class="btn btn-secondary btn-sm"><i class="fa fa-cart-plus"></i></button>
+                                                </div>
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-center">Sl</th>
+                                                            <th class="text-center">Day</th>
+                                                            <th style="width:20%;" class="text-center">From</th>
+                                                            <th style="width:20%;" class="text-center">To</th>
+                                                            <th style="width:10%;" class="text-center">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr v-for="(item, sl) in daywiseTimeArray">
+                                                            <td class="text-center">@{{sl + 1}}</td>
+                                                            <td class="text-center">@{{item.day}}</td>
+                                                            <td class="text-center">@{{item.fromTime}}</td>
+                                                            <td class="text-center">@{{item.toTime}}</td>
+                                                            <td class="text-center">
+                                                                <button type="button" @click="removeDayTime(sl)" class="text-danger" style="border: 0;background:none;"><i class="fa fa-trash"></i></button>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group text-end">
+                                                    <button type="button" @click="AddToCart" class="btn btn-warning text-white btn-sm px-4">AddToCart</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div id="chamber" class="col-md-8 row d-none">
-                                    <div class="col-md-12">
-                                        <table class="table chamberTable">
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row" style="padding:0 10px;" v-for="(cart, sl) in carts">
+                                    <h5 class="m-0 text-center text-capitalize text-white" style="background:gray;">@{{cart.selectedType}}</h5>
+                                    <div class="col-md-5 ps-0">
+                                        <div class="form-group m-0">
+                                            <input v-if="cart.selectedType == 'chamber'" type="text" class="form-control" :value="cart.chamber.chamber_name">
+                                            <input v-if="cart.selectedType == 'hospital'" type="text" class="form-control" :value="cart.hospital.name" readonly>
+                                            <input v-if="cart.selectedType == 'diagnostic'" type="text" class="form-control" :value="cart.diagnostic.name" readonly>
+                                        </div>
+                                        <div class="form-group m-0">
+                                            <input v-if="cart.selectedType == 'chamber'" class="form-control" :value="cart.chamber.chamber_address">
+                                            <input v-if="cart.selectedType == 'hospital'" class="form-control" :value="cart.hospital.address" readonly>
+                                            <input v-if="cart.selectedType == 'diagnostic'" class="form-control" :value="cart.diagnostic.address" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7 pe-0">
+                                        <table class="table table-bordered">
                                             <thead>
                                                 <tr>
-                                                    <th>Sl</th>
-                                                    <th>Chamber Name</th>
-                                                    <th>Address</th>
-                                                    <th><i class="btn btn-dark ChamberName">+</i></th>
+                                                    <th class="text-center">Sl</th>
+                                                    <th class="text-center">Day</th>
+                                                    <th style="width:20%;" class="text-center">From</th>
+                                                    <th style="width:20%;" class="text-center">To</th>
                                                 </tr>
                                             </thead>
-                                            <tbody></tbody>
+                                            <tbody>
+                                                <tr v-for="(item, sl) in cart.daywiseTimeArray">
+                                                    <td class="text-center">@{{sl + 1}}</td>
+                                                    <td class="text-center">@{{item.day}}</td>
+                                                    <td class="text-center">@{{item.fromTime}}</td>
+                                                    <td class="text-center">@{{item.toTime}}</td>
+                                                </tr>
+                                            </tbody>
                                         </table>
                                     </div>
                                 </div>
-                                <div id="hospital" class="col-md-8 row d-none">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="hospital_id">Hospital Name</label>
-                                            <select multiple name="hospital_id[]" id="hospital_id" class="select1 form-control">
-                                                @foreach($hospitals as $item)
-                                                <option value="{{$item->id}}">{{$item->name}}</option>
-                                                @endforeach
-                                            </select>
-                                            <span class="error-hospital_id error text-danger"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="diagnostic" class="col-md-8 d-none row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="diagnostic_id">Diagnostic Name</label>
-                                            <select multiple name="diagnostic_id[]" id="diagnostic_id" class="select1 form-control">
-                                                @foreach($diagnostics as $item)
-                                                <option value="{{$item->id}}">{{$item->name}}</option>
-                                                @endforeach
-                                            </select>
-                                            <span class="error-diagnostic_id error text-danger"></span>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
+                        <hr>
                         <div class="row">
-                            <div class="col-12">
-                                <label for="concentration">Consultancy</label>
-                                <textarea name="concentration" id="concentration"></textarea>
-                                <span class="text-danger error-concentration error"></span>
-                            </div>
-                            <div class="col-12">
-                                <label for="description">Description</label>
-                                <textarea name="description" id="description"></textarea>
-                            </div>
-                        </div>
-                        <div class="row px-3">
-                            <hr>
-                            <div class="col-md-1 col-1">
-                                <div class="image">
-                                    <img width="100" class="img" height="100">
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-3">
+                            <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="image">Doctor Image</label>
-                                    <input type="file" class="form-control" id="image" name="image" onchange="document.querySelector('.img').src = window.URL.createObjectURL(this.files[0])">
-                                    <span class="error-image text-danger"></span>
+                                    <label for="concentration">Concentration</label>
+                                    <w-ckeditor-vue style="width: 100%;" v-model="doctor.concentration"></w-ckeditor-vue>
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-group text-center mt-3">
-                            <hr>
-                            <button type="submit" class="btn btn-success text-white text-uppercase px-3">Save</button>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="description">Description</label>
+                                    <w-ckeditor-vue style="width: 100%;" v-model="doctor.description"></w-ckeditor-vue>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-2 d-flex justify-content-center align-items-center">
+                                <div class="form-group ImageBackground">
+                                    <img :src="imageSrc" class="imageShow" />
+                                    <label for="image">Image</label>
+                                    <input type="file" id="image" class="form-control shadow-none" @change="imageUrl" />
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group text-center mt-3">
+                                    <button type="submit" class="btn btn-success text-white text-uppercase px-4">Save Doctor</button>
+                                </div>
+                            </div>
                         </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Speciality</h5>
-            </div>
-            <form id="formDepartment">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="name">Speciality</label>
-                        <input type="text" name="name" class="form-control" id="name">
-                        <span class="error-name error text-danger"></span>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 @endsection
 
 @push("js")
-<script src="https://cdn.ckeditor.com/4.13.0/standard/ckeditor.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.14"></script>
+<script src="https://unpkg.com/vue-select@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<!-- ckeditor cdn -->
+<script src="https://cdn.jsdelivr.net/npm/@ckeditor/ckeditor5-build-classic@21.0.0/build/ckeditor.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/w-ckeditor-vue@2.0.4/dist/w-ckeditor-vue.umd.js"></script>
 <script>
-    CKEDITOR.replace('description');
-    CKEDITOR.replace('concentration');
+    Vue.component('v-select', VueSelect.VueSelect);
+    Vue.component('w-ckeditor-vue', window['w-ckeditor-vue'])
+    var app = new Vue({
+        el: '#doctor',
+        data: {
+            doctor: {
+                name: "",
+                username: "",
+                email: "urgentservicebd@gmail.com",
+                password: "",
+                education: "",
+                first_fee: 0,
+                second_fee: 0,
+                concentration: "",
+                description: "",
+                image: "",
+            },
+            cities: [],
+            selectedCity: null,
+            departments: [],
+            selectedDepartment: null,
+            hospitals: [],
+            selectedHospital: null,
+            diagnostics: [],
+            selectedDiagnostic: null,
+            selectedChamber: {
+                chamber_name: "",
+                chamber_address: "",
+            },
+            phone: ['01721843819'],
 
-    $(document).ready(() => {
-        $(".select2").select2()
+            //selection details
+            selectby: "",
+            daytime: {
+                day: "",
+                fromTime: "",
+                toTime: "",
+            },
+            daywiseTimeArray: [],
 
-        $(document).on("change", ".changeModule", (event) => {
-            if (event.target.value == "chamber") {
-                $("#chamber").removeClass("d-none")
-                $("#hospital").addClass("d-none")
-                $("#diagnostic").addClass("d-none")
-                $('.select1').select2();
-            } else if (event.target.value == "hospital") {
-                $("#chamber").addClass("d-none")
-                $("#hospital").removeClass("d-none")
-                $("#diagnostic").addClass("d-none")
-                $('.select1').select2();
-            } else if (event.target.value == "diagnostic") {
-                $("#chamber").addClass("d-none")
-                $("#hospital").addClass("d-none")
-                $("#diagnostic").removeClass("d-none")
-                $('.select1').select2();
-            } else {
-                $("#chamber").addClass("d-none")
-                $("#hospital").addClass("d-none")
-                $("#diagnostic").addClass("d-none")
-                $('.select1').select2();
-            }
-        })
+            carts: [],
 
-        $(".ChamberName").on("click", (event) => {
-            var count = $(".chamberTable").find("tbody").html();
-            if (count != "") {
-                var totallength = $(".chamberTable").find("tbody tr").length;
-                var row = `
-                <tr class="${totallength+1}">
-                    <td>${totallength+1}</td>
-                    <td><input type="text" name="chamber[]" class="form-control" placeholder="Chamber Name"/></td>
-                    <td><input type="text" name="address[]" class="form-control" placeholder="Chamber Address"/></td>
-                    <td><span data="${totallength+1}"  class="text-danger removeChamber" style="cursor:pointer;">Remove</span></td>
-                </tr>
-            `;
+            imageSrc: location.origin + "/noImage.jpg",
 
-                $(".chamberTable").find("tbody").prepend(row)
-            } else {
-                var row = `
-                <tr class="1">
-                    <td>1</td>
-                    <td><input type="text" name="chamber[]" class="form-control Chamber-Name" placeholder="Chamber Name"/></td>
-                    <td><input type="text" name="address[]" class="form-control Chamber-Address" placeholder="Chamber Address"/></td>
-                    <td><span data="1"  class="text-danger removeChamber" style="cursor:pointer;">Remove</span></td>
-                </tr>
-            `;
+        },
+        created() {
+            this.getCity();
+            this.getDepartment();
+            this.getHospital();
+            this.getDiagnostic();
+        },
+        methods: {
+            getCity() {
+                axios.get(location.origin + "/admin/city-get")
+                    .then(res => {
+                        this.cities = res.data.data
+                    })
+            },
+            getDepartment() {
+                axios.get(location.origin + "/admin/department-get")
+                    .then(res => {
+                        this.departments = res.data.data
+                    })
+            },
 
-                $(".chamberTable").find("tbody").prepend(row)
-            }
-        })
+            getHospital() {
+                axios.get(location.origin + "/admin/hospital-get")
+                    .then(res => {
+                        this.hospitals = res.data.data
+                    })
+            },
+            getDiagnostic() {
+                axios.get(location.origin + "/admin/diagnostic-get")
+                    .then(res => {
+                        this.diagnostics = res.data.data
+                    })
+            },
 
-        $(document).on("click", ".removeChamber", event => {
-            $(".chamberTable").find("tbody ." + event.target.attributes[0].value).remove()
-        })
+            // daytime add
+            addDayTime() {
+                if (this.daytime.day == "") {
+                    alert("Day select required")
+                    return
+                }
+                if (this.daytime.fromTime == "") {
+                    alert("From Time required")
+                    return
+                }
+                if (this.daytime.toTime == "") {
+                    alert("To Time required")
+                    return
+                }
+                this.daywiseTimeArray.push(this.daytime)
+                this.daytime = {
+                    day: "",
+                    fromTime: "",
+                    toTime: "",
+                }
+            },
 
-        $("#saveDoctor").on("submit", (event) => {
-            event.preventDefault()
-            var description = CKEDITOR.instances.description.getData();
-            var concentration = CKEDITOR.instances.concentration.getData();
+            // remove daytime
+            removeDayTime(sl) {
+                this.daywiseTimeArray.splice(sl, 1)
+            },
 
-            var formdata = new FormData(event.target)
-            formdata.append("description", description)
-            formdata.append("concentration", concentration)
-            $.ajax({
-                url: "{{route('admin.doctor.store')}}",
-                data: formdata,
-                method: "POST",
-                contentType: false,
-                processData: false,
-                beforeSend: () => {
-                    $("#saveDoctor").find(".error").text("");
-                },
-                success: (response) => {
-                    if (response.error) {
-                        $.each(response.error, (index, value) => {
-                            $("#saveDoctor").find(".error-" + index).text(value);
-                        })
-                    } else {
-                        $("#saveDoctor").trigger('reset')
-                        $(".img").attr("src", "");
-                        $.notify(response, "success")
-                        $('.select1').select2();
-                        $("#chamber").addClass("d-none")
-                        $("#hospital").addClass("d-none")
-                        $("#diagnostic").addClass("d-none")
+            // add phone
+            addPhone(){
+                this.phone.push("")
+            },
+
+            // add to cart
+            AddToCart() {
+                let cart = {
+                    selectedType: this.selectby,
+                    daywiseTimeArray: this.daywiseTimeArray
+                }
+
+                if (this.selectby == 'chamber') {
+                    if (this.selectedChamber.chamber_name == '') {
+                        alert("Chamber name required")
+                        return
+                    }
+                    if (this.selectedChamber.chamber_address == '') {
+                        alert("Chamber address required")
+                        return
+                    }
+                    let chamber = {
+                        chamber_name: this.selectedChamber.chamber_name,
+                        chamber_address: this.selectedChamber.chamber_address
+                    }
+                    cart.chamber = chamber
+                }
+                if (this.selectby == 'hospital') {
+                    if (this.selectedHospital == null) {
+                        alert("Hospital name is required")
+                        return
+                    }
+                    let hospital = {
+                        id: this.selectedHospital.id,
+                        name: this.selectedHospital.name,
+                        address: this.selectedHospital.address
+                    }
+                    cart.hospital = hospital
+                }
+                if (this.selectby == 'diagnostic') {
+                    if (this.selectedDiagnostic == null) {
+                        alert("Diagnostic name is required")
+                        return
+                    }
+                    let diagnostic = {
+                        id: this.selectedDiagnostic.id,
+                        name: this.selectedDiagnostic.name,
+                        address: this.selectedDiagnostic.address
+                    }
+                    cart.diagnostic = diagnostic
+                }
+
+                this.carts.push(cart)
+                this.daywiseTimeArray = [];
+                this.selectedChamber = {
+                    chamber_name: "",
+                    chamber_address: "",
+                }
+                this.selectedHospital = null
+                this.selectedDiagnostic = null
+            },
+
+
+            // save doctor
+            saveDoctor(event) {
+                let formdata = new FormData(event.target)
+                formdata.append("image", this.doctor.image)
+                formdata.append("departments", this.selectedDepartment == null ? "" : JSON.stringify(this.selectedDepartment))
+                formdata.append("city_id", this.selectedCity == null ? "" : this.selectedCity.id)
+                formdata.append("carts", JSON.stringify(this.carts))
+
+                axios.post(location.origin + "/admin/doctor", formdata)
+                    .then(res => {
+                        console.log(res.data);
+                    })
+            },
+
+
+            imageUrl(event) {
+                if (event.target.files[0]) {
+                    let img = new Image()
+                    img.src = window.URL.createObjectURL(event.target.files[0]);
+                    img.onload = () => {
+                        if (img.width === 200 && img.height === 200) {
+                            this.imageSrc = window.URL.createObjectURL(event.target.files[0]);
+                            this.doctor.image = event.target.files[0];
+                        } else {
+                            alert(`This image ${img.width}px X ${img.height}px but require image 200px X 200px`);
+                        }
                     }
                 }
-            })
-        })
-    })
-
-    $(".addDepartment").on("click", event => {
-        $("#myModal").modal('show');
-    })
-
-    $(document).on("submit", "#formDepartment", event => {
-        event.preventDefault()
-        var name = $("#formDepartment").find("#name").val()
-        var formdata = new FormData(event.target)
-        $.ajax({
-            url: "{{route('department.store')}}",
-            data: formdata,
-            method: "POST",
-            contentType: false,
-            processData: false,
-            beforeSend: () => {
-                $("#formDepartment").find(".error").text("");
             },
-            success: (response) => {
-                if (response.error) {
-                    $.each(response.error, (index, value) => {
-                        $("#addDepartment").find(".error-" + index).text(value);
-                    })
-                } else {
-                    $("#addDepartment").trigger('reset')
-                    $.notify(response.msg, "success")
-                    $("#myModal").modal('hide');
-                    $("#department_id").append(`<option value="${response.id}">${name}</option>`);
-                    $('.select2').select2();
-                }
-            }
-        })
+        },
     })
-
-    function phoneAdd() {
-        var row = `
-            <div class="input-group">
-                <input type="text" id="phone" name="phone[]" class="form-control">
-                <button type="button" class="btn btn-danger removePhone">remove</button>
-            </div>
-        `
-        $(".phoneadd").append(row)
-    }
-
-    $(document).on("click", ".removePhone", event => {
-        event.target.offsetParent.remove();
-    })
-
-    function DayWiseTime(event) {
-        if (event.target.checked) {
-            var row = `
-                <div class="input-group ${event.target.value}">
-                    <input type="time" id="from" name="from[]" class="form-control">
-                    <input type="time" id="to" name="to[]" class="form-control">
-                </div>
-            `
-            $(".timeadd").append(row)
-        } else {
-          $(".timeadd ."+event.target.value).remove();
-        }
-    }
 </script>
 @endpush

@@ -143,6 +143,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get("/doctor/chamber-delete/{id}", [DoctorController::class, 'Chamber_Destroy']);
     // hospital route
     Route::get("/hospital", [HospitalController::class, 'index'])->name("admin.hospital.index");
+    Route::get("/hospital-get", [HospitalController::class, "getHospital"])->name("admin.hospital.get");
+    Route::get("/hospital-create", [HospitalController::class, 'create'])->name("admin.hospital.create");
     Route::get("/hospital-create", [HospitalController::class, 'create'])->name("admin.hospital.create");
     Route::post("/hospital", [HospitalController::class, 'store'])->name("admin.hospital.store");
     Route::get("/hospital-edit/{id}", [HospitalController::class, 'edit'])->name("admin.hospital.edit");
@@ -150,6 +152,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post("/hospital-delete", [HospitalController::class, 'destroy'])->name("admin.hospital.destroy");
     // diagnostic route
     Route::get("/diagnostic", [DiagnosticController::class, 'index'])->name("admin.diagnostic.index");
+    Route::get("/diagnostic-get", [DiagnosticController::class, "getDiagnostic"])->name("admin.diagnostic.get");
     Route::get("/diagnostic-create", [DiagnosticController::class, 'create'])->name("admin.diagnostic.create");
     Route::post("/diagnostic", [DiagnosticController::class, 'store'])->name("admin.diagnostic.store");
     Route::get("/diagnostic-edit/{id}", [DiagnosticController::class, 'edit'])->name("admin.diagnostic.edit");

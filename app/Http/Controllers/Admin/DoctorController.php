@@ -44,15 +44,12 @@ class DoctorController extends Controller
         if (!in_array("doctor.create", $access)) {
             return view("admin.unauthorize");
         }
-
-        $hospitals = DB::table("hospitals")->orderBy("id", "DESC")->get();
-        $departments = DB::table("departments")->orderBy("id", "DESC")->get();
-        $diagnostics = DB::table("diagnostics")->orderBy("id", "DESC")->get();
-        return view("admin.doctor.create", compact("hospitals", "diagnostics", "departments"));
+        return view("admin.doctor.create");
     }
 
     public function store(Request $request)
     {
+        return $request->departments;
         $access = UserAccess::where('user_id', Auth::guard('admin')->user()->id)
             ->pluck('permissions')
             ->toArray();
@@ -68,9 +65,7 @@ class DoctorController extends Controller
                 'username'      => "required|unique:hospitals",
                 'department_id' => "required",
                 'city_id'       => "required",
-                'day'           => "required",
                 'phone'         => "required",
-                'concentration' => "required",
                 'first_fee'     => "required|numeric",
                 'second_fee'    => "required|numeric",
             ]);

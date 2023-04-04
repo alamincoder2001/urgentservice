@@ -169,4 +169,10 @@ class HospitalController extends Controller
             return response()->json("something went wrong");
         }
     }
+
+    public function getHospital()
+    {
+        $data = Hospital::get();
+        return response()->json(["data" => $data]);
+    }
 }
