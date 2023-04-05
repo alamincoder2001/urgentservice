@@ -61,7 +61,7 @@
                             <td>
                                 <div class="d-flex gap-2">
                                     <a href="{{route('admin.doctor.appointment',$item->id)}}" class="fa fa-eye text-success text-decoration-none"></a>
-                                    <a href="{{route('admin.doctor.edit',$item->id)}}" class="fa fa-edit text-primary text-decoration-none"></a>
+                                    <a href="{{route('admin.doctor.create',$item->id)}}" class="fa fa-edit text-primary text-decoration-none"></a>
                                     <button class="fa fa-trash text-danger deleteadminDoctor border-0" style="background: none;" value="{{$item->id}}"></button>
                                 </div>
                             </td>

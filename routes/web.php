@@ -133,9 +133,9 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post("/setting", [SettingController::class, "store"])->name('setting.store');
     // Doctor route
     Route::get("/doctor", [DoctorController::class, 'index'])->name("admin.doctor.index");
-    Route::get("/doctor-create", [DoctorController::class, 'create'])->name("admin.doctor.create");
+    Route::get("/doctor-create/{id?}", [DoctorController::class, 'create'])->name("admin.doctor.create");
     Route::post("/doctor", [DoctorController::class, 'store'])->name("admin.doctor.store");
-    Route::get("/doctor-edit/{id}", [DoctorController::class, 'edit'])->name("admin.doctor.edit");
+    Route::get("/doctor-fetch/{id}", [DoctorController::class, 'fetch'])->name("admin.doctor.fetch");
     Route::post("/doctor-update", [DoctorController::class, 'update'])->name("admin.doctor.update");
     Route::post("/doctor-delete", [DoctorController::class, 'destroy'])->name("admin.doctor.destroy");
     Route::get("/doctor/appointment/{id}", [DoctorController::class, 'appointment'])->name("admin.doctor.appointment");
