@@ -129,7 +129,7 @@
                         <h6 class="card-title text-uppercase m-0" style="color:#832a00;">City List</h6>
                     </div>
                     <div class="card-body" style="padding-top: 3px;">
-                        <div style="height: 400px;overflow-y: scroll;">
+                        <div style="height: 600px;overflow-y: scroll;">
                             <a title="All" href="{{route('donor')}}" class="donor_city {{$city_id != null ? '' : 'text-danger'}}">All</a>
                             @foreach($cities as $item)
                             <a title="{{$item->name}}" href="{{route('donor', $item->id)}}" class="donor_city {{$city_id != null ? $city_id == $item->id ? 'text-danger': '' : ''}}">{{$item->name}} <span class="text-danger" style="font-weight:700;">({{$item->donor->count()}})</span></a>
