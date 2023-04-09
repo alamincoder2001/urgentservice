@@ -36,4 +36,9 @@ class Ambulance extends Authenticatable
     {
         return $this->belongsTo(Upazila::class, "upazila_id", "id");
     }
+
+    public static function TotalTypeWiseAmbulance($type)
+    {
+        return Ambulance::where("ambulance_type", $type)->get()->count();
+    }
 }

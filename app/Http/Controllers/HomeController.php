@@ -66,10 +66,15 @@ class HomeController extends Controller
         return view('diagnostic_details', compact("data", "total_diagnostic", "city_id"));
     }
     //ambulance
-    public function ambulance()
+    public function ambulance($type = null)
     {
-        $data['ambulance'] = Ambulance::with('city')->orderBy('id', 'DESC')->paginate(15);
-        return view('ambulance_details', compact("data"));
+        if($type == null){
+            $data = Ambulance::groupBy('ambulance_type')->get();
+            return view('ambulance_category', compact('data'));
+        }else{
+            $data['ambulance'] = Ambulance::with('city')->where('ambulance_type', $type)->orderBy('id', 'DESC')->paginate(15);
+            return view('ambulance_details', compact("data"));
+        }
     }
 
     //ambulance
