@@ -1,5 +1,5 @@
 @extends("layouts.master")
-@push("js")
+@push("style")
 <style>
     /* =========== doctor card design ============ */
     .doctor_department {
@@ -82,21 +82,31 @@
                     <div class="card-header" style="border: none;border-radius: 0;background: #e3e3e3;">
                         <h6 class="card-title text-uppercase m-0" style="color:#832a00;">Department List</h6>
                     </div>
-                    @php
-                    $pathname = str_replace("doctor-details/", "",Request::path());
-                    $path = str_replace("%20", " ", $pathname);
-                    @endphp
                     <div class="card-body" style="padding-top: 3px;">
-                        @foreach($departments as $item)
-                        <a title="{{$item->name}}" href="{{route('doctor.details',strtolower($item->name))}}" class="doctor_department {{strtolower($item->name) == $path ? 'text-danger' : ''}}">{{mb_strimwidth($item->name, 0, 28, "...")}} <span class="text-danger" style="font-weight:700;">({{$item->specialistdoctor->count()}})</span></a>
-                        @endforeach
+                        <div style="height: 600px;overflow-y: scroll;">
+                            <a href="{{route('doctor.details')}}" class="doctor_department {{$department == null ? 'text-danger' : ''}}">All</a>
+                            @foreach($departments as $item)
+                            <a title="{{$item->name}}" href="{{route('doctor.details',['department', 'name' => strtolower($item->name)])}}" class="doctor_department {{strtolower($item->name) == $department ? 'text-danger' : ''}}">{{mb_strimwidth($item->name, 0, 28, "...")}} <span class="text-danger" style="font-weight:700;">({{$item->specialistdoctor->count()}})</span></a>
+                            @endforeach
+                        </div>
+
+                        <!-- city list -->
+                        <div class="mt-5" style="border: none;border-radius: 0;background: #e3e3e3;padding:7px;">
+                            <h6 class="title text-uppercase m-0" style="color:#832a00;">City List</h6>
+                        </div>
+                        <div style="height: 400px;overflow-y: scroll;">
+                            @foreach($cities as $item)
+                            
+                            <a title="{{$item->name}}" href="{{route('doctor.details',['city', 'id' => $item->id])}}" class="doctor_department {{$item->id == $department ? 'text-danger' : ''}}">{{$item->name}} <span class="text-danger" style="font-weight:700;">({{$item->doctor->count()}})</span></a>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="col-12 col-lg-9 doctor_details">
                 <h5 class="m-0 totalDoctorcount" style="text-align: right;font-family: auto;font-style: italic;">Total: <span>{{\App\Models\Doctor::all()->count()}}</span></h5>
                 <div class="row py-2 doctorbody">
-                    
+
                     @foreach($data['specialist'] as $item)
                     <div class="col-12 col-lg-6 mb-3">
                         <a href="{{route('singlepagedoctor', $item->doctor->id)}}" target="_blank" class="text-decoration-none text-secondary" title="{{$item->doctor->name}}">

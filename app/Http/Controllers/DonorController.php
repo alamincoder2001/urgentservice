@@ -9,14 +9,14 @@ use Illuminate\Support\Facades\Validator;
 
 class DonorController extends Controller
 {
-    public function index($blood_group = null)
+    public function index($city_id = null)
     {
-        if ($blood_group == null) {
-            $data = Donor::all();
+        if ($city_id == null) {
+            $data = Donor::with('group')->paginate(30);
         }else{
-            $data = Donor::where("blood_group", $blood_group)->latest()->get();
+            $data = Donor::with('group')->where("city_id", $city_id)->paginate(30);
         }
-        return view("donor", compact("data"));
+        return view("donor", compact("data", "city_id"));
     }
 
     public function store(Request $request)

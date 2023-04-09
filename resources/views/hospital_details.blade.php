@@ -78,10 +78,12 @@
                         <h6 class="card-title text-uppercase m-0" style="color:#832a00;">City List</h6>
                     </div>
                     <div class="card-body" style="padding-top: 3px;">
-                        <a title="All" href="{{route('hospital.details')}}" class="hospital_city {{$city_id != null ? '' : 'text-danger'}}">All</a>
-                        @foreach($cities as $item)
-                        <a title="{{$item->name}}" href="{{route('hospital.details', $item->id)}}" class="hospital_city {{$city_id != null ? $city_id == $item->id ? 'text-danger': '' : ''}}">{{$item->name}} <span class="text-danger" style="font-weight:700;">({{$item->hospital->count()}})</span></a>
-                        @endforeach
+                        <div style="height: 600px;overflow-y: scroll;">
+                            <a title="All" href="{{route('hospital.details')}}" class="hospital_city {{$city_id != null ? '' : 'text-danger'}}">All</a>
+                            @foreach($cities as $item)
+                            <a title="{{$item->name}}" href="{{route('hospital.details', $item->id)}}" class="hospital_city {{$city_id != null ? $city_id == $item->id ? 'text-danger': '' : ''}}">{{$item->name}} <span class="text-danger" style="font-weight:700;">({{$item->hospital->count()}})</span></a>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>

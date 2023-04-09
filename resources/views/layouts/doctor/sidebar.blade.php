@@ -1,6 +1,6 @@
 <div class="page-sidebar">
     <a class="logo-box d-flex align-items-center" href="{{url('doctor/dashboard')}}" style="padding:10px 10px 10px 10px !important;">
-        <img src="{{asset($setting->logo)}}" alt="{{$setting->name}}" width="80%">
+        <img src="{{asset($setting->logo)}}" alt="{{$setting->name}}" style="width:80%;height:60px;">
     </a>
     <div class="page-sidebar-inner">
         <div class="page-sidebar-menu">

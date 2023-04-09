@@ -258,6 +258,13 @@ Route::group(['prefix' => 'doctor'], function () {
     Route::get("/doctor-appointment", [DoctorDoctorController::class, "doctorAppointment"])->name("doctor.appointment");
     Route::get("/doctor-patient-show/{id}", [DoctorDoctorController::class, "doctorPatient"])->name("doctor.patient");
     Route::post("/comment/store", [DoctorDoctorController::class, "comment"])->name("comment.store");
+
+    Route::get("/doctor-fetch/{id}", [DoctorDoctorController::class, 'fetchDoctor']);
+
+    Route::get("/city-get", [DoctorDoctorController::class, 'fetch']);
+    Route::get("/department-get", [DoctorDoctorController::class, "getDepartment"]);
+    Route::get("/hospital-get", [DoctorDoctorController::class, "getHospital"]);
+    Route::get("/diagnostic-get", [DoctorDoctorController::class, "getDiagnostic"]);
 });
 
 //hospital authentication

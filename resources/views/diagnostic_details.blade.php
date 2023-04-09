@@ -13,6 +13,7 @@
         display: flex;
         align-items: center;
     }
+
     .diagnostic_city {
         text-decoration: none;
         display: block;
@@ -77,10 +78,12 @@
                         <h6 class="card-title text-uppercase m-0" style="color:#832a00;">City List</h6>
                     </div>
                     <div class="card-body" style="padding-top: 3px;">
-                        <a title="All" href="{{route('diagnostic.details')}}" class="diagnostic_city {{$city_id != null ? '' : 'text-danger'}}">All</a>
-                        @foreach($cities as $item)
-                        <a title="{{$item->name}}" href="{{route('diagnostic.details', $item->id)}}" class="diagnostic_city {{$city_id != null ? $city_id == $item->id ? 'text-danger': '' : ''}}">{{$item->name}} <span class="text-danger" style="font-weight:700;">({{$item->diagnostic->count()}})</span></a>
-                        @endforeach
+                        <div style="height: 600px;overflow-y: scroll;">
+                            <a title="All" href="{{route('diagnostic.details')}}" class="diagnostic_city {{$city_id != null ? '' : 'text-danger'}}">All</a>
+                            @foreach($cities as $item)
+                            <a title="{{$item->name}}" href="{{route('diagnostic.details', $item->id)}}" class="diagnostic_city {{$city_id != null ? $city_id == $item->id ? 'text-danger': '' : ''}}">{{$item->name}} <span class="text-danger" style="font-weight:700;">({{$item->diagnostic->count()}})</span></a>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
@@ -92,7 +95,10 @@
                     <div class="col-12 col-lg-6 mb-3">
                         <a href="{{route('singlepagediagnostic', $item->id)}}" target="_blank" class="text-decoration-none text-secondary" title="{{$item->name}}">
                             <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
-                                <div class="card-body d-flex" style="padding: 5px;gap: 8px;">
+                                <div class="card-body d-flex position-relative" style="padding: 5px;gap: 8px;">
+                                    @if($item->discount_amount != 0)
+                                    <p style="position: absolute;bottom: 5px;right: 10px;" class="m-0 text-danger">সকল প্রকার সার্ভিসের উপরে <span class="text-decoration-underline">{{$item->discount_amount}}%</span> ছাড়।</p>
+                                    @endif
                                     <div class="image" style="border: 1px dotted #ababab;height: 110px;margin-top: 4px;">
                                         <img src="{{asset($item->image != '0' ? $item->image:'/frontend/img/diagnostic.png')}}" width="100" height="100%">
                                     </div>

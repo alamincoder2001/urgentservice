@@ -31,6 +31,6 @@ class Privatecar extends Authenticatable
 
     public function typewisecategory()
     {
-        return $this->hasMany(CategoryWisePrivatecar::class)->with("cartype");
+        return $this->hasMany(CategoryWisePrivatecar::class, "privatecar_id", "id")->with('cartype');
     }
 }

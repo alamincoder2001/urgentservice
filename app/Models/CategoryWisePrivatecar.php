@@ -13,7 +13,7 @@ class CategoryWisePrivatecar extends Model
 
     public function cartype()
     {
-        return $this->belongsTo(Cartype::class);
+        return $this->belongsTo(Cartype::class, 'cartype_id', "id");
     }
     public function privatecar()
     {

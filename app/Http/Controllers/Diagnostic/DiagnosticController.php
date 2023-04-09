@@ -7,6 +7,7 @@ use App\Models\Diagnostic;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use App\Models\ChamberDiagnosticHospital;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -22,7 +23,7 @@ class DiagnosticController extends Controller
     public function index()
     {
         $id = Auth::guard("diagnostic")->user()->id;
-        $data["doctor"] = Doctor::where("diagnostic_id", $id)->get();
+        $data["doctor"] = ChamberDiagnosticHospital::where("diagnostic_id", $id)->get();
         $data["patient"] = Appointment::where("diagnostic_id", $id)->get();
         return view("diagnostic.dashboard", compact("data"));
     }

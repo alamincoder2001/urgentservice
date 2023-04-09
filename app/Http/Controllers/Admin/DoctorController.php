@@ -161,7 +161,7 @@ class DoctorController extends Controller
                 'name'          => "required|max:255",
                 'email'         => "required|email",
                 'education'     => "required",
-                'username'      => "required|unique:hospitals,username," . $request->id,
+                'username'      => "required",
                 'departments'   => "required",
                 'city_id'       => "required",
                 'concentration' => "required",
