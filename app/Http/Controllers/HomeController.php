@@ -4,20 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Doctor;
 use App\Models\Slider;
+use App\Models\Cartype;
 use App\Models\Partner;
 use App\Models\Hospital;
 use App\Models\Ambulance;
-use App\Models\Cartype;
-use App\Models\CategoryWisePrivatecar;
-use App\Models\Chamber;
 use App\Models\Department;
 use App\Models\Diagnostic;
-use App\Models\Prescription;
 use App\Models\Privatecar;
 use App\Models\Specialist;
-use Devfaysal\BangladeshGeocode\Models\Upazila;
+use App\Models\Prescription;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\CategoryWisePrivatecar;
 use Illuminate\Support\Facades\Validator;
+use Devfaysal\BangladeshGeocode\Models\Upazila;
 
 class HomeController extends Controller
 {
@@ -42,31 +42,43 @@ class HomeController extends Controller
         return view('doctor_details', compact("data"));
     }
     //hospital
-    public function hospital()
+    public function hospital($city_id = null)
     {
-        $data['hospital'] = Hospital::latest("id")->paginate(15);
-        return view('hospital_details', compact("data"));
+        if ($city_id == null) {
+            $total_hospital = Hospital::get()->count();
+            $data['hospital'] = Hospital::with('city')->orderBy('id', 'DESC')->paginate(26);
+        }else{
+            $total_hospital = Hospital::where('city_id', $city_id)->get()->count();
+            $data['hospital'] = Hospital::with('city')->where('city_id', $city_id)->orderBy('id', 'DESC')->paginate(26);
+        }
+        return view('hospital_details', compact("data", "total_hospital", "city_id"));
     }
     //diagnostic
-    public function diagnostic()
+    public function diagnostic($city_id = null)
     {
-        $data['diagnostic'] = Diagnostic::latest("id")->paginate(15);
-        return view('diagnostic_details', compact("data"));
+        if($city_id == null){
+            $total_diagnostic = Diagnostic::get()->count();
+            $data['diagnostic'] = Diagnostic::with('city')->orderBy('id', 'DESC')->paginate(26);
+        }else{
+            $total_diagnostic = Diagnostic::where('city_id', $city_id)->get()->count();
+            $data['diagnostic'] = Diagnostic::with('city')->where('city_id', $city_id)->orderBy('id', 'DESC')->paginate(26);
+        }
+        return view('diagnostic_details', compact("data", "total_diagnostic", "city_id"));
     }
     //ambulance
     public function ambulance()
     {
-        $data['ambulance'] = Ambulance::latest("id")->paginate(15);
+        $data['ambulance'] = Ambulance::with('city')->orderBy('id', 'DESC')->paginate(15);
         return view('ambulance_details', compact("data"));
     }
 
     //ambulance
     public function privatecar($id = null)
     {
-        if($id == null){
+        if ($id == null) {
             $category = Cartype::with('typewiseprivatecar')->latest()->get();
             return view("privatecar_category", compact('category'));
-        }else{
+        } else {
             $data['privatecar'] = CategoryWisePrivatecar::with('privatecar')->where('cartype_id', $id)->paginate(2);
             return view('privatecar_details', compact("data"));
         }
@@ -75,7 +87,7 @@ class HomeController extends Controller
     // single doctor
     public function singledoctor($id = null)
     {
-        $data = Doctor::with("time", "chamber", "department")->find($id);
+        $data = Doctor::with("department")->find($id);
         $related = Specialist::with('doctor')->where("department_id", $data->department[0]->department_id)->get();
         $filtered = [];
 
@@ -88,31 +100,38 @@ class HomeController extends Controller
             }
         }
 
-        $hospitals = [];
-        $diagnostics = [];
-        if ($data->hospital_id != null) {
-            //hospital
-            $hosp_id = explode(",", $data->hospital_id);
-            foreach ($hosp_id as $key => $h) {
-                array_push($hospitals, Hospital::where("id", $h)->first());
-            }
-        }
-        if($data->diagnostic_id != null){
-            //diagnostic
-            $diag_id = explode(",", $data->diagnostic_id);
-            foreach ($diag_id as $key => $d) {
-                array_push($diagnostics, Diagnostic::where("id", $d)->first());
-            }
-        }
-        $chambers = Chamber::where("doctor_id", $id)->get();
+        $doctor_details = $this->fetchDoctorDetails($id);
 
-        return view("doctor_single_page", compact("data", "filtered", "hospitals", "diagnostics", "chambers"));
+        return view("doctor_single_page", compact("data", "filtered", "doctor_details"));
+    }
+
+    public function fetchDoctorDetails($id)
+    {
+        $carts = DB::select("SELECT cdh.*,
+                    d.name AS doctor_name,
+                    h.name AS hospital_name, 
+                    h.address AS hospital_address,
+                    h.discount_amount AS hospital_discount,
+                    diag.name AS diagnostic_name, 
+                    diag.address AS diagnostic_address,
+                    diag.discount_amount AS diagnostic_discount
+                FROM chamber_diagnostic_hospitals cdh
+                JOIN doctors d ON d.id = cdh.doctor_id
+                LEFT JOIN hospitals h ON h.id = cdh.hospital_id
+                LEFT JOIN diagnostics diag ON diag.id = cdh.diagnostic_id
+                WHERE cdh.doctor_id = '$id'");
+
+        foreach ($carts as $cart) {
+            $cart->daywiseTimeArray = DB::select("SELECT dt.* FROM day_times dt WHERE dt.type_id = '$cart->id' GROUP BY dt.day");
+        }
+
+        return $carts;
     }
 
     // single hospital
     public function singlehospital($id = null)
     {
-        $data = Hospital::with('doctor')->find($id);
+        $data = Hospital::with('hospital_wise_doctor')->find($id);
         return view("hospital_single_page", compact("data"));
     }
     // single diagnostic

@@ -69,8 +69,8 @@
             <div class="card-body doctor_details">
                 <h5 class="text-center" style="text-decoration: underline;margin-bottom: 20px;">Related All Doctor</h5>
                 <div class="row">
-                    @if($data->doctor->count())
-                    @foreach($data->doctor as $item)
+                    @if($data->hospital_wise_doctor->count())
+                    @foreach($data->hospital_wise_doctor as $item)
                     <div class="col-12 col-lg-4 mb-3">
                         <a href="{{route('singlepagedoctor', $item->id)}}" target="_blank" class="text-decoration-none text-secondary" title="{{$item->name}}">
                             <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
@@ -79,9 +79,9 @@
                                         <img src="{{asset($item->image? $item->image:'/uploads/nouserimage.png')}}" width="100" height="100%">
                                     </div>
                                     <div class="info" style="padding-right:5px;">
-                                        <h6>{{$item->name}}</h6>
-                                        <p style="color:#c99913;">{{$item->department[0]->specialist->name}}, {{$item->city->name}}</p>
-                                        <p style="border-top: 2px dashed #dddddd85;text-align:justify;">{{mb_strimwidth($item->education, 0, 100, "...")}}</p>
+                                        <h6>{{$item->doctor->name}}</h6>
+                                        <p style="color:#c99913;">{{$item->doctor->department[0]->specialist->name}}, {{$item->doctor->city->name}}</p>
+                                        <p style="border-top: 2px dashed #dddddd85;text-align:justify;">{{mb_strimwidth($item->doctor->education, 0, 100, "...")}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -170,47 +170,6 @@
 <script>
     $(document).ready(() => {
         $("iframe").attr("width", "100%").attr("height", "80%");
-
-        // $("#Department").on("change", (event) => {
-        //     if (event.target.value !== null) {
-        //         var id = $("#Department").attr("data-id");
-        //         $.ajax({
-        //             url: "{{route('filter.hospitaldiagnosticdoctor')}}",
-        //             method: "POST",
-        //             data: {
-        //                 department: event.target.value
-        //             },
-        //             success: (response) => {
-        //                 if (response.null) {
-        //                     $(".showDoctor").html(`<div class="text-center">${response.null}</div>`)
-        //                 } else {
-        //                     $(".showDoctor").html("")
-        //                     $.each(response, (index, value) => {
-        //                         if (value.doctor.hospital_id == id) {
-        //                             var row = `
-        //                                     <div class="col-md-4 mb-3">
-        //                                         <div class="card mt-3 border-bottom">
-        //                                             <div class="card-body d-flex gap-2">
-        //                                                 <img src="${document.location.origin+"/"+value.doctor.image}" width="100" height="100" style="border: 1px solid gray;padding:3px;">
-        //                                                 <div class="body">
-        //                                                     <h6>${value.doctor.name}</h6>
-        //                                                     <p>${value.doctor.education}</p>
-        //                                                 </div>                                        
-        //                                             </div>
-        //                                             <div class="card-footer text-end">
-        //                                                 <a href="/single-details-doctor/${value.doctor.id}" target="_blank" class="btn btn-info btn-sm">Appointment</a>
-        //                                             </div>
-        //                                         </div>
-        //                                     </div>
-        //                                 `;
-        //                             $(".showDoctor").append(row)
-        //                         }
-        //                     })
-        //                 }
-        //             }
-        //         })
-        //     }
-        // })
 
         // Hospital store
         $(".addContact").on("submit", event => {

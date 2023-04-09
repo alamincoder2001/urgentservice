@@ -13,6 +13,21 @@
         display: flex;
         align-items: center;
     }
+
+    .hospital_city {
+        text-decoration: none;
+        display: block;
+        list-style: none;
+        padding: 3px;
+        font-family: auto;
+        border-bottom: 1px dashed #d1d1d1;
+        color: #626262;
+        transition: 2ms ease-in-out;
+    }
+
+    .hospital_city:hover {
+        color: red !important;
+    }
 </style>
 @endpush
 @section("content")
@@ -55,35 +70,50 @@
                 </div>
             </div>
         </div>
-        
-        <div class="row d-flex justify-content-center hospitalbody">
-            @foreach($data['hospital'] as $item)
-            <div class="col-md-6 col-10 col-sm-6 col-lg-4 ">
-                <a style="text-decoration: none;" target="_blank" href="{{route('singlepagehospital', $item->id)}}">
-                    <div class="card border-0 mb-4" style="height:360px;background: #ffffff;box-shadow:0px 0px 5px 1px #c1c1c1;" title="{{$item->name}}">
-                        <div class="img card-img-top m-auto mt-2 w-50 overflow-hidden d-flex justify-content-center border border-2">
-                            <img style="width: 100%; height:100%;" src="{{asset($item->image ? $item->image:'/frontend/img/hospital.png' )}}">
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title text-uppercase text-center text-dark" style="font-size: 15px;">{{mb_strimwidth($item->name, 0, 30, "...")}}</h5>
-                            <p class="card-text text-primary text-center mb-2"><span>{{ucwords($item->hospital_type)}}</span> | <span>{{$item->phone}}</span></p>
-                            <ul style="list-style: none;padding:0 0 0 5px;">
-                                <li><i style="width: 15px;height:15px;" class="fa fa-map-marker text-info"></i> <span class="text-dark" style="font-size: 11px;">{{$item->address}}, {{$item->city->name}}</span></li>
-                                <li><i style="width: 15px;height:15px;font-size:13px;" class="fa fa-envelope-o text-info"></i> <span class="text-dark" style="font-size: 13px;">{{$item->email}}</span></li>
-                            </ul>
-                        </div>
-                        <div class="text-white card-footer text-uppercase border-0 text-center py-3">
-                            View Details
-                        </div>
-                        @if($item->discount_amount != 0)
-                        <div class="discount">-{{$item->discount_amount}}%</div>
-                        @endif
-                    </div>
-                </a>
-            </div>
-            @endforeach
 
-            {{$data['hospital']->links('vendor.pagination.simple-bootstrap-4')}}
+        <div class="row m-lg-0" style="border: 1px solid #e5e5e5;">
+            <div class="col-12 col-lg-3 p-lg-0">
+                <div class="card border-0" style="border-radius: 0;height:100%;border-right: 1px solid #e3e3e3 !important;">
+                    <div class="card-header" style="border: none;border-radius: 0;background: #e3e3e3;">
+                        <h6 class="card-title text-uppercase m-0" style="color:#832a00;">City List</h6>
+                    </div>
+                    <div class="card-body" style="padding-top: 3px;">
+                        <a title="All" href="{{route('hospital.details')}}" class="hospital_city {{$city_id != null ? '' : 'text-danger'}}">All</a>
+                        @foreach($cities as $item)
+                        <a title="{{$item->name}}" href="{{route('hospital.details', $item->id)}}" class="hospital_city {{$city_id != null ? $city_id == $item->id ? 'text-danger': '' : ''}}">{{$item->name}} <span class="text-danger" style="font-weight:700;">({{$item->hospital->count()}})</span></a>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-9 doctor_details">
+                <h5 class="m-0 totalDoctorcount" style="text-align: right;font-family: auto;font-style: italic;">Total: <span>{{$total_hospital}}</span></h5>
+                <div class="row py-2 hospitalbody">
+
+                    @foreach($data['hospital'] as $item)
+                    <div class="col-12 col-lg-6 mb-3">
+                        <a href="{{route('singlepagehospital', $item->id)}}" target="_blank" class="text-decoration-none text-secondary" title="{{$item->name}}">
+                            <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
+                                <div class="card-body d-flex position-relative" style="padding: 5px;gap: 8px;">
+                                    @if($item->discount_amount != 0)
+                                    <p style="position: absolute;bottom: 5px;right: 10px;" class="m-0 text-danger">সকল প্রকার সার্ভিসের উপরে <span class="text-decoration-underline">{{$item->discount_amount}}%</span> ছাড়।</p>
+                                    @endif
+                                    <div class="image" style="border: 1px dotted #ababab;height: 110px;margin-top: 4px;">
+                                        <img src="{{asset($item->image != '0' ? $item->image:'/frontend/img/hospital.png')}}" width="100" height="100%">
+                                    </div>
+                                    <div class="info" style="padding-right:5px;">
+                                        <h6>{{$item->name}}</h6>
+                                        <p class="text-capitalize" style="color:#c99913;">{{$item->hospital_type}}, {{$item->city->name}}</p>
+                                        <p style="border-top: 2px dashed #dddddd85;text-align:justify;"><i class="fa fa-map-marker"></i> {{$item->address}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    @endforeach
+
+                    {{$data['hospital']->links('vendor.pagination.simple-bootstrap-4')}}
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -124,27 +154,22 @@
 
         function Row(index, value) {
             var row = `
-                <div class="col-md-6 col-10 col-sm-6 col-lg-4 ">
-                    <a class="text-decoration-none" target="_blank" href="${'/single-details-hospital/'+value.id}">
-                        <div class="card border-0 mb-4" style="height:360px;background: #ffffff;box-shadow:0px 0px 5px 1px #c1c1c1;" title="${value.name}">
-                            <div class="img card-img-top m-auto mt-2 w-50 overflow-hidden d-flex justify-content-center border border-2">
-                                <img src="${value.image != '0'?location.origin+'/'+value.image:location.origin+'/frontend/img/hospital.png'}" style="width: 100%; height:100%;">
+                    <div class="col-12 col-lg-6 mb-3">
+                        <a href="/single-details-hospital/${value.id}" target="_blank" class="text-decoration-none text-secondary" title="${value.name}">
+                            <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
+                                <div class="card-body d-flex" style="padding: 5px;gap: 8px;">
+                                    <div class="image" style="border: 1px dotted #ababab;height: 110px;margin-top: 4px;">
+                                        <img src="${value.image != '0' ?'/'+value.image: '/frontend/img/hospital.png'}" width="100" height="100%">
+                                    </div>
+                                    <div class="info" style="padding-right:5px;">
+                                        <h6>${value.name}</h6>
+                                        <p class="text-capitalize" style="color:#c99913;">${value.hospital_type}, ${value.city.name}</p>
+                                        <p style="border-top: 2px dashed #dddddd85;text-align:justify;"><i class="fa fa-map-marker"></i> ${value.address}</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <h5 class="card-title text-uppercase text-center text-dark" style="font-size: 15px;">${value.name}</h5>
-                                <p class="card-text text-primary text-center mb-2"><span>${value.hospital_type.toUpperCase()}</span> | <span>${value.phone}</span></p>
-                                <ul style="list-style: none;padding:0 0 0 5px;">
-                                    <li><i style="width: 15px;height:15px;" class="fa fa-map-marker text-info"></i> <span class="text-dark" style="font-size: 13px;">${value.address}, ${value.city.name}</span></li>
-                                    <li><i style="width: 15px;height:15px;font-size:13px;" class="fa fa-envelope-o text-info"></i> <span class="text-dark" style="font-size: 13px;">${value.email}</span></li>
-                                </ul>
-                            </div>                    
-                            <div class="card-footer text-uppercase text-white border-0 text-center py-3">
-                                View Details
-                            </div>
-                            ${value.discount_amount!=0?"<div class='discount'>-"+value.discount_amount+"%</div>":""}
-                        </div>
-                    </a>
-                </div>
+                        </a>
+                    </div>
                 `;
             $(".hospitalbody").append(row)
 

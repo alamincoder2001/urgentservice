@@ -33,7 +33,9 @@
             @endphp
             <div class="col-md-4 col-12">
                 <h2 class="text-uppercase text-secondary">Our Location</h2>
-                <p class="mb-4 text-dark text-capitalize">{{$contact->address}}, {{$contact->phone}}</p>
+                <h6 class="m-0 text-secondary">( {{$setting->appointment_text}} )</h6>
+                <p class="mb-2 text-dark text-capitalize">{{$contact->address}}, {{$contact->phone}}</p>
+
                 <div class="footer-body">
                     <h4 class="text-secondary">News Letter</h4>
                     <div class="news-letter">

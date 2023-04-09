@@ -96,16 +96,15 @@ class DoctorController extends Controller
             if ($validator->fails()) {
                 return response()->json(["error" => $validator->errors()]);
             } else {
-                $data           = new Doctor;
-                $data->image    = $this->imageUpload($request, 'image', 'uploads/doctor') ?? '';
-                $data->name     = $request->name;
-                $data->username = $request->username;
-                $data->email    = $request->email;
-                $data->password = Hash::make($request->password);
-
-                $data->education = $request->education;
-
+                $data                = new Doctor;
+                $data->image         = $this->imageUpload($request, 'image', 'uploads/doctor') ?? '';
+                $data->name          = $request->name;
+                $data->username      = $request->username;
+                $data->email         = $request->email;
+                $data->password      = Hash::make($request->password);
+                $data->education     = $request->education;
                 $data->city_id       = $request->city_id;
+                $data->address       = $request->address;
                 $data->phone         = $request->phone;
                 $data->first_fee     = $request->first_fee;
                 $data->second_fee    = $request->second_fee;
@@ -115,24 +114,26 @@ class DoctorController extends Controller
 
 
                 foreach (json_decode($request->carts) as $key => $cart) {
-                    $details = new ChamberDiagnosticHospital();
-                    $details->doctor_id = $data->id;
-                    $details->type = $cart->selectedType;
-                    if ($cart->selectedType == "chamber") {
-                        $details->chamber_name = $cart->chamber->chamber_name;
-                        $details->chamber_address = $cart->chamber->chamber_address;
-                    } elseif ($cart->selectedType == "hospital") {
-                        $details->hospital_id = $cart->hospital->id;
-                    } else {
-                        $details->diagnostic_id = $cart->diagnostic->id;
+                    $details                  = new ChamberDiagnosticHospital();
+                    $details->doctor_id       = $data->id;
+                    $details->type            = $cart->selectby;
+                    if ($cart->selectby == 'chamber') {
+                        $details->chamber_name    = $cart->chamber_name;
+                        $details->chamber_address = $cart->chamber_address;
+                    }
+                    if ($cart->selectby == 'hospital') {
+                        $details->hospital_id     = $cart->hospital_id;
+                    }
+                    if ($cart->selectby == 'diagnostic') {
+                        $details->diagnostic_id   = $cart->diagnostic_id;
                     }
                     $details->save();
                     foreach($cart->daywiseTimeArray as $item){
-                        $t = new DayTime();
-                        $t->type_id = $details->id;
-                        $t->day = $item->day;
+                        $t           = new DayTime();
+                        $t->type_id  = $details->id;
+                        $t->day      = $item->day;
                         $t->fromTime = $item->fromTime;
-                        $t->toTime = $item->toTime;
+                        $t->toTime   = $item->toTime;
                         $t->save();
                     }
 
@@ -187,6 +188,7 @@ class DoctorController extends Controller
                 }
                 $data->education     = $request->education;
                 $data->city_id       = $request->city_id;
+                $data->address       = $request->address;
                 $data->phone         = $request->phone;
                 $data->first_fee     = $request->first_fee;
                 $data->second_fee    = $request->second_fee;
@@ -204,18 +206,20 @@ class DoctorController extends Controller
                     }
                 }
 
-                ChamberDiagnosticHospital::where("doctor_id", $data->id)->delete();
+                ChamberDiagnosticHospital::where("doctor_id", $request->id)->delete();
                 foreach (json_decode($request->carts) as $key => $cart) {
-                    $details = new ChamberDiagnosticHospital();
-                    $details->doctor_id = $data->id;
-                    $details->type = $cart->selectedType;
-                    if ($cart->selectedType == "chamber") {
-                        $details->chamber_name = $cart->chamber->chamber_name;
-                        $details->chamber_address = $cart->chamber->chamber_address;
-                    } elseif ($cart->selectedType == "hospital") {
-                        $details->hospital_id = $cart->hospital->id;
-                    } else {
-                        $details->diagnostic_id = $cart->diagnostic->id;
+                    $details                  = new ChamberDiagnosticHospital();
+                    $details->doctor_id       = $request->id;
+                    $details->type            = $cart->selectby;
+                    if ($cart->selectby == 'chamber') {
+                        $details->chamber_name    = $cart->chamber_name;
+                        $details->chamber_address = $cart->chamber_address;
+                    }
+                    if ($cart->selectby == 'hospital') {
+                        $details->hospital_id     = $cart->hospital_id;
+                    }
+                    if ($cart->selectby == 'diagnostic') {
+                        $details->diagnostic_id   = $cart->diagnostic_id;
                     }
                     $details->save();
                     foreach($cart->daywiseTimeArray as $item){
@@ -231,7 +235,7 @@ class DoctorController extends Controller
                 return response()->json("Doctor updated successfully");
             }
         } catch (\Throwable $e) {
-            return response()->json("Something went wrong".$e->getMessage());
+            return response()->json("Something went wrong ");
         }
     }
 

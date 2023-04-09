@@ -77,13 +77,15 @@ class SettingController extends Controller
                     if(empty($request->logo)){
                         $setting->logo = $old1;
                     }
-                    $setting->name = $request->name;
+                    $setting->name             = $request->name;
+                    $setting->appointment_text = $request->appointment_text;
                     $setting->update();
                     return response()->json("Setting Updated successfully");
                 } else {
-                    $setting->name = $request->name;
-                    $setting->favicon = $old;
-                    $setting->logo = $old1;
+                    $setting->name             = $request->name;
+                    $setting->appointment_text = $request->appointment_text;
+                    $setting->favicon          = $old;
+                    $setting->logo             = $old1;
                     $setting->update();
                     return response()->json("Setting Updated successfully");
                 }

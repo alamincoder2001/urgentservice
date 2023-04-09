@@ -80,7 +80,7 @@
             <div class="col-12 col-lg-3 p-lg-0">
                 <div class="card border-0" style="border-radius: 0;height:100%;border-right: 1px solid #e3e3e3 !important;">
                     <div class="card-header" style="border: none;border-radius: 0;background: #e3e3e3;">
-                        <h6 class="card-title text-uppercase" style="color:#832a00;">Department List</h6>
+                        <h6 class="card-title text-uppercase m-0" style="color:#832a00;">Department List</h6>
                     </div>
                     @php
                     $pathname = str_replace("doctor-details/", "",Request::path());

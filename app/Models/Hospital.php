@@ -34,8 +34,8 @@ class Hospital extends Authenticatable
         return $this->belongsTo(District::class, "city_id");
     }
 
-    public function doctor()
+    public function hospital_wise_doctor()
     {
-        return $this->hasMany(Doctor::class)->with("department");
+        return $this->hasMany(ChamberDiagnosticHospital::class)->with('doctor');
     }
 }

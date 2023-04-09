@@ -66,9 +66,9 @@ Route::post("/donor-filter", [FilterController::class, "filterdonor"])->name("fi
 
 // =========== Frontend route ========= //
 Route::get("/", [HomeController::class, "index"])->name("website");
-Route::get("/doctor-details/{id?}", [HomeController::class, "doctor"])->name("doctor.details");
-Route::get("/hospital-details", [HomeController::class, "hospital"])->name("hospital.details");
-Route::get("/diagnostic-details", [HomeController::class, "diagnostic"])->name("diagnostic.details");
+Route::get("/doctor-details/{department?}", [HomeController::class, "doctor"])->name("doctor.details");
+Route::get("/hospital-details/{city?}", [HomeController::class, "hospital"])->name("hospital.details");
+Route::get("/diagnostic-details/{city?}", [HomeController::class, "diagnostic"])->name("diagnostic.details");
 Route::get("/ambulance-details", [HomeController::class, "ambulance"])->name("ambulance.details");
 Route::get("/privatecar-details/{id?}", [HomeController::class, "privatecar"])->name("privatecar.details");
 Route::get("/single-details-doctor/{id}", [HomeController::class, "singledoctor"])->name("singlepagedoctor");

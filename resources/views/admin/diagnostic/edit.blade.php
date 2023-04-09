@@ -103,7 +103,7 @@
                                 <span class="error-address text-danger error"></span>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="map_link">Map Link</label>
                                 <textarea name="map_link" id="map_link" class="form-control">{{$data->map_link}}</textarea>
@@ -116,8 +116,8 @@
                                 <input type="file" class="form-control" id="image" name="image" onchange="document.querySelector('.img').src = window.URL.createObjectURL(this.files[0])">
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <img src="{{asset($data->image)}}" width="100" class="img" style="border: 1px solid #ccc; height:80px;">
+                        <div class="col-md-2">
+                            <img src="{{asset($data->image != '0' ? $data->image : 'noimage.jpg')}}" width="100" class="img" style="border: 1px solid #ccc; height:80px;">
                         </div>
                         <div class="col-12">
                             <div class="form-group">

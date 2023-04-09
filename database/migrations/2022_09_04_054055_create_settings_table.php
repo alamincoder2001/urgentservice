@@ -18,6 +18,7 @@ class CreateSettingsTable extends Migration
             $table->string("name", 100);
             $table->string("favicon")->nullable();
             $table->string("logo")->nullable();
+            $table->text("appointment_text")->nullable();
             $table->timestamps();
         });
     }

@@ -101,11 +101,19 @@
                                 </div>
                                 <span class="error-phone error text-danger"></span>
                             </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="address">Address</label>
+                                    <textarea name="address" id="address" v-model="doctor.address" class="form-control"></textarea>
+                                </div>
+                                <span class="error-address error text-danger"></span>
+                            </div>
                         </div>
                         <hr>
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="row" v-for="(cart, sl) in carts">
+                                <div class="row" v-for="(cart, sl) in carts" style="position:relative;border: 1px solid #e1e1e1;padding: 5px 0;margin: 0;margin-bottom: 5px;">
+                                    <span @click="removeCart(sl)" style="cursor:pointer;position: absolute;background: red;width: 20px;height: 25px;top: -12px;right: -15px;z-index: 99999;border-radius: 50%;color: white;padding: 2px 6px;">X</span>
                                     <div class="col-md-5">
                                         <div class="form-group">
                                             <select v-model="cart.selectby" class="form-select shadow-none mb-2">
@@ -118,9 +126,9 @@
                                             <input v-if="cart.selectby == 'chamber'" type="text" v-model="cart.chamber_name" class="form-control shadow-none mb-2" placeholder="chamber name">
                                             <textarea v-if="cart.selectby == 'chamber'" v-model="cart.chamber_address" class="form-control shadow-none mb-2" placeholder="chamber address"></textarea>
                                             <!-- hospital details -->
-                                            <v-select v-if="cart.selectby == 'hospital'" :options="hospitals" v-model="selectedHospital" label="name"></v-select>
+                                            <v-select v-if="cart.selectby == 'hospital'" :options="hospitals" v-model="cart.selectedHospital" label="name" @input="onChangeHospital(sl)"></v-select>
                                             <!-- diagnostic details -->
-                                            <v-select v-if="cart.selectby == 'diagnostic'" :options="diagnostics" v-model="selectedDiagnostic" label="name"></v-select>
+                                            <v-select v-if="cart.selectby == 'diagnostic'" :options="diagnostics" v-model="cart.selectedDiagnostic" label="name" @input="onChangeDiagnostic(sl)"></v-select>
                                         </div>
                                     </div>
                                     <div class="col-md-7" v-if="cart.selectby != ''">
@@ -141,7 +149,7 @@
                                                     <input type="time" v-model="daytime.toTime" class="form-control shadow-none">
                                                     <button type="button" @click="addDayTime(sl)" class="btn btn-secondary btn-sm"><i class="fa fa-cart-plus"></i></button>
                                                 </div>
-                                                <table class="table table-bordered">
+                                                <table class="table table-bordered m-0">
                                                     <thead>
                                                         <tr>
                                                             <th class="text-center">Sl</th>
@@ -153,7 +161,7 @@
                                                     </thead>
                                                     <tbody>
                                                         <tr v-for="(item, key) in cart.daywiseTimeArray">
-                                                            <td class="text-center">@{{sl + 1}}</td>
+                                                            <td class="text-center">@{{key + 1}}</td>
                                                             <td class="text-center">@{{item.day}}</td>
                                                             <td class="text-center">@{{item.fromTime}}</td>
                                                             <td class="text-center">@{{item.toTime}}</td>
@@ -164,55 +172,15 @@
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <div class="col-md-12">
-                                                <div class="form-group text-end">
-                                                    <button type="button" @click="AddToCart" class="btn btn-warning text-white btn-sm px-4">AddToCart</button>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="col-md-12">
-                                <div class="row" style="padding:0 10px;" v-for="(cart, sl) in carts">
-                                    <div style="background:gray;position:relative;">
-                                        <h5 class="m-0 text-center text-capitalize text-white">@{{cart.selectedType}}</h5>
-                                        <span @click="removeCart(sl)" style="cursor:pointer;position: absolute;top: 0;right: 0;background: red;padding: 0 5px;" class="text-white"><i class="fa fa-trash"></i></span>
-                                    </div>
-                                    <div class="col-md-5 ps-0">
-                                        <div class="form-group m-0">
-                                            <input v-if="cart.selectedType == 'chamber'" type="text" class="form-control" :value="cart.chamber.chamber_name">
-                                            <input v-if="cart.selectedType == 'hospital'" type="text" class="form-control" :value="cart.hospital.name" readonly>
-                                            <input v-if="cart.selectedType == 'diagnostic'" type="text" class="form-control" :value="cart.diagnostic.name" readonly>
-                                        </div>
-                                        <div class="form-group m-0">
-                                            <input v-if="cart.selectedType == 'chamber'" class="form-control" :value="cart.chamber.chamber_address">
-                                            <input v-if="cart.selectedType == 'hospital'" class="form-control" :value="cart.hospital.address" readonly>
-                                            <input v-if="cart.selectedType == 'diagnostic'" class="form-control" :value="cart.diagnostic.address" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-7 pe-0">
-                                        <table class="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-center">Sl</th>
-                                                    <th class="text-center">Day</th>
-                                                    <th style="width:20%;" class="text-center">From</th>
-                                                    <th style="width:20%;" class="text-center">To</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr v-for="(item, sl) in cart.daywiseTimeArray">
-                                                    <td class="text-center">@{{sl + 1}}</td>
-                                                    <td class="text-center">@{{item.day}}</td>
-                                                    <td class="text-center">@{{item.fromTime}}</td>
-                                                    <td class="text-center">@{{item.toTime}}</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                            <div class="col-md-12">
+                                <div class="form-group text-end">
+                                    <button type="button" @click="AddToCart" class="btn btn-warning text-white btn-sm px-4">Add Module</button>
                                 </div>
-                            </div> -->
+                            </div>
                         </div>
                         <hr>
                         <div class="row">
@@ -269,6 +237,7 @@
                 email: "urgentservicebd@gmail.com",
                 password: "",
                 education: "",
+                address: "",
                 first_fee: 0,
                 second_fee: 0,
                 concentration: "",
@@ -280,9 +249,7 @@
             departments: [],
             selectedDepartment: null,
             hospitals: [],
-            selectedHospital: null,
             diagnostics: [],
-            selectedDiagnostic: null,
             selectedChamber: {
                 chamber_name: "",
                 chamber_address: "",
@@ -300,6 +267,8 @@
 
             carts: [{
                 selectby: "",
+                selectedHospital: null,
+                selectedDiagnostic: null,
                 hospital_id: "",
                 diagnostic_id: "",
                 chamber_name: "",
@@ -347,8 +316,33 @@
                     })
             },
 
+            onChangeHospital(sl) {
+                if (this.carts[sl].selectedHospital == null) {
+                    return
+                }
+                this.carts[sl].hospital_id = this.carts[sl].selectedHospital.id
+            },
+            onChangeDiagnostic(sl) {
+                if (this.carts[sl].selectedDiagnostic == null) {
+                    return
+                }
+                this.carts[sl].diagnostic_id = this.carts[sl].selectedDiagnostic.id
+            },
+
             // daytime add
             addDayTime(sl) {
+                if (this.carts[sl].selectby == 'chamber' && this.carts[sl].chamber_name == '' && this.carts[sl].chamber_address == '') {
+                    alert("Chamber name required or address required")
+                    return
+                }
+                if (this.carts[sl].selectby == 'hospital' && this.carts[sl].selectedHospital == null) {
+                    alert("Hospital name required")
+                    return
+                }
+                if (this.carts[sl].selectby == 'diagnostic' && this.carts[sl].selectedDiagnostic == null) {
+                    alert("Diagnostic name required")
+                    return
+                }
                 if (this.daytime.day == "") {
                     alert("Day select required")
                     return
@@ -398,8 +392,6 @@
                     daywiseTimeArray: [],
                 }
                 this.carts.push(cart)
-                this.selectedHospital = null
-                this.selectedDiagnostic = null
             },
 
             removeCart(sl) {
@@ -467,20 +459,23 @@
             getDoctor() {
                 axios.get(location.origin + "/admin/doctor-fetch/" + this.doctor.id)
                     .then(res => {
-                        this.carts = []
+                        if (res.data.carts.length > 0) {
+                            this.carts = []
+                        }
                         let doctor = res.data.doctor
                         let carts = res.data.carts
                         this.doctor = {
-                            name: doctor.name,
-                            username: doctor.username,
-                            email: doctor.email,
-                            password: "",
-                            education: doctor.education,
-                            first_fee: doctor.first_fee,
-                            second_fee: doctor.second_fee,
+                            name         : doctor.name,
+                            username     : doctor.username,
+                            email        : doctor.email,
+                            password     : "",
+                            education    : doctor.education,
+                            address      : doctor.address,
+                            first_fee    : doctor.first_fee,
+                            second_fee   : doctor.second_fee,
                             concentration: doctor.concentration,
-                            description: doctor.description == null ? "" : doctor.description,
-                            image: doctor.image,
+                            description  : doctor.description == null ? "": doctor.description,
+                            image        : doctor.image,
                         }
                         this.selectedCity = {
                             id: doctor.city_id,
@@ -513,6 +508,23 @@
                                 chamber_address: item.chamber_address,
                                 daywiseTimeArray: [],
                             }
+                            if (item.type == 'hospital') {
+                                cart.selectedHospital = {
+                                    id: item.hospital_id,
+                                    name: item.hospital_name
+                                }
+                            } else {
+                                cart.selectedHospital = null
+                            }
+                            if (item.type == 'diagnostic') {
+                                cart.selectedDiagnostic = {
+                                    id: item.diagnostic_id,
+                                    name: item.diagnostic_name
+                                }
+                            } else {
+                                cart.selectedDiagnostic = null
+                            }
+
                             item.daywiseTimeArray.forEach(d => {
                                 cart.daywiseTimeArray.push(d)
                             })
@@ -526,16 +538,17 @@
 
             clearData() {
                 this.doctor = {
-                    name: "",
-                    username: "",
-                    email: "urgentservicebd@gmail.com",
-                    password: "",
-                    education: "",
-                    first_fee: 0,
-                    second_fee: 0,
+                    name         : "",
+                    username     : "",
+                    email        : "urgentservicebd@gmail.com",
+                    password     : "",
+                    education    : "",
+                    address      : "",
+                    first_fee    : 0,
+                    second_fee   : 0,
                     concentration: "",
-                    description: "",
-                    image: "",
+                    description  : "",
+                    image        : "",
                 };
                 this.phones = [{
                     phone: '01721843819',

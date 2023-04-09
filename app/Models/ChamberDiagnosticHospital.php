@@ -10,4 +10,9 @@ class ChamberDiagnosticHospital extends Model
     use HasFactory;
     
     protected $guarded = ["id"];
+
+    public function doctor()
+    {
+        return $this->belongsTo(Doctor::class, "doctor_id", "id")->with("city");
+    }
 }

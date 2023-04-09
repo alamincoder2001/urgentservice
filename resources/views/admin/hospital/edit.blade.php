@@ -115,7 +115,7 @@
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <img src="{{asset($data->image != '0' ? $item->image : 'noimage.jpg')}}" width="100" class="img" style="border: 1px solid #ccc; height:80px;">
+                            <img src="{{asset($data->image != '0' ? $data->image : 'noimage.jpg')}}" width="100" class="img" style="border: 1px solid #ccc; height:80px;">
                         </div>
                         <div class="col-12">
                             <div class="form-group">

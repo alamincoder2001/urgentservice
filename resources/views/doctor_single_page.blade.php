@@ -81,6 +81,10 @@
         display: none;
         margin: 6px !important;
     }
+
+    .daytimescrollbar::-webkit-scrollbar {
+        display: none;
+    }
 </style>
 @endpush
 
@@ -107,13 +111,7 @@
                         </h6>
                         <p>
                             <span class="fs-5" style="font-size: 15px !important;font-weight: 500;font-family: math;">Address:</span>
-                            @if($data->chamber_name)
-                            {{$data->address}}, {{$data->city->name}}
-                            @else
-                            @if($data->hospital_id || $data->diagnostic_id)
-                            {{$data->hospital_id?$data->hospital->address:$data->diagnostic->address}}, {{$data->hospital_id?$data->hospital->city->name:$data->diagnostic->city->name}}
-                            @endif
-                            @endif
+                            {{$data->address}}
                         </p>
                     </div>
 
@@ -145,37 +143,53 @@
                     <div class="card-header text-center text-white" style="background: #035b64 !important;border-radius:0;">
                         <h4 class="fs-6 text-uppercase m-0 p-1">Availability Time & Location</h4>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <h5 style="font-size:14px; font-family:cursive;">
-                                @if(count($data->chamber) != 0)
-                                @foreach($data->chamber->take(1) as $chamber)
-                                <i class="fa fa-home"></i> {{$chamber->name}}, {{$chamber->address}}
-                                @endforeach
-                                @endif
-                                @if($data->hospital_id)
-                                <br>
-                                <i class='fa fa-hospital-o'></i> {{$data->hospital_id?$data->hospital->name.", ".$data->hospital->city->name:""}}{{$data->hospital->discount_amount>0?' ('.$data->hospital->discount_amount.'%)':''}}
-                                @endif
-                                @if($data->diagnostic_id)
-                                <br>
-                                <i class="fa fa-plus-square-o"></i> {{$data->diagnostic_id?$data->diagnostic->name.", ".$data->diagnostic->city->name:""}} {{$data->diagnostic->discount_amount>0?' ('.$data->diagnostic->discount_amount.'%)':''}}
-                                @endif
-                            </h5>
-                            <hr style="margin-bottom: 0;">
-                            @foreach($data->time as $day)
-                            <div class="col-12">
-                                <div class="card border-0">
-                                    <div class="card-body" style="padding: 7px 15px !important;">
-                                        <div class="day">
-                                            <i class="fa fa-calendar-check-o"></i> {{$day->day}}
-                                        </div>
-                                        <span class="text-uppercase">{{(date("h:i a", strtotime($day->from)))}} - {{date("h:i a", strtotime($day->to))}}</span>
-                                    </div>
-                                </div>
+                    <div class="card-body daytimescrollbar" style="overflow-y: scroll;">
+                        @foreach($doctor_details as $item)
+                        <div class="daytime" style="margin-bottom: 15px;">
+                            <div class="daytime-header" style="background: gainsboro;padding: 5px;">
+                                <h5 style="font-size:14px; font-family:cursive;margin:0;">
+                                    @if($item->type == 'chamber')
+                                    <i class="fa fa-home"></i> {{$item->chamber_name}}
+                                    @endif
+                                    @if($item->type == 'hospital')
+                                    <i class='fa fa-hospital-o'></i> {{$item->hospital_name}}{{$item->hospital_discount>0?' ('.$item->hospital_discount.'%)':''}}
+                                    @endif
+                                    @if($item->type == 'diagnostic')
+                                    <i class="fa fa-plus-square-o"></i> {{$item->diagnostic_name}}{{$item->diagnostic_discount>0?' ('.$item->diagnostic_discount.'%)':''}}
+                                    @endif
+                                </h5>
+                                <p class="m-0" style="margin-left:20px !important">
+                                    (
+                                    @if($item->type == 'chamber')
+                                    {{$item->chamber_address}}
+                                    @endif
+                                    @if($item->type == 'hospital')
+                                    {{$item->hospital_address}}
+                                    @endif
+                                    @if($item->type == 'diagnostic')
+                                    {{$item->diagnostic_address}}
+                                    @endif
+                                    )
+                                </p>
                             </div>
-                            @endforeach
+                            <div class="daytime-body">
+
+                                @foreach($item->daywiseTimeArray as $day)
+                                <ul class="m-0" style="list-style: none;">
+                                    <li class="position-relative">
+                                        <i style="left: -15px;top: 7px;font-size: 12px;" class="fa fa-calendar-check-o position-absolute"></i>
+                                        <span style="font-size: 11px;font-weight: 500;" class="text-uppercase">
+                                            {{$day->day}}
+                                        </span>
+                                        @foreach(\App\Models\DayTime::daygroup($day->type_id, $day->day) as $time)
+                                        <p>{{ date("h:i a", strtotime($time->fromTime))}} - {{date("h:i a", strtotime($time->toTime)) }}</p>
+                                        @endforeach
+                                    </li>
+                                </ul>
+                                @endforeach
+                            </div>
                         </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -257,12 +271,6 @@
                                     <span class="error-contact error text-danger"></span>
                                 </div>
                             </div>
-                            <!-- <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="email" class="py-2">Email</label>
-                                    <input type="text" name="email" id="email" class="form-control" autocomplete="off" placeholder="example@gmail.com">
-                                </div>
-                            </div> -->
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="appointment_date" class="py-2">Appointment Date</label>
@@ -275,16 +283,16 @@
                                     <label for="email" class="py-2">Organization</label>
                                     <select name="organization_id" id="organization_id" class="form-control">
                                         <option value="">Select Organization</option>
-                                        @foreach($hospitals as $item)
-                                        <option data-id="hospital" value="{{$item->id}}">{{$item->name}}</option>
-                                        @endforeach
-
-                                        @foreach($diagnostics as $item)
-                                        <option data-id="diagnostic" value="{{$item->id}}">{{$item->name}}</option>
-                                        @endforeach
-
-                                        @foreach($chambers as $item)
-                                        <option data-id="chamber" value="{{$item->name}}">{{$item->name}}</option>
+                                        @foreach($doctor_details as $item)
+                                        @if($item->type == 'chamber')
+                                        <option data-id="{{$item->type}}" value="{{$item->chamber_name}}">{{$item->chamber_name}}</option>
+                                        @endif
+                                        @if($item->type == 'hospital')
+                                        <option data-id="{{$item->type}}" value="{{$item->hospital_id}}">{{$item->hospital_name}}</option>
+                                        @endif
+                                        @if($item->type == 'diagnostic')
+                                        <option data-id="{{$item->type}}" value="{{$item->diagnostic_id}}">{{$item->diagnostic_name}}</option>
+                                        @endif
                                         @endforeach
                                     </select>
                                     <span class="error-organization_id error text-danger"></span>
@@ -378,9 +386,9 @@
         // appointment send
         $("#Appointment").on("submit", (event) => {
             event.preventDefault();
-            
+
             let contact = $("#Appointment").find("#contact").val()
-            if(contact == ''){
+            if (contact == '') {
                 $("#Appointment").find(".error-contact").text("Contact Number is empty")
                 return;
             } else if (!Number(contact)) {
@@ -403,7 +411,7 @@
                         $.each(response.error, (index, value) => {
                             $("#Appointment").find(".error-" + index).text(value);
                         })
-                    } else if(response.errors){
+                    } else if (response.errors) {
                         $.notify(response.errors, "error");
                         location.reload()
                     } else {
@@ -492,7 +500,7 @@
     const displayConcentration = (elem) => {
         concentration.innerHTML = concentration.getAttribute('data-full');
         concentration.style.height = "250px"
-        concentration.style.overflow = "scroll"
+        concentration.style.overflowY = "scroll"
         elem.target.remove();
     };
     // description
@@ -512,7 +520,7 @@
     const displayDescription = (elem) => {
         description.innerHTML = description.getAttribute('data-full');
         description.style.height = "150px"
-        description.style.overflow = "scroll"
+        description.style.overflowY = "scroll"
         elem.target.remove();
     };
 

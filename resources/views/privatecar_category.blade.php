@@ -1,23 +1,4 @@
 @extends("layouts.master")
-@push("js")
-<style>
-    /* =========== doctor card design ============ */
-    .doctor_department {
-        text-decoration: none;
-        display: block;
-        list-style: none;
-        padding: 3px;
-        font-family: auto;
-        border-bottom: 1px dashed #d1d1d1;
-        color: #626262;
-        transition: 2ms ease-in-out;
-    }
-
-    .doctor_department:hover {
-        color: red !important;
-    }
-</style>
-@endpush
 @section("content")
 <section style="margin: 35px 0;">
     <div class="container">

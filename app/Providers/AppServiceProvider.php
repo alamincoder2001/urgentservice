@@ -39,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         View::share('setting', Setting::first());
         View::share('contact', Contact::first());
-        View::share('cities', District::with('donor')->orderBy("name")->get());
+        View::share('cities', District::with('donor', 'hospital', 'diagnostic')->orderBy("name")->get());
         View::share('upazilas', Upazila::orderBy("name")->get());
         View::share('departments', Department::with('specialistdoctor')->orderBy("name", 'ASC')->get());
         View::share('doctors', Doctor::orderBy("name", 'ASC')->get());

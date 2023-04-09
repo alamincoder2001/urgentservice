@@ -50,6 +50,12 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="appointment_text">Appointment Description</label>
+                            <textarea name="appointment_text" id="appointment_text" class="form-control"></textarea>
+                        </div>
+                    </div>
                     <div class="form-group text-center">
                         <button class="btn btn-success text-white text-uppercase">Setting Change</button>
                     </div>
@@ -73,6 +79,7 @@
                     $("#submitSetting").find("#name").val(response.name)
                     $("#submitSetting").find(".fav-img").attr("src", location.origin+"/"+ response.favicon)
                     $("#submitSetting").find(".logo-img").attr("src", location.origin+"/" + response.logo)
+                    $("#submitSetting").find("#appointment_text").val(response.appointment_text)
                 }
             })
         }
