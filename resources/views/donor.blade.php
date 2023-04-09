@@ -120,8 +120,6 @@
             </div>
         </div>
 
-
-
         <div class="row m-lg-0" style="border: 1px solid #e5e5e5;">
             <div class="col-12 col-lg-3 p-lg-0">
                 <div class="card border-0" style="border-radius: 0;height:100%;border-right: 1px solid #e3e3e3 !important;">
