@@ -16,7 +16,6 @@ use App\Models\Prescription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\CategoryWisePrivatecar;
-use App\Models\ChamberDiagnosticHospital;
 use Illuminate\Support\Facades\Validator;
 use Devfaysal\BangladeshGeocode\Models\Upazila;
 
@@ -32,20 +31,22 @@ class HomeController extends Controller
         return view('website', compact("data"));
     }
     //doctor
-    public function doctor($dept_id = null)
+    public function doctor($any = null)
     {
         $department = null;
         $city_id = null;
-        if ($dept_id != null) {
-            if ($dept_id == 'department') {
+        if ($any != null) {
+            if ($any == 'department') {
                 $dept = Department::where("name", $_GET['name'])->first();
                 $department .= $dept->name;
                 $data["specialist"] = Specialist::where("department_id", $dept->id)->with("doctor", "specialist")->groupBy("doctor_id")->latest()->paginate(24);
-            } else {
+            } else if ($any == "city") {
                 $city_id .= $_GET['id'];
                 $data['specialist'] = Specialist::with("doctor", "specialist")->groupBy("doctor_id")->orderBy('id', 'desc')->get()->filter(function ($data, $key) {
                     return $data->doctor->city_id == $_GET['id'];
                 });
+            } else {
+                return redirect("/");
             }
         } else {
             $data["specialist"] = Specialist::with("doctor", "specialist")->groupBy("doctor_id")->orderBy('id', 'desc')->paginate(24);
@@ -77,18 +78,20 @@ class HomeController extends Controller
         return view('diagnostic_details', compact("data", "total_diagnostic", "city_id"));
     }
     //ambulance
-    public function ambulance($types = null)
+    public function ambulance($any = null)
     {
         $type = null;
         $city_id = null;
         $data['ambulance_types'] = Ambulance::groupBy('ambulance_type')->get();
-        if ($types != null) {
-            if ($types == 'type') {
+        if ($any != null) {
+            if ($any == 'type') {
                 $type .= $_GET['type_name'];
                 $data['ambulance'] = Ambulance::with('city')->where('ambulance_type', $_GET['type_name'])->orderBy('id', 'DESC')->paginate(24);
-            } else {
+            } else if ($any == "city") {
                 $city_id .= $_GET['id'];
                 $data['ambulance'] = Ambulance::with('city')->where('city_id', $_GET['id'])->orderBy('id', 'DESC')->paginate(24);
+            } else {
+                return redirect("/");
             }
         } else {
             $data['ambulance'] = Ambulance::with('city')->orderBy('id', 'DESC')->paginate(24);
@@ -97,21 +100,23 @@ class HomeController extends Controller
     }
 
     //ambulance
-    public function privatecar($types = null)
+    public function privatecar($any = null)
     {
         $categories = Cartype::with('typewiseprivatecar')->latest()->get();
 
         $type_id = null;
         $city_id = null;
-        if ($types != null) {
-            if ($types == 'type') {
+        if ($any != null) {
+            if ($any == 'type') {
                 $type_id .= $_GET['id'];
                 $data['privatecar'] = CategoryWisePrivatecar::with('privatecar', 'cartype')->where('cartype_id', $_GET['id'])->paginate(24);
-            } else {
+            } else if ($any == "city") {
                 $city_id .= $_GET['id'];
                 $data['privatecar'] = CategoryWisePrivatecar::with('privatecar', 'cartype')->get()->filter(function ($data) {
                     return $data->privatecar->city_id == $_GET['id'];
                 });
+            } else {
+                return redirect("/");
             }
         } else {
             $data['privatecar'] = CategoryWisePrivatecar::with('privatecar', 'cartype')->paginate(24);

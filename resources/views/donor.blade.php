@@ -124,13 +124,21 @@
             <div class="col-12 col-lg-3 p-lg-0">
                 <div class="card border-0" style="border-radius: 0;height:100%;border-right: 1px solid #e3e3e3 !important;">
                     <div class="card-header" style="border: none;border-radius: 0;background: #e3e3e3;">
-                        <h6 class="card-title text-uppercase m-0" style="color:#832a00;">City List</h6>
+                        <h6 class="card-title text-uppercase m-0" style="color:#832a00;">Blood Group List</h6>
                     </div>
                     <div class="card-body" style="padding-top: 3px;">
-                        <div style="height: 600px;overflow-y: scroll;">
-                            <a title="All" href="{{route('donor')}}" class="donor_city {{$city_id != null ? '' : 'text-danger'}}">All</a>
+                        <a title="All" href="{{route('donor')}}" class="donor_city {{$blood_group != null ? '' : 'text-danger'}}">All</a>
+                        @foreach($bloodgroup as $item)
+                        <a title="{{$item->blood_group}}" href="{{route('donor', ['blood_group', 'id' => $item->id])}}" class="donor_city {{$blood_group == $item->id ? 'text-danger': ''}}">{{$item->blood_group}} <span class="text-danger" style="font-weight:700;">({{$item->donor->count()}})</span></a>
+                        @endforeach
+
+                        <!-- city list -->
+                        <div class="mt-5" style="border: none;border-radius: 0;background: #e3e3e3;padding:7px;">
+                            <h6 class="title text-uppercase m-0" style="color:#832a00;">City List</h6>
+                        </div>
+                        <div style="height: 400px;overflow-y: scroll;">
                             @foreach($cities as $item)
-                            <a title="{{$item->name}}" href="{{route('donor', $item->id)}}" class="donor_city {{$city_id != null ? $city_id == $item->id ? 'text-danger': '' : ''}}">{{$item->name}} <span class="text-danger" style="font-weight:700;">({{$item->donor->count()}})</span></a>
+                            <a title="{{$item->name}}" href="{{route('donor', ['city', 'id' => $item->id])}}" class="donor_city {{$item->id == $city_id ? 'text-danger' : ''}}">{{$item->name}} <span class="text-danger" style="font-weight:700;">({{$item->donor->count()}})</span></a>
                             @endforeach
                         </div>
                     </div>

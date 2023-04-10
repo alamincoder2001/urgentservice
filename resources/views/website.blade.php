@@ -346,7 +346,7 @@
         <div class="row">
             @foreach($bloodgroup as $item)
             <div class="col-12 col-lg-3 mb-3">
-                <a href="{{route('donor', $item->id)}}" class="text-decoration-none">
+                <a href="{{route('donor', ['blood-group', 'id' => $item->id])}}" class="text-decoration-none">
                     <div class="position-relative card border-0">
                         <div class="card-img">
                             <img src="{{asset('frontend/img/donor.png')}}" width="90" />
