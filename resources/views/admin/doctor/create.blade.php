@@ -276,7 +276,7 @@
                 daywiseTimeArray: [],
             }],
 
-            imageSrc: location.origin + "/noImage.jpg",
+            imageSrc: location.origin + "/noimage.jpg",
             changePassword: false,
 
         },
@@ -531,7 +531,7 @@
 
                             this.carts.push(cart)
                         })
-                        this.imageSrc = doctor.image == 0 ? location.origin + "/noImage.jpg" : location.origin + "/" + doctor.image;
+                        this.imageSrc = doctor.image == 0 ? location.origin + "/noimage.jpg" : location.origin + "/" + doctor.image;
                         this.changePassword = true
                     })
             },
@@ -556,7 +556,7 @@
                 this.selectedDepartment = null
                 this.selectedCity = null
                 this.carts = [];
-                this.imageSrc = location.origin + "/noImage.jpg";
+                this.imageSrc = location.origin + "/noimage.jpg";
             },
         },
     })

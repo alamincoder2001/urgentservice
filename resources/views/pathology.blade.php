@@ -283,7 +283,7 @@ $data = App\Models\Test::orderBy("name")->get();
                 url: location.origin + "/doctorwise-organization/" + event.target.value,
                 method: "GET",
                 beforeSend: () => {
-                    $("#organization_id").html(`<option>Select Organization</option>`);
+                    $("#organization_id").html(`<option>Select Doctor Chamber</option>`);
                 },
                 success: res => {
                     if (res.length > 0) {
