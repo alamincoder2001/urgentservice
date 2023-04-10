@@ -24,8 +24,6 @@
                             <th>Phone</th>
                             <th>First Fee</th>
                             <th>Second Fee</th>
-                            <th>Availability</th>
-                            <th>Time</th>
                             <th>Image</th>
                             <th>Action</th>
                         </tr>
@@ -44,17 +42,7 @@
                             </td>
                             <td>{{$item->phone}}</td>
                             <td>{{$item->first_fee}}</td>
-                            <td>{{$item->second_fee}}</td>
-                            <td>
-                                @foreach($item->time as $day)
-                                    {{$day->day}},
-                                @endforeach
-                            </td>
-                            <td>
-                                @foreach($item->time as $t)
-                                {{date("h:i a", strtotime($t->from))}}-{{date("h:i a", strtotime($t->to))}}
-                                @endforeach
-                            </td>
+                            <td>{{$item->second_fee}}</td>                            
                             <td>
                                 <img src="{{asset($item->image != '0' ? $item->image : '/uploads/nouserimage.png')}}" width="50">
                             </td>
