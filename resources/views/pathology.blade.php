@@ -110,7 +110,7 @@
 $data = App\Models\Test::orderBy("name")->get();
 @endphp
 <section id="contact-us">
-    <div class="contact-heading d-flex align-items-center justify-content-start text-white" style="background: url('{{asset('frontend/img/pathology.jpg')}}');">
+    <div class="contact-heading d-flex align-items-center justify-content-start text-white" style="background: url('{{asset('/frontend/img/pathology.jpg')}}');">
         <div class="container">
             <h2 class="text-uppercase text-dark">Pathology Section</h2>
         </div>
