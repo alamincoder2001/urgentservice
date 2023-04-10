@@ -129,7 +129,7 @@
                     <div class="card-body" style="padding-top: 3px;">
                         <a title="All" href="{{route('donor')}}" class="donor_city {{$blood_group != null ? '' : 'text-danger'}}">All</a>
                         @foreach($bloodgroup as $item)
-                        <a title="{{$item->blood_group}}" href="{{route('donor', ['blood_group', 'id' => $item->id])}}" class="donor_city {{$blood_group == $item->id ? 'text-danger': ''}}">{{$item->blood_group}} <span class="text-danger" style="font-weight:700;">({{$item->donor->count()}})</span></a>
+                        <a title="{{$item->blood_group}}" href="{{route('donor', ['blood-group', 'id' => $item->id])}}" class="donor_city {{$blood_group == $item->id ? 'text-danger': ''}}">{{$item->blood_group}} <span class="text-danger" style="font-weight:700;">({{$item->donor->count()}})</span></a>
                         @endforeach
 
                         <!-- city list -->
@@ -167,8 +167,6 @@
                         </a>
                     </div>
                     @endforeach
-
-                    {{$data->links('vendor.pagination.simple-bootstrap-4')}}
                 </div>
             </div>
         </div>
