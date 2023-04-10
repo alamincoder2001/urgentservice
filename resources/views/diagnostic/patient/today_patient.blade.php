@@ -1,6 +1,6 @@
-@extends("layouts.hospital.app")
+@extends("layouts.diagnostic.app")
 
-@section("title", "Hospital Patient Appointment")
+@section("title", "Diagnostic Patient Today Appointment")
 
 @section("content")
 
@@ -34,7 +34,7 @@
                             <td>
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="{{$item->comment==null?'text-danger':'text-success'}}">{{$item->comment==null?'Pending':'Success'}}</i>
-                                    <a href="{{route('hospital.patient.show', $item->id)}}" class="fa fa-eye text-info text-decoration-none"></a>
+                                    <a href="{{route('diagnostic.patient.show', $item->id)}}" class="fa fa-eye text-info text-decoration-none"></a>
                                 </div>
                             </td>
                         </tr>
@@ -48,7 +48,6 @@
 @endsection
 
 @push("js")
-
 <script>
     $("#example").DataTable();
 </script>

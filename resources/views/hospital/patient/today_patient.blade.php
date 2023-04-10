@@ -1,6 +1,6 @@
 @extends("layouts.hospital.app")
 
-@section("title", "Hospital Patient Appointment")
+@section("title", "Hospital Patient Today Appointment")
 
 @section("content")
 
@@ -45,6 +45,7 @@
         </div>
     </div>
 </div>
+
 @endsection
 
 @push("js")

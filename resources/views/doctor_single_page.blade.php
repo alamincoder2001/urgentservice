@@ -274,15 +274,15 @@
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="appointment_date" class="py-2">Appointment Date</label>
-                                    <input type="text" name="appointment_date" id="appointment_date" class="form-control" value="28-03-2023">
+                                    <input type="text" name="appointment_date" id="appointment_date" class="form-control" value="{{date('d-m-Y')}}">
                                     <span class="error-appointment_date error text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="email" class="py-2">Organization</label>
+                                    <label for="email" class="py-2">Doctor Chamber</label>
                                     <select name="organization_id" id="organization_id" class="form-control">
-                                        <option value="">Select Organization</option>
+                                        <option value="">Select Doctor Chamber</option>
                                         @foreach($doctor_details as $item)
                                         @if($item->type == 'chamber')
                                         <option data-id="{{$item->type}}" value="{{$item->chamber_name}}">{{$item->chamber_name}}</option>

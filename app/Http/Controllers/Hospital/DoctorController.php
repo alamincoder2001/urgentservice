@@ -8,6 +8,7 @@ use App\Models\Department;
 use App\Models\Specialist;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\ChamberDiagnosticHospital;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -23,7 +24,7 @@ class DoctorController extends Controller
     public function index()
     {
         $id = Auth::guard("hospital")->user()->id;
-        $doctors = Doctor::with("department", "time")->where("hospital_id", $id)->get();
+        $doctors = ChamberDiagnosticHospital::with("doctor")->where("hospital_id", $id)->get();
         return view("hospital.doctor.index", compact('doctors'));
     }
     public function create()

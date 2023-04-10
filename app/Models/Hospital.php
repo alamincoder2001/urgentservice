@@ -36,6 +36,6 @@ class Hospital extends Authenticatable
 
     public function hospital_wise_doctor()
     {
-        return $this->hasMany(ChamberDiagnosticHospital::class)->with('doctor');
+        return $this->hasMany(ChamberDiagnosticHospital::class, 'hospital_id', 'id')->with('doctor');
     }
 }

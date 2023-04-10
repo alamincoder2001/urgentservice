@@ -16,6 +16,7 @@ use App\Models\Prescription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\CategoryWisePrivatecar;
+use App\Models\ChamberDiagnosticHospital;
 use Illuminate\Support\Facades\Validator;
 use Devfaysal\BangladeshGeocode\Models\Upazila;
 
@@ -171,7 +172,7 @@ class HomeController extends Controller
     // single diagnostic
     public function singlediagnostic($id = null)
     {
-        $data = Diagnostic::with('doctor')->find($id);
+        $data = Diagnostic::with('diagnostic_wise_doctor')->find($id);
         return view("diagnostic_single_page", compact("data"));
     }
     // single ambulance

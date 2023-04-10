@@ -287,6 +287,7 @@ Route::group(['prefix' => 'hospital'], function () {
     Route::post("/doctor-delete", [HospitalDoctorController::class, 'destroy'])->name("hospital.doctor.destroy");
     // hospital appointment
     Route::get("/hospital-patient-appointment", [AppointmentController::class, "index"])->name("hospital.appointment.index");
+    Route::get("/hospital-patient-today-appointment", [AppointmentController::class, "todayAppointment"])->name("hospital.appointment.today");
     Route::get("/hospital-patient-show/{id}", [AppointmentController::class, "patient"])->name("hospital.patient.show");
     Route::post("/hospital/comment/store", [AppointmentController::class, "comment"])->name("hospital.comment.store");
     // dignostic comment
@@ -313,6 +314,7 @@ Route::group(['prefix' => 'diagnostic'], function () {
     Route::post("/doctor-delete", [DiagnosticDoctorController::class, 'destroy'])->name("diagnostic.doctor.destroy");
     // diagnostic patient list
     Route::get("/patient/list", [DiagnosticAppointmentController::class, "index"])->name("diagnostic.appointment");
+    Route::get("/patient/today", [DiagnosticAppointmentController::class, "todayPatient"])->name("diagnostic.appointment.today");
     Route::get("/diagnostic-patient-show/{id}", [DiagnosticAppointmentController::class, "patient"])->name("diagnostic.patient.show");
     Route::post("/diagnostic/comment/store", [DiagnosticAppointmentController::class, "comment"])->name("diagnostic.comment.store");
     // dignostic comment

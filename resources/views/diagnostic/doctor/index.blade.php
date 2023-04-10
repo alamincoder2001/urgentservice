@@ -24,8 +24,6 @@
                             <th>Phone</th>
                             <th>First Fee</th>
                             <th>Second Fee</th>
-                            <th>Availability</th>
-                            <th>Time</th>
                             <th>Image</th>
                             <th>Action</th>
                         </tr>
@@ -34,34 +32,24 @@
                         @foreach($doctors as $key=>$item)
                         <tr>
                             <td>{{$key+1}}</td>
-                            <td>{{$item->name}}</td>
-                            <td>{{$item->username}}</td>
-                            <td>{{$item->education}}</td>
+                            <td>{{$item->doctor->name}}</td>
+                            <td>{{$item->doctor->username}}</td>
+                            <td>{{$item->doctor->education}}</td>
                             <td>
-                                @foreach($item->department as $department)
+                                @foreach($item->doctor->department as $department)
                                     {{$department->specialist->name}}, 
                                 @endforeach
                             </td>
-                            <td>{{$item->phone}}</td>
-                            <td>{{$item->first_fee}}</td>
-                            <td>{{$item->second_fee}}</td>
+                            <td>{{$item->doctor->phone}}</td>
+                            <td>{{$item->doctor->first_fee}}</td>
+                            <td>{{$item->doctor->second_fee}}</td>
                             <td>
-                                @foreach($item->time as $day)
-                                    {{$day->day}},
-                                @endforeach
-                            </td>
-                            <td>
-                                @foreach($item->time as $t)
-                                {{date("h:i a", strtotime($t->from))}}-{{date("h:i a", strtotime($t->to))}}
-                                @endforeach
-                            </td>
-                            <td>
-                                <img src="{{asset($item->image != '0' ? $item->image : '/uploads/nouserimage.png')}}" width="50">
+                                <img src="{{asset($item->doctor->image != '0' ? $item->doctor->image : '/uploads/nouserimage.png')}}" width="50">
                             </td>
                             <td>
                                 <div class="d-flex">
-                                    <a href="{{route('diagnostic.doctor.edit',$item->id)}}" class="fa fa-edit text-primary text-decoration-none"></a>
-                                    <button class="fa fa-trash text-danger border-0 deletediagnosticDoctor" style="background: none;" value="{{$item->id}}"></button>
+                                    <a href="{{route('diagnostic.doctor.edit',$item->doctor->id)}}" class="fa fa-edit text-primary text-decoration-none"></a>
+                                    <button class="fa fa-trash text-danger border-0 deletediagnosticDoctor" style="background: none;" value="{{$item->doctor->id}}"></button>
                                 </div>
                             </td>
                         </tr>

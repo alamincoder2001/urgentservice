@@ -34,8 +34,8 @@ class Diagnostic extends Authenticatable
         return $this->belongsTo(District::class, "city_id");
     }
 
-    public function doctor()
+    public function diagnostic_wise_doctor()
     {
-        return $this->hasMany(Doctor::class)->with("department");
+        return $this->hasMany(ChamberDiagnosticHospital::class, 'diagnostic_id', 'id')->with('doctor');
     }
 }

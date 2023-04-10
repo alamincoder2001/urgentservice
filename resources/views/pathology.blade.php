@@ -154,9 +154,9 @@ $data = App\Models\Test::orderBy("name")->get();
 
                                     <div class="col-md-6 d-none showhideOrganization">
                                         <div class="form-group">
-                                            <label for="organization_id" class="py-2">Organization</label>
+                                            <label for="organization_id" class="py-2">Doctor Chamber</label>
                                             <select class="form-control" name="organization_id" id="organization_id">
-                                                <option value="">Select Organization</option>
+                                                <option value="">Select Doctor Chamber</option>
                                             </select>
                                         </div>
                                     </div>
@@ -286,22 +286,18 @@ $data = App\Models\Test::orderBy("name")->get();
                     $("#organization_id").html(`<option>Select Organization</option>`);
                 },
                 success: res => {
-                    if (res.chambers.length > 0) {
-                        $.each(res.chambers, (index, value) => {
-                            let row = `<option data-id="chamber" value="${value.name}">${value.name}</option>`;
-                            $("#organization_id").append(row);
-                        })
-                    }
-                    if (res.hospitals.length > 0) {
-                        $.each(res.hospitals, (index, value) => {
-                            let row = `<option data-id="hospital" value="${value.id}">${value.name}</option>`;
-                            $("#organization_id").append(row);
-                        })
-                    }
-                    if (res.diagnostics.length > 0) {
-                        $.each(res.diagnostics, (index, value) => {
-                            let row = `<option data-id="diagnostic" value="${value.id}">${value.name}</option>`;
-                            $("#organization_id").append(row);
+                    if (res.length > 0) {
+                        $.each(res, (index, value) => {
+                            if(value.type == 'chamber'){
+                                let row = `<option data-id="chamber" value="${value.chamber_name}">${value.chamber_name}</option>`;
+                                $("#organization_id").append(row);
+                            }else if(value.type == 'hospital'){
+                                let row = `<option data-id="hospital" value="${value.hospital_id}">${value.hospital_name}</option>`;
+                                $("#organization_id").append(row);
+                            }else{
+                                let row = `<option data-id="diagnostic" value="${value.diagnostic_id}">${value.diagnostic_name}</option>`;
+                                $("#organization_id").append(row);
+                            }
                         })
                     }
                 }

@@ -19,9 +19,16 @@ class AppointmentController extends Controller
     public function index()
     {
         $diagnostic = Auth::guard("diagnostic")->user();
-        $tests = Test::where("diagnostic_id", $diagnostic->id)->orderBy("name")->get();
         $data["appointment"] = Appointment::where("diagnostic_id", $diagnostic->id)->get();
-        return view("diagnostic.patient.index", compact("data", "tests"));
+        return view("diagnostic.patient.index", compact("data"));
+    }
+
+    public function todayPatient()
+    {
+        $today = date('d-m-Y');
+        $diagnostic = Auth::guard("diagnostic")->user();
+        $data["appointment"] = Appointment::where("diagnostic_id", $diagnostic->id)->where('appointment_date', $today)->get();
+        return view("diagnostic.patient.today_patient", compact("data"));
     }
 
     public function patient($id)

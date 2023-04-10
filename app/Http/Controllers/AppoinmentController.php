@@ -9,6 +9,7 @@ use App\Models\Diagnostic;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
 use App\Mail\PatientNotification;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
@@ -74,25 +75,18 @@ class AppoinmentController extends Controller
 
     public function organization($id)
     {
-        $data = Doctor::with("time", "chamber", "department")->find($id);
-        $hospitals = [];
-        $diagnostics = [];
-        if ($data->hospital_id != null) {
-            //hospital
-            $hosp_id = explode(",", $data->hospital_id);
-            foreach ($hosp_id as $key => $h) {
-                array_push($hospitals, Hospital::where("id", $h)->first());
-            }
-        }
-        if ($data->diagnostic_id != null) {
-            //diagnostic
-            $diag_id = explode(",", $data->diagnostic_id);
-            foreach ($diag_id as $key => $d) {
-                array_push($diagnostics, Diagnostic::where("id", $d)->first());
-            }
-        }
-        $chambers = Chamber::where("doctor_id", $id)->get();
-
-        return response()->json(["chambers"=>$chambers, "hospitals" => $hospitals, "diagnostics" => $diagnostics]);
+        $data = DB::select("SELECT cdh.*,
+                                d.name AS doctor_name,
+                                h.name AS hospital_name, 
+                                h.address AS hospital_address,
+                                diag.name AS diagnostic_name, 
+                                diag.address AS diagnostic_address
+                            FROM chamber_diagnostic_hospitals cdh
+                            JOIN doctors d ON d.id = cdh.doctor_id
+                            LEFT JOIN hospitals h ON h.id = cdh.hospital_id
+                            LEFT JOIN diagnostics diag ON diag.id = cdh.diagnostic_id
+                            WHERE cdh.doctor_id = '$id'");
+                            
+        return response()->json($data);
     }
 }

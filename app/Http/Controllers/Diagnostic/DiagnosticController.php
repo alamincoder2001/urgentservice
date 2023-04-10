@@ -22,9 +22,11 @@ class DiagnosticController extends Controller
 
     public function index()
     {
+        $today = date('d-m-Y');
         $id = Auth::guard("diagnostic")->user()->id;
         $data["doctor"] = ChamberDiagnosticHospital::where("diagnostic_id", $id)->get();
         $data["patient"] = Appointment::where("diagnostic_id", $id)->get();
+        $data["today"] = Appointment::where("diagnostic_id", $id)->where('appointment_date', $today)->get();
         return view("diagnostic.dashboard", compact("data"));
     }
 

@@ -70,19 +70,19 @@
             <div class="card-body doctor_details">
                 <h5 class="text-center" style="text-decoration: underline;margin-bottom: 20px;">Related All Doctor</h5>
                 <div class="row">
-                    @if($data->doctor->count())
-                    @foreach($data->doctor as $item)
+                    @if($data->diagnostic_wise_doctor->count())
+                    @foreach($data->diagnostic_wise_doctor as $item)
                     <div class="col-12 col-lg-4 mb-3">
-                        <a href="{{route('singlepagedoctor', $item->id)}}" target="_blank" class="text-decoration-none text-secondary" title="{{$item->name}}">
+                        <a href="{{route('singlepagedoctor', $item->doctor->id)}}" target="_blank" class="text-decoration-none text-secondary" title="{{$item->doctor->name}}">
                             <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
                                 <div class="card-body d-flex" style="padding: 5px;gap: 8px;">
                                     <div class="image" style="border: 1px dotted #ababab;height: 110px;margin-top: 4px;">
-                                        <img src="{{asset($item->image? $item->image:'/uploads/nouserimage.png')}}" width="100" height="100%">
+                                        <img src="{{asset($item->doctor->image? $item->doctor->image:'/uploads/nouserimage.png')}}" width="100" height="100%">
                                     </div>
                                     <div class="info" style="padding-right:5px;">
-                                        <h6>{{$item->name}}</h6>
-                                        <p style="color:#c99913;">{{$item->department[0]->specialist->name}}, {{$item->city->name}}</p>
-                                        <p style="border-top: 2px dashed #dddddd85;text-align:justify;">{{mb_strimwidth($item->education, 0, 100, "...")}}</p>
+                                        <h6>{{$item->doctor->name}}</h6>
+                                        <p style="color:#c99913;">{{$item->doctor->department[0]->specialist->name}}, {{$item->doctor->city->name}}</p>
+                                        <p style="border-top: 2px dashed #dddddd85;text-align:justify;">{{mb_strimwidth($item->doctor->education, 0, 100, "...")}}</p>
                                     </div>
                                 </div>
                             </div>

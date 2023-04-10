@@ -32,7 +32,7 @@
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <li class="dropdown user-dropdown">
-            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" type="button" aria-expanded="false"><img src="{{asset(Auth::guard('hospital')->user()->image != 0 ? Auth::guard('hospital')->user()->image : '/noimage.jpg')}}" alt="..." class="rounded-circle"></a>
+            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" type="button" aria-expanded="false"><img src="{{asset(Auth::guard('hospital')->user()->image != '0' ? Auth::guard('hospital')->user()->image : '/noimage.jpg')}}" alt="..." class="rounded-circle"></a>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="{{route('hospital.profile')}}"><i class="fa fa-hospital"></i> Hospital Profile</a></li>
               <li role="separator" class="divider"></li>
