@@ -31,7 +31,7 @@
 </style>
 @endpush
 @section("content")
-<section id="hospital-details" style="padding: 25px 0;">
+<section id="doctor-details" style="padding: 25px 0;">
     <div class="container">
         <div class="doctordetail-header mb-3">
             <div class="row d-flex justify-content-center align-items-center">

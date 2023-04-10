@@ -19,7 +19,7 @@
 </style>
 @endpush
 @section("content")
-<section id="hospital-details" style="padding: 25px 0;">
+<section id="doctor-details" style="padding: 25px 0;">
     <div class="container">
         <div class="doctordetail-header mb-3">
             <div class="row d-flex justify-content-center align-items-center">
@@ -64,10 +64,20 @@
                         <h6 class="card-title text-uppercase m-0" style="color:#832a00;">CarType List</h6>
                     </div>
                     <div class="card-body" style="padding-top: 3px;">
-                        <a title="All" href="{{route('privatecar.details')}}" class="privatecar_category {{$id != null ? '' : 'text-danger'}}">All</a>
+                        <a title="All" href="{{route('privatecar.details')}}" class="privatecar_category {{$type_id != null ? '' : 'text-danger'}}">All</a>
                         @foreach($categories as $item)
-                        <a title="{{$item->name}}" href="{{route('privatecar.details', $item->id)}}" class="privatecar_category {{$id != null ? $id == $item->id ? 'text-danger': '' : ''}}">{{$item->name}} <span class="text-danger" style="font-weight:700;">({{$item->typewiseprivatecar->count()}})</span></a>
+                        <a title="{{$item->name}}" href="{{route('privatecar.details', ['type', 'id' => $item->id])}}" class="privatecar_category {{$type_id == $item->id ? 'text-danger': ''}}">{{$item->name}} <span class="text-danger" style="font-weight:700;">({{$item->typewiseprivatecar->count()}})</span></a>
                         @endforeach
+
+                        <!-- city list -->
+                        <div class="mt-5" style="border: none;border-radius: 0;background: #e3e3e3;padding:7px;">
+                            <h6 class="title text-uppercase m-0" style="color:#832a00;">City List</h6>
+                        </div>
+                        <div style="height: 400px;overflow-y: scroll;">
+                            @foreach($cities as $item)
+                            <a title="{{$item->name}}" href="{{route('privatecar.details',['city', 'id' => $item->id])}}" class="privatecar_category {{$item->id == $city_id ? 'text-danger' : ''}}">{{$item->name}} <span class="text-danger" style="font-weight:700;">({{$item->privatecar->count()}})</span></a>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
@@ -94,7 +104,9 @@
                     </div>
                     @endforeach
 
+                    @if($city_id == null)
                     {{$data['privatecar']->links('vendor.pagination.simple-bootstrap-4')}}
+                    @endif
                 </div>
             </div>
         </div>

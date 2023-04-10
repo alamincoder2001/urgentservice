@@ -86,7 +86,7 @@
                         <div style="height: 600px;overflow-y: scroll;">
                             <a href="{{route('doctor.details')}}" class="doctor_department {{$department == null ? 'text-danger' : ''}}">All</a>
                             @foreach($departments as $item)
-                            <a title="{{$item->name}}" href="{{route('doctor.details',['department', 'name' => strtolower($item->name)])}}" class="doctor_department {{strtolower($item->name) == $department ? 'text-danger' : ''}}">{{mb_strimwidth($item->name, 0, 28, "...")}} <span class="text-danger" style="font-weight:700;">({{$item->specialistdoctor->count()}})</span></a>
+                            <a title="{{$item->name}}" href="{{route('doctor.details',['department', 'name' => strtolower($item->name)])}}" class="doctor_department {{strtolower($item->name) == strtolower($department) ? 'text-danger' : ''}}">{{mb_strimwidth($item->name, 0, 28, "...")}} <span class="text-danger" style="font-weight:700;">({{$item->specialistdoctor->count()}})</span></a>
                             @endforeach
                         </div>
 
@@ -96,8 +96,7 @@
                         </div>
                         <div style="height: 400px;overflow-y: scroll;">
                             @foreach($cities as $item)
-                            
-                            <a title="{{$item->name}}" href="{{route('doctor.details',['city', 'id' => $item->id])}}" class="doctor_department {{$item->id == $department ? 'text-danger' : ''}}">{{$item->name}} <span class="text-danger" style="font-weight:700;">({{$item->doctor->count()}})</span></a>
+                            <a title="{{$item->name}}" href="{{route('doctor.details',['city', 'id' => $item->id])}}" class="doctor_department {{$item->id == $city_id ? 'text-danger' : ''}}">{{$item->name}} <span class="text-danger" style="font-weight:700;">({{$item->doctor->count()}})</span></a>
                             @endforeach
                         </div>
                     </div>
@@ -126,7 +125,9 @@
                     </div>
                     @endforeach
 
+                    @if($city_id == null)
                     {{$data['specialist']->links('vendor.pagination.simple-bootstrap-4')}}
+                    @endif
                 </div>
             </div>
         </div>

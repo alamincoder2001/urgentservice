@@ -31,67 +31,91 @@ class HomeController extends Controller
         return view('website', compact("data"));
     }
     //doctor
-    public function doctor($department = null)
+    public function doctor($dept_id = null)
     {
-        if ($department != null) {
-            if ($department == 'department') {
+        $department = null;
+        $city_id = null;
+        if ($dept_id != null) {
+            if ($dept_id == 'department') {
                 $dept = Department::where("name", $_GET['name'])->first();
-                $department = $dept->name;
+                $department .= $dept->name;
                 $data["specialist"] = Specialist::where("department_id", $dept->id)->with("doctor", "specialist")->groupBy("doctor_id")->latest()->paginate(24);
-            }else{
-                return "Working.....";
+            } else {
+                $city_id .= $_GET['id'];
+                $data['specialist'] = Specialist::with("doctor", "specialist")->groupBy("doctor_id")->orderBy('id', 'desc')->get()->filter(function ($data, $key) {
+                    return $data->doctor->city_id == $_GET['id'];
+                });
             }
         } else {
-           $data["specialist"] = Specialist::with("doctor", "specialist")->groupBy("doctor_id")->latest()->paginate(24);
+            $data["specialist"] = Specialist::with("doctor", "specialist")->groupBy("doctor_id")->orderBy('id', 'desc')->paginate(24);
         }
-        return view('doctor_details', compact("data", "department"));
+        return view('doctor_details', compact("data", "department", "city_id"));
     }
     //hospital
     public function hospital($city_id = null)
     {
         if ($city_id == null) {
             $total_hospital = Hospital::get()->count();
-            $data['hospital'] = Hospital::with('city')->orderBy('id', 'DESC')->paginate(26);
-        }else{
+            $data['hospital'] = Hospital::with('city')->orderBy('id', 'DESC')->paginate(24);
+        } else {
             $total_hospital = Hospital::where('city_id', $city_id)->get()->count();
-            $data['hospital'] = Hospital::with('city')->where('city_id', $city_id)->orderBy('id', 'DESC')->paginate(26);
+            $data['hospital'] = Hospital::with('city')->where('city_id', $city_id)->orderBy('id', 'DESC')->paginate(24);
         }
         return view('hospital_details', compact("data", "total_hospital", "city_id"));
     }
     //diagnostic
     public function diagnostic($city_id = null)
     {
-        if($city_id == null){
+        if ($city_id == null) {
             $total_diagnostic = Diagnostic::get()->count();
-            $data['diagnostic'] = Diagnostic::with('city')->orderBy('id', 'DESC')->paginate(26);
-        }else{
+            $data['diagnostic'] = Diagnostic::with('city')->orderBy('id', 'DESC')->paginate(24);
+        } else {
             $total_diagnostic = Diagnostic::where('city_id', $city_id)->get()->count();
-            $data['diagnostic'] = Diagnostic::with('city')->where('city_id', $city_id)->orderBy('id', 'DESC')->paginate(26);
+            $data['diagnostic'] = Diagnostic::with('city')->where('city_id', $city_id)->orderBy('id', 'DESC')->paginate(24);
         }
         return view('diagnostic_details', compact("data", "total_diagnostic", "city_id"));
     }
     //ambulance
-    public function ambulance($type = null)
+    public function ambulance($types = null)
     {
+        $type = null;
+        $city_id = null;
         $data['ambulance_types'] = Ambulance::groupBy('ambulance_type')->get();
-        if($type == null){
-            $data['ambulance'] = Ambulance::with('city')->orderBy('id', 'DESC')->paginate(15);
-        }else{
-            $data['ambulance'] = Ambulance::with('city')->where('ambulance_type', $type)->orderBy('id', 'DESC')->paginate(15);
+        if ($types != null) {
+            if ($types == 'type') {
+                $type .= $_GET['type_name'];
+                $data['ambulance'] = Ambulance::with('city')->where('ambulance_type', $_GET['type_name'])->orderBy('id', 'DESC')->paginate(24);
+            } else {
+                $city_id .= $_GET['id'];
+                $data['ambulance'] = Ambulance::with('city')->where('city_id', $_GET['id'])->orderBy('id', 'DESC')->paginate(24);
+            }
+        } else {
+            $data['ambulance'] = Ambulance::with('city')->orderBy('id', 'DESC')->paginate(24);
         }
-        return view('ambulance_details', compact("data", 'type'));
+        return view('ambulance_details', compact("data", 'type', 'city_id'));
     }
 
     //ambulance
-    public function privatecar($id = null)
+    public function privatecar($types = null)
     {
         $categories = Cartype::with('typewiseprivatecar')->latest()->get();
-        if ($id == null) {
-            $data['privatecar'] = CategoryWisePrivatecar::with('privatecar', 'cartype')->paginate(25);
+
+        $type_id = null;
+        $city_id = null;
+        if ($types != null) {
+            if ($types == 'type') {
+                $type_id .= $_GET['id'];
+                $data['privatecar'] = CategoryWisePrivatecar::with('privatecar', 'cartype')->where('cartype_id', $_GET['id'])->paginate(24);
+            } else {
+                $city_id .= $_GET['id'];
+                $data['privatecar'] = CategoryWisePrivatecar::with('privatecar', 'cartype')->get()->filter(function ($data) {
+                    return $data->privatecar->city_id == $_GET['id'];
+                });
+            }
         } else {
-            $data['privatecar'] = CategoryWisePrivatecar::with('privatecar', 'cartype')->where('cartype_id', $id)->paginate(25);
+            $data['privatecar'] = CategoryWisePrivatecar::with('privatecar', 'cartype')->paginate(24);
         }
-        return view('privatecar_details', compact("data", "categories", "id"));
+        return view('privatecar_details', compact("data", "categories", "type_id", "city_id"));
     }
 
     // single doctor

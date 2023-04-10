@@ -19,7 +19,7 @@
 @endpush
 
 @section("content")
-<section id="hospital-details" style="padding: 25px 0;">
+<section id="doctor-details" style="padding: 25px 0;">
     <div class="container">
         <div class="doctordetail-header mb-3">
             <div class="row d-flex justify-content-center align-items-center">
@@ -67,8 +67,18 @@
                     <div class="card-body" style="padding-top: 3px;">
                         <a title="All" href="{{route('ambulance.details')}}" class="ambulance_category {{$type != null ? '' : 'text-danger'}}">All</a>
                         @foreach($data['ambulance_types'] as $item)
-                        <a title="{{$item->ambulance_type}}" href="{{route('ambulance.details', $item->ambulance_type)}}" class="ambulance_category {{$type != null ? $type == $item->ambulance_type ? 'text-danger': '' : ''}}">{{$item->ambulance_type}} <span class="text-danger" style="font-weight:700;">({{\App\Models\Ambulance::TotalTypeWiseAmbulance($item->ambulance_type)}})</span></a>
+                        <a title="{{$item->ambulance_type}}" href="{{route('ambulance.details', ['type', 'type_name' => $item->ambulance_type])}}" class="ambulance_category {{$type != null ? $type == $item->ambulance_type ? 'text-danger': '' : ''}}">{{$item->ambulance_type}} <span class="text-danger" style="font-weight:700;">({{\App\Models\Ambulance::TotalTypeWiseAmbulance($item->ambulance_type)}})</span></a>
                         @endforeach
+
+                        <!-- city list -->
+                        <div class="mt-5" style="border: none;border-radius: 0;background: #e3e3e3;padding:7px;">
+                            <h6 class="title text-uppercase m-0" style="color:#832a00;">City List</h6>
+                        </div>
+                        <div style="height: 400px;overflow-y: scroll;">
+                            @foreach($cities as $item)
+                            <a title="{{$item->name}}" href="{{route('ambulance.details',['city', 'id' => $item->id])}}" class="ambulance_category {{$item->id == $city_id ? 'text-danger' : ''}}">{{$item->name}} <span class="text-danger" style="font-weight:700;">({{$item->ambulance->count()}})</span></a>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
