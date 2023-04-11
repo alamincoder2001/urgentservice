@@ -27,10 +27,9 @@ class DoctorController extends Controller
         $doctors = ChamberDiagnosticHospital::with("doctor")->where("hospital_id", $id)->get();
         return view("hospital.doctor.index", compact('doctors'));
     }
-    public function create()
+    public function create($id = null)
     {
-        $departments = Department::all();
-        return view("hospital.doctor.create", compact("departments"));
+        return view("hospital.doctor.create", compact('id'));
     }
 
     public function store(Request $request)

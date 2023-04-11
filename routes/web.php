@@ -280,7 +280,7 @@ Route::group(['prefix' => 'hospital'], function () {
 
     // hospital doctor route
     Route::get("/doctor", [HospitalDoctorController::class, 'index'])->name("hospital.doctor.index");
-    Route::get("/doctor-create", [HospitalDoctorController::class, 'create'])->name("hospital.doctor.create");
+    Route::get("/doctor-create/{id?}", [HospitalDoctorController::class, 'create'])->name("hospital.doctor.create");
     Route::post("/doctor", [HospitalDoctorController::class, 'store'])->name("hospital.doctor.store");
     Route::get("/doctor-edit/{id}", [HospitalDoctorController::class, 'edit'])->name("hospital.doctor.edit");
     Route::post("/doctor-update", [HospitalDoctorController::class, 'update'])->name("hospital.doctor.update");
