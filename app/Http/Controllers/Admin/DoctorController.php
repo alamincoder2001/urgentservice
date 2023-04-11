@@ -96,20 +96,21 @@ class DoctorController extends Controller
             if ($validator->fails()) {
                 return response()->json(["error" => $validator->errors()]);
             } else {
-                $data                = new Doctor;
-                $data->image         = $this->imageUpload($request, 'image', 'uploads/doctor') ?? '';
-                $data->name          = $request->name;
-                $data->username      = $request->username;
-                $data->email         = $request->email;
-                $data->password      = Hash::make($request->password);
-                $data->education     = $request->education;
-                $data->city_id       = $request->city_id;
-                $data->address       = $request->address;
-                $data->phone         = $request->phone;
-                $data->first_fee     = $request->first_fee;
-                $data->second_fee    = $request->second_fee;
-                $data->concentration = $request->concentration;
-                $data->description   = $request->description;
+                $data                   = new Doctor;
+                $data->image            = $this->imageUpload($request, 'image', 'uploads/doctor') ?? '';
+                $data->name             = $request->name;
+                $data->username         = $request->username;
+                $data->email            = $request->email;
+                $data->password         = Hash::make($request->password);
+                $data->education        = $request->education;
+                $data->city_id          = $request->city_id;
+                $data->address          = $request->address;
+                $data->appointment_text = $request->appointment_text;
+                $data->phone            = $request->phone;
+                $data->first_fee        = $request->first_fee;
+                $data->second_fee       = $request->second_fee;
+                $data->concentration    = $request->concentration;
+                $data->description      = $request->description;
                 $data->save();
 
 
@@ -186,14 +187,15 @@ class DoctorController extends Controller
                 if (!empty($request->password)) {
                     $data->password = Hash::make($request->password);
                 }
-                $data->education     = $request->education;
-                $data->city_id       = $request->city_id;
-                $data->address       = $request->address;
-                $data->phone         = $request->phone;
-                $data->first_fee     = $request->first_fee;
-                $data->second_fee    = $request->second_fee;
-                $data->concentration = $request->concentration;
-                $data->description   = $request->description;
+                $data->education        = $request->education;
+                $data->city_id          = $request->city_id;
+                $data->address          = $request->address;
+                $data->appointment_text = $request->appointment_text;
+                $data->phone            = $request->phone;
+                $data->first_fee        = $request->first_fee;
+                $data->second_fee       = $request->second_fee;
+                $data->concentration    = $request->concentration;
+                $data->description      = $request->description;
                 $data->update();
 
                 Specialist::where("doctor_id", $request->id)->delete();

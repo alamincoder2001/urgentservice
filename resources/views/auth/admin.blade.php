@@ -128,7 +128,7 @@
 <body>
 
     <div class="wrapper">
-        <h3 class="text-center">Urgent Service BD</h3>
+        <h3 class="text-center text-uppercase">{{$setting->name}}</h3>
         <div class="text-center mt-4 name">
             <i class="fa ami fa-user"></i>
         </div>

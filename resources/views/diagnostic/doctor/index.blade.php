@@ -37,7 +37,7 @@
                             <td>{{$item->doctor->education}}</td>
                             <td>
                                 @foreach($item->doctor->department as $department)
-                                    {{$department->specialist->name}}, 
+                                {{$department->specialist->name}},
                                 @endforeach
                             </td>
                             <td>{{$item->doctor->phone}}</td>
@@ -48,7 +48,7 @@
                             </td>
                             <td>
                                 <div class="d-flex">
-                                    <a href="{{route('diagnostic.doctor.edit',$item->doctor->id)}}" class="fa fa-edit text-primary text-decoration-none"></a>
+                                    <a href="{{route('diagnostic.doctor.create',$item->doctor->id)}}" class="fa fa-edit text-primary text-decoration-none"></a>
                                     <button class="fa fa-trash text-danger border-0 deletediagnosticDoctor" style="background: none;" value="{{$item->doctor->id}}"></button>
                                 </div>
                             </td>
@@ -67,7 +67,7 @@
     $(document).ready(() => {
         $("#example").DataTable();
 
-        $(document).on("click", ".deletediagnosticDoctor",(event) => {
+        $(document).on("click", ".deletediagnosticDoctor", (event) => {
             if (confirm("Are you sure want to delete this data!")) {
                 $.ajax({
                     url: "{{route('diagnostic.doctor.destroy')}}",

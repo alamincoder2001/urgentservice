@@ -3,15 +3,17 @@
 namespace App\Http\Controllers\Hospital;
 
 use App\Models\Doctor;
+use App\Models\DayTime;
 use App\Models\Sittime;
 use App\Models\Department;
 use App\Models\Specialist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\ChamberDiagnosticHospital;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use App\Models\ChamberDiagnosticHospital;
 use Illuminate\Support\Facades\Validator;
 
 class DoctorController extends Controller
@@ -27,9 +29,20 @@ class DoctorController extends Controller
         $doctors = ChamberDiagnosticHospital::with("doctor")->where("hospital_id", $id)->get();
         return view("hospital.doctor.index", compact('doctors'));
     }
+
     public function create($id = null)
     {
         return view("hospital.doctor.create", compact('id'));
+    }
+
+    public function fetch($id)
+    {
+        $doctor           = Doctor::with("city", "department")->find($id);
+        $auth_id          = Auth::guard('hospital')->user()->id;
+        $hospital_doctor  = ChamberDiagnosticHospital::where("doctor_id", $id)->where('hospital_id', $auth_id)->first();
+        $daywiseTimeArray = DB::select("SELECT dt.* FROM day_times dt WHERE dt.type_id = '$hospital_doctor->id'");
+
+        return response()->json(["doctor" => $doctor, "daywiseTimeArray" => $daywiseTimeArray]);
     }
 
     public function store(Request $request)
@@ -40,10 +53,8 @@ class DoctorController extends Controller
                 'username'      => "required|unique:doctors",
                 'email'         => "required",
                 'education'     => "required|max:255",
-                'department_id' => "required",
+                'departments'   => "required",
                 'password'      => "required",
-                'to'            => "required",
-                'from'          => "required",
                 'concentration' => "required",
                 'phone'         => "required",
                 'first_fee'     => "required|numeric",
@@ -53,52 +64,50 @@ class DoctorController extends Controller
             if ($validator->fails()) {
                 return response()->json(["error" => $validator->errors()]);
             } else {
-                $data = new Doctor;
-                $data->image = $this->imageUpload($request, 'image', 'uploads/doctor') ?? '';
-                $data->name = $request->name;
-                $data->username = $request->username;
-                $data->email = $request->email;
-                $data->password = Hash::make($request->password);
-                $data->education = $request->education;
-                $data->city_id = Auth::guard("hospital")->user()->city_id;
-                $data->phone = implode(",", $request->phone);
-                $data->first_fee = $request->first_fee;
-                $data->second_fee = $request->second_fee;
-                $data->description = $request->description;
-                $data->concentration = $request->concentration;
-                $data->hospital_id = Auth::guard("hospital")->user()->id;
+                $data                   = new Doctor;
+                $data->image            = $this->imageUpload($request, 'image', 'uploads/doctor') ?? '';
+                $data->name             = $request->name;
+                $data->username         = $request->username;
+                $data->email            = $request->email;
+                $data->password         = Hash::make($request->password);
+                $data->education        = $request->education;
+                $data->city_id          = $request->city_id;
+                $data->phone            = $request->phone;
+                $data->first_fee        = $request->first_fee;
+                $data->second_fee       = $request->second_fee;
+                $data->description      = $request->description;
+                $data->address          = $request->address;
+                $data->appointment_text = $request->appointment_text;
+                $data->concentration    = $request->concentration;
                 $data->save();
 
-                if (!empty($request->from)) {
-                    foreach ($request->from as $key => $item) {
-                        $t            = new Sittime();
-                        $t->doctor_id = $data->id;
-                        $t->day       = $request->day[$key];
-                        $t->from      = $item;
-                        $t->to        = $request->to[$key];
-                        $t->save();
-                    }
-                }
-                if (!empty($request->department_id)) {
-                    foreach ($request->department_id as $item) {
-                        $s = new Specialist();
-                        $s->doctor_id = $data->id;
-                        $s->department_id = $item;
+                if (!empty($request->departments)) {
+                    foreach (json_decode($request->departments) as $item) {
+                        $s                = new Specialist();
+                        $s->doctor_id     = $data->id;
+                        $s->department_id = $item->id;
                         $s->save();
                     }
+                }
+
+                $details              = new ChamberDiagnosticHospital();
+                $details->doctor_id   = $data->id;
+                $details->type        = 'hospital';
+                $details->hospital_id = Auth::guard("hospital")->user()->id;
+                $details->save();
+                foreach (json_decode($request->daywiseTimeArray) as $key => $item) {
+                    $t           = new DayTime();
+                    $t->type_id  = $details->id;
+                    $t->day      = $item->day;
+                    $t->fromTime = $item->fromTime;
+                    $t->toTime   = $item->toTime;
+                    $t->save();
                 }
                 return response()->json("Doctor addedd successfully");
             }
         } catch (\Throwable $e) {
             return "Something went wrong";
         }
-    }
-
-    public function edit($id)
-    {
-        $departments = Department::all();
-        $data = Doctor::with("time", "department")->find($id);
-        return view("hospital.doctor.edit", compact("data", "departments"));
     }
 
     public function update(Request $request)
@@ -109,9 +118,7 @@ class DoctorController extends Controller
                 'username'      => "required|unique:doctors,username," . $request->id,
                 'email'         => "required",
                 'education'     => "required|max:255",
-                'department_id' => "required",
-                'to'            => "required",
-                'from'          => "required",
+                'departments'   => "required",
                 'concentration' => "required",
                 'phone'         => "required",
                 'first_fee'     => "required|numeric",
@@ -129,43 +136,49 @@ class DoctorController extends Controller
                     }
                     $data->image = $this->imageUpload($request, 'image', 'uploads/doctor') ?? '';
                 }
-                $data->name = $request->name;
+                $data->name     = $request->name;
                 $data->username = $request->username;
-                $data->email = $request->email;
+                $data->email    = $request->email;
                 if (!empty($request->password)) {
                     $data->email = Hash::make($request->password);
                 }
 
-                $data->education = $request->education;
-                $data->city_id = Auth::guard("hospital")->user()->city_id;
-                $data->phone = implode(",", $request->phone);
-                $data->first_fee = $request->first_fee;
-                $data->second_fee = $request->second_fee;
-                $data->description = $request->description;
-                $data->concentration = $request->concentration;
-                $data->hospital_id = Auth::guard("hospital")->user()->id;
+                $data->education        = $request->education;
+                $data->city_id          = $request->city_id;
+                $data->phone            = $request->phone;
+                $data->first_fee        = $request->first_fee;
+                $data->second_fee       = $request->second_fee;
+                $data->description      = $request->description;
+                $data->address          = $request->address;
+                $data->appointment_text = $request->appointment_text;
+                $data->concentration    = $request->concentration;
                 $data->update();
 
                 Specialist::where("doctor_id", $request->id)->delete();
-                if (!empty($request->department_id)) {
-                    foreach ($request->department_id as $item) {
+                if (!empty($request->departments)) {
+                    foreach (json_decode($request->departments) as $item) {
                         $s                = new Specialist();
                         $s->doctor_id     = $request->id;
-                        $s->department_id = $item;
+                        $s->department_id = $item->id;
                         $s->save();
                     }
                 }
-                Sittime::where("doctor_id", $request->id)->delete();
-                if (!empty($request->from)) {
-                    foreach ($request->from as $key => $item) {
-                        $t            = new Sittime();
-                        $t->doctor_id = $request->id;
-                        $t->day       = $request->day[$key];
-                        $t->from      = $item;
-                        $t->to        = $request->to[$key];
-                        $t->save();
-                    }
+
+                ChamberDiagnosticHospital::where("doctor_id", $request->id)->delete();
+                $details              = new ChamberDiagnosticHospital();
+                $details->doctor_id   = $request->id;
+                $details->type        = 'hospital';
+                $details->hospital_id = Auth::guard("hospital")->user()->id;
+                $details->save();
+                foreach (json_decode($request->daywiseTimeArray) as $key => $item) {
+                    $t           = new DayTime();
+                    $t->type_id  = $details->id;
+                    $t->day      = $item->day;
+                    $t->fromTime = $item->fromTime;
+                    $t->toTime   = $item->toTime;
+                    $t->save();
                 }
+
                 return response()->json("Doctor updated successfully");
             }
         } catch (\Throwable $e) {

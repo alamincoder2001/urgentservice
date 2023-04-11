@@ -3,15 +3,17 @@
 namespace App\Http\Controllers\Diagnostic;
 
 use App\Models\Doctor;
+use App\Models\Department;
 use App\Models\Diagnostic;
+use App\Models\Appointment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Appointment;
-use App\Models\ChamberDiagnosticHospital;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use App\Models\ChamberDiagnosticHospital;
 use Illuminate\Support\Facades\Validator;
+use Devfaysal\BangladeshGeocode\Models\District;
 
 class DiagnosticController extends Controller
 {
@@ -119,5 +121,15 @@ class DiagnosticController extends Controller
         }catch(\Throwable $e){
             return response()->json("Something went wrong");
         }
+    }
+
+    public function fetch()
+    {
+        return District::orderBy('name', 'asc')->get();
+    }
+
+    public function getDepartment()
+    {
+        return Department::get();
     }
 }

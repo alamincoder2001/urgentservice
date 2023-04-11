@@ -4,14 +4,16 @@ namespace App\Http\Controllers\Hospital;
 
 use App\Models\Doctor;
 use App\Models\Hospital;
+use App\Models\Department;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\ChamberDiagnosticHospital;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use App\Models\ChamberDiagnosticHospital;
 use Illuminate\Support\Facades\Validator;
+use Devfaysal\BangladeshGeocode\Models\District;
 
 class HospitalController extends Controller
 {
@@ -119,5 +121,15 @@ class HospitalController extends Controller
         } catch (\Throwable $e) {
             return response()->json("Something went wrong");
         }
+    }
+
+    public function fetch()
+    {
+        return District::orderBy('name', 'asc')->get();
+    }
+
+    public function getDepartment()
+    {
+        return Department::get();
     }
 }

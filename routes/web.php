@@ -282,7 +282,7 @@ Route::group(['prefix' => 'hospital'], function () {
     Route::get("/doctor", [HospitalDoctorController::class, 'index'])->name("hospital.doctor.index");
     Route::get("/doctor-create/{id?}", [HospitalDoctorController::class, 'create'])->name("hospital.doctor.create");
     Route::post("/doctor", [HospitalDoctorController::class, 'store'])->name("hospital.doctor.store");
-    Route::get("/doctor-edit/{id}", [HospitalDoctorController::class, 'edit'])->name("hospital.doctor.edit");
+    Route::get("/doctor-fetch/{id}", [HospitalDoctorController::class, 'fetch'])->name("hospital.doctor.fetch");
     Route::post("/doctor-update", [HospitalDoctorController::class, 'update'])->name("hospital.doctor.update");
     Route::post("/doctor-delete", [HospitalDoctorController::class, 'destroy'])->name("hospital.doctor.destroy");
     // hospital appointment
@@ -292,6 +292,9 @@ Route::group(['prefix' => 'hospital'], function () {
     Route::post("/hospital/comment/store", [AppointmentController::class, "comment"])->name("hospital.comment.store");
     // dignostic comment
     Route::post("/hospital/clients/comment", [HospitalDiagnosticController::class, "hospitalcomment"])->name("hospital.client.comment");
+
+    Route::get("/city-get", [HospitalHospitalController::class, 'fetch']);
+    Route::get("/department-get", [HospitalHospitalController::class, "getDepartment"]);
 });
 
 //diagnostic authentication
@@ -307,9 +310,9 @@ Route::group(['prefix' => 'diagnostic'], function () {
 
     // diagnostic doctor route
     Route::get("/doctor", [DiagnosticDoctorController::class, 'index'])->name("diagnostic.doctor.index");
-    Route::get("/doctor-create", [DiagnosticDoctorController::class, 'create'])->name("diagnostic.doctor.create");
+    Route::get("/doctor-create/{id?}", [DiagnosticDoctorController::class, 'create'])->name("diagnostic.doctor.create");
     Route::post("/doctor", [DiagnosticDoctorController::class, 'store'])->name("diagnostic.doctor.store");
-    Route::get("/doctor-edit/{id}", [DiagnosticDoctorController::class, 'edit'])->name("diagnostic.doctor.edit");
+    Route::get("/doctor-fetch/{id}", [DiagnosticDoctorController::class, 'fetch'])->name("diagnostic.doctor.fetch");
     Route::post("/doctor-update", [DiagnosticDoctorController::class, 'update'])->name("diagnostic.doctor.update");
     Route::post("/doctor-delete", [DiagnosticDoctorController::class, 'destroy'])->name("diagnostic.doctor.destroy");
     // diagnostic patient list
@@ -319,6 +322,10 @@ Route::group(['prefix' => 'diagnostic'], function () {
     Route::post("/diagnostic/comment/store", [DiagnosticAppointmentController::class, "comment"])->name("diagnostic.comment.store");
     // dignostic comment
     Route::post("/diagnostic/clients/comment", [HospitalDiagnosticController::class, "diagnosticcomment"])->name("diagnostic.client.comment");
+
+    Route::get("/city-get", [DiagnosticDiagnosticController::class, 'fetch']);
+    Route::get("/department-get", [DiagnosticDiagnosticController::class, "getDepartment"]);
+    
 });
 
 //ambulance authentication

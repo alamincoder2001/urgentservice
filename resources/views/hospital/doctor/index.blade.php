@@ -48,7 +48,7 @@
                             </td>
                             <td>
                                 <div class="d-flex">
-                                    <a href="{{route('hospital.doctor.edit',$item->doctor->id)}}" class="fa fa-edit text-primary text-decoration-none"></a>
+                                    <a href="{{route('hospital.doctor.create',$item->doctor->id)}}" class="fa fa-edit text-primary text-decoration-none"></a>
                                     <button class="fa fa-trash text-danger border-0 deletehospitalDoctor" style="background: none;" value="{{$item->doctor->id}}"></button>
                                 </div>
                             </td>

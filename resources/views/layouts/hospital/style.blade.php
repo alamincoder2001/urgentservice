@@ -22,3 +22,29 @@
           box-shadow: none !important;
       }
   </style>
+  <style>
+      .ImageBackground .imageShow {
+          display: block;
+          height: 120px;
+          width: 135px;
+          margin-top: 10px;
+          border: 1px solid #27ff00;
+          border-bottom: 0;
+          box-sizing: border-box;
+      }
+
+      .ImageBackground input {
+          display: none;
+      }
+
+      .ImageBackground label {
+          background: green;
+          width: 135px;
+          color: white;
+          padding: 5px;
+          text-align: center;
+          cursor: pointer;
+          font-family: monospace;
+          text-transform: uppercase;
+      }
+  </style>

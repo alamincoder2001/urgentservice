@@ -203,6 +203,7 @@
                 </div>
             </div>
             <div class="col-lg-5 col-12 mt-3">
+                <div style="background: #035b64;color: white;padding: 0 5px;text-align: center;margin-bottom: 5px;">{{$data->appointment_text}}</div>
                 <div class="form-group d-flex align-items-center justify-content-center">
                     <button onclick="DoctorAppointment(event)" value="1" class="rounded-pill btn text-white w-75" style="background: #035b64 !important;"><i class="fa fa-edit"></i> Take Appointment</button>
                 </div>

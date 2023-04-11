@@ -18,7 +18,6 @@
 </style>
 @endpush
 @section("content")
-
 <div class="row" id="doctor">
     <div class="col-md-12">
         <div class="card">
@@ -28,7 +27,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <form id="saveDoctor">
+                <form @submit.prevent="saveDoctor">
                     <div class="personal-info px-3">
                         <h5>Personal Information</h5>
                         <div class="row">
@@ -67,6 +66,13 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
+                                    <label for="city_id">City Name<small class="text-danger">*</small></label>
+                                    <v-select :options="cities" v-model="selectedCity" label="name"></v-select>
+                                </div>
+                                <span class="error-city_id text-danger error"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
                                     <label for="department_id">Specialist<small class="text-danger">*</small></label>
                                     <v-select multiple :options="departments" v-model="selectedDepartment" label="name"></v-select>
                                     <span class="error-department_id error text-danger"></span>
@@ -84,19 +90,33 @@
                                 <span class="error-phone error text-danger"></span>
                             </div>
                             <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="address">Address</label>
+                                    <textarea name="address" id="address" v-model="doctor.address" class="form-control"></textarea>
+                                </div>
+                                <span class="error-address error text-danger"></span>
+                            </div>
+                            <div class="col-md-3">
                                 <label for="first_fee">First Fee<small class="text-danger">*</small></label>
                                 <div class="input-group">
                                     <input type="number" v-model="doctor.first_fee" id="first_fee" name="first_fee" class="form-control"><i class="btn btn-secondary">Tk</i>
                                 </div>
                                 <span class="error-first_fee error text-danger"></span>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label for="second_fee">Second Fee<small class="text-danger">*</small></label>
                                 <div class="input-group">
                                     <input type="number" v-model="doctor.second_fee" id="second_fee" name="second_fee" class="form-control"><i class="btn btn-secondary">Tk</i>
                                 </div>
                                 <span class="error-second_fee error text-danger"></span>
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="appointment_text">Appointment Schedule</label>
+                                    <textarea name="appointment_text" v-model="doctor.appointment_text" id="appointment_text" class="form-control"></textarea>
+                                </div>
+                            </div>
+
                             <hr class="my-2">
                             <div class="col-md-12">
                                 <div class="input-group">
@@ -150,24 +170,17 @@
                                     <w-ckeditor-vue style="width: 100%;" v-model="doctor.description"></w-ckeditor-vue>
                                 </div>
                             </div>
-                        </div>
-                        <hr class="my-2">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="image">Doctor Image</label>
-                                    <input type="file" class="form-control" id="image" name="image" onchange="document.querySelector('.img').src = window.URL.createObjectURL(this.files[0])">
-                                    <span class="error-image error text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="image">
-                                    <img src="{{asset('noimage.jpg')}}" width="100" class="img" height="100">
+
+                            <div class="col-md-2 d-flex justify-content-center align-items-center">
+                                <div class="form-group ImageBackground">
+                                    <img :src="imageSrc" class="imageShow" />
+                                    <label for="image">Image</label>
+                                    <input type="file" id="image" class="form-control shadow-none" @change="imageUrl" />
                                 </div>
                             </div>
                         </div>
                         <div class="form-group text-center mt-3">
-                            <button type="submit" class="btn btn-success text-white text-uppercase px-3">Save</button>
+                            <button type="submit" class="btn btn-success text-white text-uppercase px-3">Save Doctor</button>
                         </div>
                     </div>
                 </form>
@@ -203,6 +216,7 @@
                 second_fee: 0,
                 concentration: "",
                 description: "",
+                appointment_text: "২য় ও ৪র্থ বৃহস্পতিবার ও শুক্রবার রোগী দেখেন ৪:৩০পি.এম থেকে ৬:৪০ পি.এম পর্যন্ত",
                 image: "",
             },
             cities: [],
@@ -242,40 +256,14 @@
             getCity() {
                 axios.get(location.origin + "/hospital/city-get")
                     .then(res => {
-                        this.cities = res.data.data
+                        this.cities = res.data
                     })
             },
             getDepartment() {
                 axios.get(location.origin + "/hospital/department-get")
                     .then(res => {
-                        this.departments = res.data.data
+                        this.departments = res.data
                     })
-            },
-
-            getHospital() {
-                axios.get(location.origin + "/hospital/hospital-get")
-                    .then(res => {
-                        this.hospitals = res.data.data
-                    })
-            },
-            getDiagnostic() {
-                axios.get(location.origin + "/hospital/diagnostic-get")
-                    .then(res => {
-                        this.diagnostics = res.data.data
-                    })
-            },
-
-            onChangeHospital(sl) {
-                if (this.carts[sl].selectedHospital == null) {
-                    return
-                }
-                this.carts[sl].hospital_id = this.carts[sl].selectedHospital.id
-            },
-            onChangeDiagnostic(sl) {
-                if (this.carts[sl].selectedDiagnostic == null) {
-                    return
-                }
-                this.carts[sl].diagnostic_id = this.carts[sl].selectedDiagnostic.id
             },
 
             // daytime add
@@ -321,7 +309,7 @@
 
             // save doctor
             async saveDoctor(event) {
-                if (this.carts.length == 0) {
+                if (this.daywiseTimeArray.length == 0) {
                     alert("Cart is empty")
                     return
                 }
@@ -337,7 +325,7 @@
                 formdata.append("image", this.doctor.image)
                 formdata.append("departments", this.selectedDepartment == null ? "" : JSON.stringify(this.selectedDepartment))
                 formdata.append("city_id", this.selectedCity == null ? "" : this.selectedCity.id)
-                formdata.append("daywiseTimeArray", JSON.stringify(this.carts))
+                formdata.append("daywiseTimeArray", JSON.stringify(this.daywiseTimeArray))
                 formdata.append("phone", phone)
                 formdata.append("concentration", this.doctor.concentration)
                 formdata.append("description", this.doctor.description)
@@ -377,13 +365,10 @@
             },
 
             getDoctor() {
-                axios.get(location.origin + "/admin/doctor-fetch/" + this.doctor.id)
+                axios.get(location.origin + "/hospital/doctor-fetch/" + this.doctor.id)
                     .then(res => {
-                        if (res.data.carts.length > 0) {
-                            this.carts = []
-                        }
                         let doctor = res.data.doctor
-                        let carts = res.data.carts
+
                         this.doctor = {
                             name: doctor.name,
                             username: doctor.username,
@@ -394,6 +379,8 @@
                             first_fee: doctor.first_fee,
                             second_fee: doctor.second_fee,
                             concentration: doctor.concentration,
+                            address: doctor.address,
+                            appointment_text: doctor.appointment_text,
                             description: doctor.description == null ? "" : doctor.description,
                             image: doctor.image,
                         }
@@ -419,9 +406,8 @@
                             })
                         })
 
-                        res.data.carts.forEach((item, key) => {
-                            cart.daywiseTimeArray.push(d)
-                        })
+                        this.daywiseTimeArray = res.data.daywiseTimeArray
+
                         this.imageSrc = doctor.image == 0 ? location.origin + "/noimage.jpg" : location.origin + "/" + doctor.image;
                         this.changePassword = true
                     })
@@ -439,6 +425,8 @@
                     second_fee: 0,
                     concentration: "",
                     description: "",
+                    appointment_text: "২য় ও ৪র্থ বৃহস্পতিবার ও শুক্রবার রোগী দেখেন ৪:৩০পি.এম থেকে ৬:৪০ পি.এম পর্যন্ত",
+                    address: "",
                     image: "",
                 };
                 this.phones = [{

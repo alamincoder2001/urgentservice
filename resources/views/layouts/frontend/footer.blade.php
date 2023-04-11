@@ -33,7 +33,6 @@
             @endphp
             <div class="col-md-4 col-12">
                 <h2 class="text-uppercase text-secondary">Our Location</h2>
-                <h6 class="m-0 text-secondary">( {{$setting->appointment_text}} )</h6>
                 <p class="mb-2 text-dark text-capitalize">{{$contact->address}}, {{$contact->phone}}</p>
 
                 <div class="footer-body">

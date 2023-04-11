@@ -101,6 +101,12 @@
                                 </div>
                                 <span class="error-phone error text-danger"></span>
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="appointment_text">Appointment Schedule</label>
+                                    <textarea name="appointment_text" v-model="doctor.appointment_text" id="appointment_text" class="form-control"></textarea>
+                                </div>
+                            </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="address">Address</label>
@@ -242,6 +248,7 @@
                 second_fee: 0,
                 concentration: "",
                 description: "",
+                appointment_text: "২য় ও ৪র্থ বৃহস্পতিবার ও শুক্রবার রোগী দেখেন ৪:৩০পি.এম থেকে ৬:৪০ পি.এম পর্যন্ত",
                 image: "",
             },
             cities: [],
@@ -465,17 +472,18 @@
                         let doctor = res.data.doctor
                         let carts = res.data.carts
                         this.doctor = {
-                            name         : doctor.name,
-                            username     : doctor.username,
-                            email        : doctor.email,
-                            password     : "",
-                            education    : doctor.education,
-                            address      : doctor.address,
-                            first_fee    : doctor.first_fee,
-                            second_fee   : doctor.second_fee,
-                            concentration: doctor.concentration,
-                            description  : doctor.description == null ? "": doctor.description,
-                            image        : doctor.image,
+                            name            : doctor.name,
+                            username        : doctor.username,
+                            email           : doctor.email,
+                            password        : "",
+                            education       : doctor.education,
+                            address         : doctor.address,
+                            appointment_text: doctor.appointment_text,
+                            first_fee       : doctor.first_fee,
+                            second_fee      : doctor.second_fee,
+                            concentration   : doctor.concentration,
+                            description     : doctor.description == null ? "": doctor.description,
+                            image           : doctor.image,
                         }
                         this.selectedCity = {
                             id: doctor.city_id,
@@ -538,17 +546,18 @@
 
             clearData() {
                 this.doctor = {
-                    name         : "",
-                    username     : "",
-                    email        : "urgentservicebd@gmail.com",
-                    password     : "",
-                    education    : "",
-                    address      : "",
-                    first_fee    : 0,
-                    second_fee   : 0,
-                    concentration: "",
-                    description  : "",
-                    image        : "",
+                    name            : "",
+                    username        : "",
+                    email           : "urgentservicebd@gmail.com",
+                    password        : "",
+                    education       : "",
+                    address         : "",
+                    appointment_text: "২য় ও ৪র্থ বৃহস্পতিবার ও শুক্রবার রোগী দেখেন ৪:৩০পি.এম থেকে ৬:৪০ পি.এম পর্যন্ত",
+                    first_fee       : 0,
+                    second_fee      : 0,
+                    concentration   : "",
+                    description     : "",
+                    image           : "",
                 };
                 this.phones = [{
                     phone: '01721843819',
