@@ -19,6 +19,13 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
                         <input type="text" id="name" name="name" class="form-control" placeholder="Ex: Paediatric Surgery">
                         <span class="error-name error text-danger"></span>
                     </div>
+                    <div class="form-group">
+                        <input type="file" name="image" class="form-control image mb-2" onchange="document.querySelector('.img').src = window.URL.createObjectURL(this.files[0])">
+                        <span class="text-danger">(200 x 200)</span>
+                        <div style="height:150px; position:relative;border:1px solid #bdbdbd;">
+                            <img class="img" src="{{asset('noimage.jpg')}}" style="width: 100%;height:100%;position:absolute;">
+                        </div>
+                    </div>
                     <div class="form-group text-center">
                         <button type="submit" class="btn btn-success px-3">Save</button>
                     </div>
@@ -29,6 +36,13 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
                         <label for="name">Department Name</label>
                         <input type="text" id="name" name="name" class="form-control">
                         <span class="error-name error text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="file" name="image" class="form-control image mb-2" onchange="document.querySelector('.img1').src = window.URL.createObjectURL(this.files[0])">
+                        <span class="text-danger">(200 x 200)</span>
+                        <div style="height:150px; position:relative;border:1px solid #bdbdbd;">
+                            <img class="img1" style="width: 100%;height:100%;position:absolute;">
+                        </div>
                     </div>
                     <div class="form-group text-center">
                         <button type="submit" class="btn btn-info px-3">Update</button>
@@ -47,6 +61,7 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
                         <tr>
                             <th>Sl</th>
                             <th>Name</th>
+                            <th>Image</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -74,6 +89,12 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
                 },
                 {
                     data: 'name',
+                },
+                {
+                    data: null,
+                    render: data => {
+                        return `<img src="${location.origin}/${data.image}" width="40" />`;
+                    }
                 },
                 {
                     data: null,
@@ -108,6 +129,7 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
                     } else {
                         table.ajax.reload()
                         $("#addDepartment").trigger('reset')
+                        $("#addDepartment").find(".img").prop("src", location.origin+"/noImage.jpg");
                         $.notify(response.msg, "success");
                     }
                 }
@@ -131,6 +153,11 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
                     $.each(response, (index, value) => {
                         $("#updateDepartment").find("#" + index).val(value);
                     })
+                    if (response.image) {
+                        $("#updateDepartment").find(".img1").prop("src", location.origin+"/"+response.image);
+                    }else{
+                        $("#updateDepartment").find(".img1").prop("src", location.origin+"/noImage.jpg");
+                    }
                 }
             })
         })
@@ -159,6 +186,7 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
                         $("#addDepartment").removeClass("d-none")
                         $("#updateDepartment").addClass("d-none")
                         $.notify(response, "success");
+                        $("#updateDepartment").find(".img1").prop("src", location.origin+"/noImage.jpg");
                     }
                 }
             })
