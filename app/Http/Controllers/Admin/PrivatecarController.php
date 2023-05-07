@@ -64,7 +64,7 @@ class PrivatecarController extends Controller
                 $data->username       = $request->username;
                 $data->password       = Hash::make($request->password);
                 $data->email          = $request->email;
-                $data->phone          = $request->phone;
+                $data->phone          = implode(",", $request->phone);
                 $data->city_id        = $request->city_id;
                 $data->upazila_id     = $request->upazila_id;
                 $data->address        = $request->address;
@@ -130,7 +130,7 @@ class PrivatecarController extends Controller
                     $data->password       = Hash::make($request->password);
                 }
                 $data->email          = $request->email;
-                $data->phone          = $request->phone;
+                $data->phone          = implode(",", $request->phone);
                 $data->city_id        = $request->city_id;
                 $data->upazila_id     = $request->upazila_id;
                 $data->address        = $request->address;

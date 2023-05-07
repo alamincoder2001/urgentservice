@@ -49,9 +49,11 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="phone">Phone</label>
-                                <div class="input-group">
-                                    <i class="btn btn-secondary">+88</i><input type="text" name="phone" id="phone" value="01721843819" class="form-control">
+                                <label for="">Phone <span class="bg-dark rounded-pill text-white p-1" style="cursor: pointer;" onclick="addPhone(event)"><i class="fa fa-plus"></i></span></label>
+                                <div class="multiplePhone">
+                                    <div class="input-group">
+                                        <input type="text" name="phone[]" id="" class="form-control" value="01721843819">
+                                    </div>
                                 </div>
                                 <span class="error-phone text-danger error"></span>
                             </div>
@@ -269,6 +271,17 @@
                 })
             }
         })
+    }
+
+    function addPhone(event) {
+        var row = `<div class="input-group">
+                        <input type="text" name="phone[]" id="phone" class="form-control">
+                        <button onclick="removePhone(event)" type="button" class="btn btn-danger">remove</button>
+                    </div>`;
+        $('.multiplePhone').append(row);
+    }
+    function removePhone(event){
+        event.target.offsetParent.remove();
     }
 </script>
 @endpush

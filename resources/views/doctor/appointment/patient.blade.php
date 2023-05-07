@@ -18,9 +18,6 @@
                         <i style="font-weight: 600;font-family: serif;">Appointment Date:</i> <i style="font-size:13px;">{{$patients->appointment_date}}</i>
                     </div>
                     <div class="input-group gap-3">
-                        <i style="font-weight: 600;font-family: serif;">Patient Contact:</i> <i style="font-size:13px;">{{$patients->contact}}</i>
-                    </div>
-                    <div class="input-group gap-3">
                         <i style="font-weight: 600;font-family: serif;">Patient Age:</i> <i style="font-size:13px;">{{$patients->age}}</i>
                     </div>
                     <div class="input-group gap-3">

@@ -53,13 +53,21 @@
                                 <span class="error-email text-danger error"></span>
                             </div>
                         </div>
+                        @php
+                            $phones = explode(',', $data->phone);
+                        @endphp
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="phone">Phone</label>
-                                <div class="input-group">
-                                    <p class="btn btn-secondary m-0">+88</p><input type="text" name="phone" id="phone" class="form-control" value="{{$data->phone}}">
-                                    <span class="error-phone text-danger error"></span>
+                                <label for="">Phone <span class="bg-dark rounded-pill text-white p-1" style="cursor: pointer;" onclick="addPhone(event)"><i class="fa fa-plus"></i></span></label>
+                                <div class="multiplePhone">
+                                    @foreach($phones as $phone)
+                                    <div class="input-group">
+                                        <input type="text" name="phone[]" id="" class="form-control" value="{{$phone}}">
+                                        <button onclick="removePhone(event)" type="button" class="btn btn-danger">remove</button>
+                                    </div>
+                                    @endforeach
                                 </div>
+                                <span class="error-phone text-danger error"></span>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -293,6 +301,17 @@
         } else {
             $("#password").prop("readonly", true)
         }
+    }
+
+    function addPhone(event) {
+        var row = `<div class="input-group">
+                        <input type="text" name="phone[]" id="phone" class="form-control">
+                        <button onclick="removePhone(event)" type="button" class="btn btn-danger">remove</button>
+                    </div>`;
+        $('.multiplePhone').append(row);
+    }
+    function removePhone(event){
+        event.target.offsetParent.remove();
     }
 </script>
 @endpush

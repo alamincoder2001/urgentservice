@@ -79,7 +79,7 @@ class AmbulanceController extends Controller
                 $data->email          = $request->email;
                 $data->password       = Hash::make($request->password);
                 $data->ambulance_type = implode(",", $request->ambulance_type);
-                $data->phone          = $request->phone;
+                $data->phone          = implode(",", $request->phone);
                 $data->city_id        = $request->city_id;
                 $data->upazila_id     = $request->upazila_id;
                 $data->address        = $request->address;
@@ -147,7 +147,7 @@ class AmbulanceController extends Controller
                     $data->password = Hash::make($request->password);
                 }
                 $data->ambulance_type = implode(",", $request->ambulance_type);
-                $data->phone          = $request->phone;
+                $data->phone          = implode(",", $request->phone);
                 $data->city_id        = $request->city_id;
                 $data->upazila_id     = $request->upazila_id;
                 $data->address        = $request->address;
@@ -161,7 +161,7 @@ class AmbulanceController extends Controller
                 return response()->json("Ambulance updated successfully");
             }
         } catch (\Throwable $e) {
-            return response()->json("something went wrong");
+            return response()->json("something went wrong ".$e->getMessage());
         }
     }
 
@@ -176,9 +176,8 @@ class AmbulanceController extends Controller
 
         try {
             $data = Ambulance::find($request->id);
-            $old = $data->image;
-            if (File::exists($old)) {
-                File::delete($old);
+            if (File::exists($data->image)) {
+                File::delete($data->image);
             }
             $data->delete();
             return response()->json("Ambulance Deleted successfully");

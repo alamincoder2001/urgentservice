@@ -54,11 +54,19 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
                                 <span class="error-password text-danger error"></span>
                             </div>
                         </div>
+                        @php
+                            $phones = explode(',', $data->phone);
+                        @endphp
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="phone">Phone</label>
-                                <div class="input-group">
-                                    <p class="btn btn-secondary m-0">+88</p><input type="text" name="phone" id="phone" class="form-control" value="{{$data->phone}}">
+                                <label for="">Phone <span class="bg-dark rounded-pill text-white p-1" style="cursor: pointer;" onclick="addPhone(event)"><i class="fa fa-plus"></i></span></label>
+                                <div class="multiplePhone">
+                                    @foreach($phones as $phone)
+                                    <div class="input-group">
+                                        <input type="text" name="phone[]" id="" class="form-control" value="{{$phone}}">
+                                        <button onclick="removePhone(event)" type="button" class="btn btn-danger">remove</button>
+                                    </div>
+                                    @endforeach
                                 </div>
                                 <span class="error-phone text-danger error"></span>
                             </div>
@@ -206,9 +214,11 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
                             $("#updateAmbulance").find(".error-" + index).text(value);
                         })
                     } else {
+                        console.log(response);
+                        return
                         $("#updateAmbulance").trigger('reset')
                         $.notify(response, "success");
-                        window.location.href = "{{route('admin.ambulance.index')}}"
+                        location.href = "{{route('admin.ambulance.index')}}"
                     }
                 }
             })
@@ -228,6 +238,17 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
                 })
             }
         })
+    }
+
+    function addPhone(event) {
+        var row = `<div class="input-group">
+                        <input type="text" name="phone[]" id="phone" class="form-control">
+                        <button onclick="removePhone(event)" type="button" class="btn btn-danger">remove</button>
+                    </div>`;
+        $('.multiplePhone').append(row);
+    }
+    function removePhone(event){
+        event.target.offsetParent.remove();
     }
 </script>
 @endpush

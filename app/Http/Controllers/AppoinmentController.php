@@ -26,7 +26,7 @@ class AppoinmentController extends Controller
                 "district"         => "required",
                 "upozila"          => "required",
                 "contact"          => "required",
-            ]);
+            ],["organization_id.required" => "The chamber field is required."]);
             if ($validator->fails()) {
                 return response()->json(["error" => $validator->errors()]);
             } else {
