@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="{{asset('backend')}}/plugins/datatables/css/jquery.datatables.min.css" />
 <!-- nvd3 plugin -->
 <link rel="stylesheet" href="{{asset('backend')}}/plugins/nvd3/nv.d3.min.css" />
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="{{asset('backend/css/select2.css')}}" rel="stylesheet" />
 
 @stack("style")
 <!-- theme core css -->

@@ -40,9 +40,9 @@
                             </div>
                             <div class="col-md-3 col-10">
                                 <div class="form-group">
-                                    <label for="ambulance_name" class="d-md-block d-none">Type Of Ambulance</label>
-                                    <select class="rounded-pill" name="ambulance_name" id="ambulance_name">
-                                        <option label="Select Ambulance Name"></option>
+                                    <label for="ambulance_type" class="d-md-block d-none">Type Of Ambulance</label>
+                                    <select class="rounded-pill" name="ambulance_type" id="ambulance_type">
+                                        <option label="Select Ambulance Type"></option>
                                     </select>
                                     <span class="error-ambulance_name error text-white"></span>
                                 </div>
@@ -188,7 +188,6 @@
             $.ajax({
                 url: "{{route('filter.ambulance')}}",
                 method: "POST",
-                dataType: "JSON",
                 data: formdata,
                 contentType: false,
                 processData: false,

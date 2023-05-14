@@ -66,7 +66,7 @@ class HospitalController extends Controller
                 $data->description     = $request->description;
                 $data->map_link        = $request->map_link;
                 $data->update();
-                return response()->json("Hospital updated successfully");
+                return "Hospital updated successfully";
             }
         } catch (\Throwable $e) {
             return response()->json("something went wrong");
