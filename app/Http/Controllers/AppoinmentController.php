@@ -26,6 +26,7 @@ class AppoinmentController extends Controller
                 "district"         => "required",
                 "upozila"          => "required",
                 "contact"          => "required",
+                "patient_type"     => "required",
             ],["organization_id.required" => "The chamber field is required."]);
             if ($validator->fails()) {
                 return response()->json(["error" => $validator->errors()]);
@@ -38,7 +39,7 @@ class AppoinmentController extends Controller
                 $data->upozila          = $request->upozila;
                 $data->contact          = $request->contact;
                 $data->doctor_id        = $request->doctor_id;
-                $data->problem          = $request->problem;
+                $data->patient_type     = $request->patient_type;
                 $data->email            = $request->email;
                 if (!isset($request->organization_name) || $request->organization_name == '') {
                     return response()->json(["errors" => "Organization is empty"]);

@@ -11,7 +11,7 @@
   <!-- nvd3 plugin -->
   <link rel="stylesheet" href="{{asset('backend')}}/plugins/nvd3/nv.d3.min.css" />
 
-  <link href="{{asset('css/select2.css')}}" rel="stylesheet" />
+  <link href="{{asset('backend/css/select2.css')}}" rel="stylesheet" />
 
   @stack("style")
   <!-- theme core css -->

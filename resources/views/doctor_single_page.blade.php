@@ -301,8 +301,14 @@
                             </div>
                             <div class="col-md-6 col-6">
                                 <div class="form-group">
-                                    <label for="problem" class="py-2">Problem</label>
-                                    <textarea name="problem" class="form-control" id="problem" placeholder="Decribe your problem"></textarea>
+                                    <label class="py-2">Patient Type</label><br>
+                                    <input type="radio" id="new_patient" name="patient_type" value="new_patient">
+                                    <label for="new_patient">New Patient</label>
+                                    <br>
+                                    <input type="radio" id="old_patient" name="patient_type" value="old_patient">
+                                    <label for="old_patient">Old Patient</label>
+                                    <br>
+                                    <span class="error-patient_type error text-danger"></span>
                                 </div>
                             </div>
                         </div>

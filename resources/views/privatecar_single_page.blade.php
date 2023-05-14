@@ -63,7 +63,7 @@
                                     <select id="privatecar_type" name="privatecar_type" class="form-control" style="cursor: pointer;">
                                         <option label="Select privatecar Type"></option>
                                         @foreach($data->typewisecategory as $private)
-                                            <option value="{{$private->cartype->id}}">{{$private->cartype->name}}</option>
+                                        <option value="{{$private->cartype->id}}">{{$private->cartype->name}}</option>
                                         @endforeach
                                     </select>
                                     <span class="error-privatecar_type error text-danger"></span>
@@ -72,7 +72,7 @@
                             <div class="col-md-3">
                                 <div class="form-group my-2">
                                     <label for="departing_date">Departing Date: <span class="text-danger">*</span></label>
-                                    <input type="text" name="departing_date" class="form-control datepicker" value="{{date('d/m/Y')}}">
+                                    <input type="text" name="departing_date" class="form-control departing_date" value="{{date('d/m/Y')}}">
                                     <span class="error-departing_date error text-danger"></span>
                                 </div>
                             </div>
@@ -177,14 +177,19 @@
 @endsection
 
 @push("js")
-    <script>
-        $(document).ready(() => {
-            $("iframe").attr("width", "100%").attr("height", "300px !important");
+<script>
+    $(".departing_date").datepicker({
+        format: "dd-mm-yyyy",
+        startDate: new Date(),
+        orientation: 'bottom'
+    })
+    $(document).ready(() => {
+        $("iframe").attr("width", "100%").attr("height", "300px !important");
 
-            $("#addPrivatecar").on("submit", event=> {
-                event.preventDefault()
-                var formdata = new FormData(event.target)
-                $.ajax({
+        $("#addPrivatecar").on("submit", event => {
+            event.preventDefault()
+            var formdata = new FormData(event.target)
+            $.ajax({
                 url: "{{route('hire.privatecar')}}",
                 data: formdata,
                 method: "POST",
@@ -204,7 +209,7 @@
                     }
                 }
             })
-            })
         })
-    </script>
+    })
+</script>
 @endpush

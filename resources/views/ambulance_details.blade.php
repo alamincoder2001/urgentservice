@@ -26,7 +26,7 @@
                 <div class="col-md-10 col-10">
                     <form id="filterAmbulance" class="form">
                         <div class="row d-flex justify-content-center">
-                            <div class="col-md-4 col-10">
+                            <div class="col-md-3 col-10">
                                 <div class="form-group mb-4 mb-md-0">
                                     <label for="city" class="d-md-block d-none">City</label>
                                     <select class="rounded-pill city" name="city" id="city">
@@ -38,7 +38,16 @@
                                     <span class="error-city error text-white"></span>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-10">
+                            <div class="col-md-3 col-10">
+                                <div class="form-group">
+                                    <label for="ambulance_name" class="d-md-block d-none">Type Of Ambulance</label>
+                                    <select class="rounded-pill" name="ambulance_name" id="ambulance_name">
+                                        <option label="Select Ambulance Name"></option>
+                                    </select>
+                                    <span class="error-ambulance_name error text-white"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-10">
                                 <div class="form-group">
                                     <label for="ambulance_name" class="d-md-block d-none">Ambulance Name</label>
                                     <select class="rounded-pill ambulance" name="ambulance_name" id="ambulance_name">
@@ -47,7 +56,7 @@
                                     <span class="error-ambulance_name error text-white"></span>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-6">
+                            <div class="col-md-3 col-6">
                                 <div class="form-group text-center pt-1">
                                     <label for="country"></label>
                                     <button type="submit" class="btn text-white rounded-pill">Search</button>
@@ -62,7 +71,7 @@
             <div class="col-12 col-lg-3 p-lg-0">
                 <div class="card border-0" style="border-radius: 0;height:100%;border-right: 1px solid #e3e3e3 !important;">
                     <div class="card-header" style="border: none;border-radius: 0;background: #e3e3e3;">
-                        <h6 class="card-title text-uppercase m-0" style="color:#832a00;">Ambulance Type List</h6>
+                        <h6 class="card-title text-uppercase m-0" style="color:#832a00;">Type Of Ambulance List</h6>
                     </div>
                     <div class="card-body" style="padding-top: 3px;">
                         <a title="All" href="{{route('ambulance.details')}}" class="ambulance_category {{$type != null ? '' : 'text-danger'}}">All</a>
@@ -85,7 +94,6 @@
             <div class="col-12 col-lg-9 doctor_details">
                 <h5 class="m-0 totalDoctorcount" style="text-align: right;font-family: auto;font-style: italic;">Total: <span>{{$data['ambulance']->count()}}</span></h5>
                 <div class="row py-2 ambulancebody">
-
                     @foreach($data['ambulance'] as $item)
                     <div class="col-12 col-lg-6 mb-3">
                         <a href="{{route('singlepageambulance', $item->id)}}" target="_blank" class="text-decoration-none text-secondary" title="{{$item->name}}">

@@ -63,10 +63,10 @@
                                     <select id="ambulance_type" name="ambulance_type" class="form-control" style="cursor: pointer;">
                                         <option label="Select ambulance Type"></option>
                                         @php
-                                            $type = explode(",",$data->ambulance_type);
+                                        $type = explode(",",$data->ambulance_type);
                                         @endphp
                                         @foreach($type as $am)
-                                            <option value="{{$am}}">{{$am}}</option>
+                                        <option value="{{$am}}">{{$am}}</option>
                                         @endforeach
                                     </select>
                                     <span class="error-ambulance_type error text-danger"></span>
@@ -75,7 +75,7 @@
                             <div class="col-md-3">
                                 <div class="form-group my-2">
                                     <label for="departing_date">Departing Date: <span class="text-danger">*</span></label>
-                                    <input type="text" name="departing_date" class="form-control datepicker" value="{{date('d/m/Y')}}">
+                                    <input type="text" name="departing_date" class="form-control departing_date" value="{{date('d/m/Y')}}">
                                     <span class="error-departing_date error text-danger"></span>
                                 </div>
                             </div>
@@ -186,14 +186,19 @@
 @endsection
 
 @push("js")
-    <script>
-        $(document).ready(() => {
-            $("iframe").attr("width", "100%").attr("height", "300px !important");
+<script>
+    $(".departing_date").datepicker({
+        format: "dd-mm-yyyy",
+        startDate: new Date(),
+        orientation: 'bottom'
+    })
+    $(document).ready(() => {
+        $("iframe").attr("width", "100%").attr("height", "300px !important");
 
-            $("#addAmbulance").on("submit", event=> {
-                event.preventDefault()
-                var formdata = new FormData(event.target)
-                $.ajax({
+        $("#addAmbulance").on("submit", event => {
+            event.preventDefault()
+            var formdata = new FormData(event.target)
+            $.ajax({
                 url: "{{route('hire.ambulance')}}",
                 data: formdata,
                 method: "POST",
@@ -214,7 +219,7 @@
                     }
                 }
             })
-            })
         })
-    </script>
+    })
+</script>
 @endpush
