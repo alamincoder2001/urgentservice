@@ -9,9 +9,9 @@
         <div class="card">
             <form id="updateImage">
                 <div class="form-group text-center">
-                    <img class="img" src="{{asset(Auth::guard('diagnostic')->user()->image)}}" width="100">
+                    <img class="img" src="{{asset(Auth::guard('diagnostic')->user()->image != '0' ? Auth::guard('diagnostic')->user()->image: 'noImage.jpg')}}" width="100">
                 </div>
-                <div class="form-group">
+                <div class="form-group text-center">
                     <label for="image">Image</label>
                     <input type="file" name="image" id="image" class="form-control" onchange="document.querySelector('.img').src = window.URL.createObjectURL(this.files[0])">
                 </div>
@@ -81,7 +81,7 @@
                             $("#updatePassword").find(".error-" + index).text(value);
                         })
                     } else if (response.errors) {
-                        $.notify(response.errors);
+                        $("#updatePassword").find(".error-password").text(response.errors);
                     } else {
                         $("#updatePassword").trigger("reset")
                         $.notify(response, "success");

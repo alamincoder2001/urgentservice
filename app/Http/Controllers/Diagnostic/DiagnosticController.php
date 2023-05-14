@@ -41,13 +41,13 @@ class DiagnosticController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                "name" => "required",
-                "username" => "required|unique:diagnostics,username,".$request->id,
-                "email" => "required|email",
-                "phone" => "required|min:11|max:15",
-                "city_id" => "required",
+                "name"            => "required",
+                "username"        => "required|unique:diagnostics,username,".$request->id,
+                "email"           => "required|email",
+                "phone"           => "required",
+                "city_id"         => "required",
                 "diagnostic_type" => "required",
-                "address" => "required",
+                "address"         => "required",
             ]);
 
             if ($validator->fails()) {
@@ -58,8 +58,8 @@ class DiagnosticController extends Controller
                 $data->username = $request->username;
                 $data->email = $request->email;
                 $data->diagnostic_type = $request->diagnostic_type;
-                $data->phone = $request->phone;
-                $data->discount = $request->discount;
+                $data->phone = implode(',', $request->phone);
+                $data->discount_amount = $request->discount_amount;
                 $data->city_id = $request->city_id;
                 $data->address = $request->address;
                 $data->description = $request->description;
@@ -69,7 +69,7 @@ class DiagnosticController extends Controller
                 return response()->json("Diagnostic updated successfully");
             }
         } catch (\Throwable $e) {
-            return response()->json("something went wrong");
+            return response()->json("something went wrong".$e->getMessage());
         }
     }
 
@@ -97,7 +97,7 @@ class DiagnosticController extends Controller
                     $data->update();
                     return response()->json("Password updated successfully");
                 }else{
-                    return response()->json(["errors"=> "Current Password Not Match"]);
+                    return response()->json(["errors"=> "Current Password does not Match"]);
                 }
             }
         } catch (\Throwable $e) {

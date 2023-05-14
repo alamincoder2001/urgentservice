@@ -2,9 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Hospital\AppointmentController;
 use App\Http\Controllers\Hospital\DoctorController;
 use App\Http\Controllers\Hospital\HospitalController;
+use App\Http\Controllers\HospitalDiagnosticController;
+use App\Http\Controllers\Hospital\AppointmentController;
 
 //hospital authentication
 Route::group(['prefix' => 'hospital'], function () {

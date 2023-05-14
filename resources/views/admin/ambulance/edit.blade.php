@@ -214,8 +214,6 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
                             $("#updateAmbulance").find(".error-" + index).text(value);
                         })
                     } else {
-                        console.log(response);
-                        return
                         $("#updateAmbulance").trigger('reset')
                         $.notify(response, "success");
                         location.href = "{{route('admin.ambulance.index')}}"

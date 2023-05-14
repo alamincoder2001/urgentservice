@@ -47,13 +47,19 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="phone">Hospital Phone</label>
+                            <label for="phone">Phone <i class="fa fa-plus" onclick="phoneAdd()"></i></label>
+                            <div class="phoneadd">
+                                @php
+                                $phone = explode(",", Auth::guard('hospital')->user()->phone);
+                                @endphp
+                                @foreach($phone as $item)
                                 <div class="input-group">
-                                    <i class="btn btn-secondary">+88</i><input type="text" name="phone" id="phone" class="form-control" value="{{Auth::guard('hospital')->user()->phone}}">
+                                    <input type="text" id="phone" name="phone[]" class="form-control" value="{{$item}}">
+                                    <button type="button" class="btn btn-danger removePhone">remove</button>
                                 </div>
-                                <span class="error-phone error text-danger"></span>
+                                @endforeach
                             </div>
+                            <span class="error-phone error text-danger"></span>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
@@ -150,6 +156,20 @@
                 }
             })
         })
+    })
+
+    function phoneAdd() {
+        var row = `
+            <div class="input-group">
+                <input type="text" id="phone" name="phone[]" class="form-control">
+                <button type="button" class="btn btn-danger removePhone">remove</button>
+            </div>
+        `
+        $(".phoneadd").append(row)
+    }
+
+    $(document).on("click", ".removePhone", event => {
+        event.target.offsetParent.remove();
     })
 </script>
 @endpush

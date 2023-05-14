@@ -160,7 +160,7 @@ class DoctorController extends Controller
                     $data->update();
                     return response()->json("Password Change Successfully");
                 } else {
-                    return response()->json("Current Password does not match");
+                    return response()->json(['errors' => "Current Password does not match"]);
                 }
             }
         } catch (\Throwable $e) {

@@ -37,31 +37,37 @@
                                 <span class="error-username error text-danger"></span>
                             </div>
                         </div>
-                        <!--<div class="col-md-6">-->
-                        <!--    <div class="form-group">-->
-                        <!--        <label for="email">Diagnostic Email</label>-->
-                        <!--        <input type="email" name="email" id="email" class="form-control" value="{{Auth::guard('diagnostic')->user()->email}}">-->
-                        <!--        <span class="error-email error text-danger"></span>-->
-                        <!--    </div>-->
-                        <!--</div>-->
-                        <!--<div class="col-md-6">-->
-                        <!--    <div class="form-group">-->
-                        <!--        <label for="phone">Diagnostic Phone</label>-->
-                        <!--        <div class="input-group">-->
-                        <!--            <i class="btn btn-secondary">+88</i><input type="text" name="phone" id="phone" class="form-control" value="{{Auth::guard('diagnostic')->user()->phone}}">-->
-                        <!--        </div>-->
-                        <!--        <span class="error-phone error text-danger"></span>-->
-                        <!--    </div>-->
-                        <!--</div>-->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email">Diagnostic Email</label>
+                                <input type="email" name="email" id="email" class="form-control" value="{{Auth::guard('diagnostic')->user()->email}}">
+                                <span class="error-email error text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="phone">Phone <i class="fa fa-plus" onclick="phoneAdd()"></i></label>
+                            <div class="phoneadd">
+                                @php
+                                $phone = explode(",", Auth::guard('diagnostic')->user()->phone);
+                                @endphp
+                                @foreach($phone as $item)
+                                <div class="input-group">
+                                    <input type="text" id="phone" name="phone[]" class="form-control" value="{{$item}}">
+                                    <button type="button" class="btn btn-danger removePhone">remove</button>
+                                </div>
+                                @endforeach
+                            </div>
+                            <span class="error-phone error text-danger"></span>
+                        </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="discount">Discount</label>
+                                <label for="discount_amount">Discount</label>
                                 <div class="input-group">
-                                    <input type="number" name="discount" id="discount" class="form-control" value="{{Auth::guard('diagnostic')->user()->discount}}"><i class="btn btn-secondary">%</i>
+                                    <input type="number" name="discount_amount" id="discount_amount" class="form-control" value="{{Auth::guard('diagnostic')->user()->discount_amount}}"><i class="btn btn-secondary">%</i>
                                 </div>
-                                <span class="error-discount text-danger error"></span>
+                                <span class="error-discount_amount text-danger error"></span>
                             </div>
-                        </div> 
+                        </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="diagnostic_type">Diagnostic Type</label>
@@ -147,6 +153,20 @@
                 }
             })
         })
+    })
+
+    function phoneAdd() {
+        var row = `
+            <div class="input-group">
+                <input type="text" id="phone" name="phone[]" class="form-control">
+                <button type="button" class="btn btn-danger removePhone">remove</button>
+            </div>
+        `
+        $(".phoneadd").append(row)
+    }
+
+    $(document).on("click", ".removePhone", event => {
+        event.target.offsetParent.remove();
     })
 </script>
 @endpush
