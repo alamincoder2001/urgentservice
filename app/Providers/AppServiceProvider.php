@@ -3,9 +3,7 @@
 namespace App\Providers;
 
 use App\Models\BloodGroup;
-use App\Models\City;
 use App\Models\Contact;
-use App\Models\Test;
 use App\Models\Setting;
 use App\Models\Department;
 use App\Models\Doctor;

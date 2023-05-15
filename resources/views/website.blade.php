@@ -27,6 +27,7 @@
     .doctor_department:hover {
         color: red !important;
     }
+
     .carbtn {
         width: 12px !important;
         height: 12px !important;
@@ -72,7 +73,8 @@
         font-family: sans-serif;
         transition: all ease-in-out;
     }
-    .department:hover{
+
+    .department:hover {
         background: linear-gradient(201deg, #0694cb, #09581edb) !important;
     }
 
@@ -170,37 +172,38 @@
                 <div class="col-md-12 col-12">
                     <form id="fillterWebsite">
                         <div class="row d-flex justify-content-center">
-                            <div class="col-md-6 col-lg-3 col-6">
+                            <div class="col-md-3 col-6">
+                                <div class="form-group mb-4 mb-md-0">
+                                    <label for="service" class="d-lg-block d-none">Service</label>
+                                    <select name="service" id="country" class="service rounded-pill">
+                                        <option label="Select Service"></option>
+                                        <option value="Doctor">Doctor</option>
+                                        <option value="Hospital">Hospital</option>
+                                        <option value="Diagnostic">Diagnostic</option>
+                                        <option value="Ambulance">Ambulance</option>
+                                        <option value="Privatecar">Privatecar</option>
+                                    </select>
+                                    <span class="error-service text-white"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6">
                                 <div class="form-group mb-4 mb-md-0">
                                     <label for="city" class="d-lg-block d-none">City</label>
-                                    <select name="city" id="city" class="rounded-pill city">
+                                    <select name="city" id="city" class="rounded-pill">
                                         <option label="Select City"></option>
                                         @foreach($cities as $city)
                                         <option value="{{$city->id}}">{{$city->name}}</option>
                                         @endforeach
                                     </select>
-                                    <span class="error-city text-white"></span>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-lg-3 col-6">
-                                <div class="form-group mb-4 mb-md-0">
-                                    <label for="service" class="d-lg-block d-none">Service</label>
-                                    <select name="service" id="country" class="service rounded-pill">
-                                        <option label="Select Service"></option>
-                                    </select>
-                                    <span class="error-service text-white"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-3 col-6">
+                            <div class="col-md-3 col-6">
                                 <div class="form-group">
-                                    <label for="country" class="d-lg-block d-none">Select <span id="Name"></span> Name</label>
-                                    <select name="country" id="country" class="Name rounded-pill">
-                                        <option label="Select Name"></option>
-                                    </select>
-                                    <span class="error-country text-white"></span>
+                                    <label for="name" class="d-lg-block d-none">Select <span id="Name"></span> Name</label>
+                                    <input type="text" name="name" id="name" class="Name form-control" style="height: 33px;border-radius: 2rem;background: black;border: 0;box-shadow: none;color: #a3a3a3;padding-left: 18px;padding-top: 3px;" autocomplete="off" />
                                 </div>
                             </div>
-                            <div class="col-md-6 col-lg-3 col-6 mt-0 mt-md-4">
+                            <div class="col-md-3 col-6 mt-0 mt-md-4">
                                 <div class="form-group text-center">
                                     <button type="submit" class="btn text-white homeBtn rounded-pill">Search</button>
                                 </div>
@@ -232,7 +235,7 @@
                 <a href="{{route('doctor.details')}}" class="text-decoration-none">
                     <div class="card border-0">
                         <div class="card-img">
-                        <img src="{{asset('frontend/img/doctor.png')}}" width="90" />
+                            <img src="{{asset('frontend/img/doctor.png')}}" width="90" />
                         </div>
                         <div class="card-body text-center">
                             <h6 class="text-uppercase">Find Specialist Doctors</h6>
@@ -388,151 +391,123 @@
 
 @push("js")
 <script>
-    $(document).ready(() => {
-
-        $(".city").select2({
-            placeholder: "Select city"
-        });
-        $(".Name").select2({
-            placeholder: "Select Name"
-        });
-
-        $("#city").on("change", (event) => {
-            var arr = ["Doctor", "Hospital", "Diagnostic", "Ambulance", "Privatecar"]
-            $(".service").html(`<option value="">Select Service</option>`)
-            $("#Name").html("")
-            $(".Name").html(`<option value="">Select Name</option>`)
-            if (event.target.value) {
-                $.each(arr, (index, value) => {
-                    $(".service").append(`<option value="${value}">${value}</option>`)
-                })
-            }
-        })
-        $(document).on("change", ".service", (event) => {
-            if (event.target.value) {
-                $.ajax({
-                    url: "{{route('filter.city')}}",
-                    method: "POST",
-                    data: {
-                        id: $("#city").val(),
-                        service: $(".service").val()
-                    },
-                    beforeSend: () => {
-                        $(".Name").html(`<option value="">Select ${event.target.value} Name</option>`)
-                        $("#Name").html(event.target.value)
-                    },
-                    success: (response) => {
-                        if (response.null) {} else {
-                            $.each(response, (index, value) => {
-                                var row = `<option value="${value.name}">${value.name}</option>`;
-                                $(".Name").append(row)
-                            })
-                        }
-                    }
-                })
-            } else {
-                $("#Name").html(event.target.value)
-                $(".Name").html(`<option value="">Select ${event.target.value} Name</option>`)
-            }
-        })
-
-        $("#fillterWebsite").on("submit", (event) => {
-            event.preventDefault();
-            var ci = $("#city").val();
-            var city = $(".service").val();
-            $(".error-city").text("")
-            $(".error-service").text("")
-            if (ci !== "") {
-                if (city !== "") {
-                    if (city == "Doctor") {
-                        var url = "{{route('filter.doctor')}}"
-                        var formdata = {
-                            city: ci,
-                            doctor_name: $(".Name").val()
-                        }
-                        Filter(formdata, url, city)
-                    } else if (city == "Hospital") {
-                        var url = "{{route('filter.hospital')}}"
-                        var formdata = {
-                            city: ci,
-                            hospital_name: $(".Name").val()
-                        }
-                        Filter(formdata, url, city)
-                    } else if (city == "Diagnostic") {
-                        var url = "{{route('filter.diagnostic')}}"
-                        var formdata = {
-                            city: ci,
-                            diagnostic_name: $(".Name").val()
-                        }
-                        Filter(formdata, url, city)
-                    } else if (city == "Privatecar") {
-                        var url = "{{route('filter.privatecar')}}"
-                        var formdata = {
-                            city: ci,
-                            privatecar_name: $(".Name").val()
-                        }
-                        Filter(formdata, url, city)
-                    } else {
-                        var url = "{{route('filter.ambulance')}}"
-                        var formdata = {
-                            city: ci,
-                            ambulance_name: $(".Name").val()
-                        }
-                        Filter(formdata, url, city)
-                    }
-                } else {
-                    $(".error-service").text("Must be select service")
-                }
-            } else {
-                $(".error-city").text("Select city first")
-            }
-        })
-
-        function Filter(formdata, url, city) {
+    $(document).on("change", ".service", event => {
+        if (event.target.value) {
             $.ajax({
-                url: url,
+                url: "{{route('filter.city')}}",
                 method: "POST",
-                data: formdata,
+                data: {
+                    id: $("#city").val(),
+                    service: $(".service").val()
+                },
                 beforeSend: () => {
-                    ClearAll()
-                    $("#fillterWebsite").find(".error").text("")
-                    $(".error-city").text("")
-                    $(".error-service").text("")
-                    $(".main-show").html("");
-                    $(".Loading").removeClass("d-none")
+                    $(".Name").html(`<option value="">Select ${event.target.value} Name</option>`)
+                    $("#Name").html(event.target.value)
                 },
                 success: (response) => {
-                    if (response.error) {
-                        $(".error-city").text(response.error.city)
-                    } else {
-                        if (response.null) {
-                            $(".main-show").html(`<p>${response.null}</p>`);
-                        } else {
-                            $.each(response, (index, value) => {
-                                $(".main-show").css({
-                                    padding: "55px 0"
-                                })
-                                if (city == "Doctor") {
-                                    Doctor(index, value)
-                                } else if (city == "Diagnostic") {
-                                    Diagnostic(index, value)
-                                } else if (city == "Hospital") {
-                                    Hospital(index, value)
-                                } else if (city == "Privatecar") {
-                                    Privatecar(index, value)
-                                } else {
-                                    Ambulance(index, value)
-                                }
-                            })
-                        }
+                    if (response.null) {} else {
+                        $.each(response, (index, value) => {
+                            var row = `<option value="${value.name}">${value.name}</option>`;
+                            $(".Name").append(row)
+                        })
                     }
-                },
-                complete: () => {
-                    $(".Loading").addClass("d-none")
                 }
             })
+        } else {
+            $("#Name").html(event.target.value)
+            $(".Name").html(`<option value="">Select ${event.target.value} Name</option>`)
         }
     })
+
+    $("#fillterWebsite").on("submit", (event) => {
+        event.preventDefault();
+        var ci = $("#city").val();
+        var service = $(".service").val();
+        $(".error-service").text("")
+        if (service != "") {
+            if (service == "Doctor") {
+                var url = "{{route('filter.doctor')}}"
+                var formdata = {
+                    city: ci,
+                    doctor_name: $(".Name").val()
+                }
+                Filter(formdata, url, service)
+            } else if (service == "Hospital") {
+                var url = "{{route('filter.hospital')}}"
+                var formdata = {
+                    city: ci,
+                    hospital_name: $(".Name").val()
+                }
+                Filter(formdata, url, service)
+            } else if (service == "Diagnostic") {
+                var url = "{{route('filter.diagnostic')}}"
+                var formdata = {
+                    city: ci,
+                    diagnostic_name: $(".Name").val()
+                }
+                Filter(formdata, url, service)
+            } else if (service == "Privatecar") {
+                var url = "{{route('filter.privatecar')}}"
+                var formdata = {
+                    city: ci,
+                    privatecar_name: $(".Name").val()
+                }
+                Filter(formdata, url, service)
+            } else {
+                var url = "{{route('filter.ambulance')}}"
+                var formdata = {
+                    city: ci,
+                    ambulance_name: $(".Name").val()
+                }
+                Filter(formdata, url, service)
+            }
+        } else {
+            $(".error-service").text("Service must be select")
+        }
+    })
+
+    function Filter(formdata, url, service) {
+        $.ajax({
+            url: url,
+            method: "POST",
+            data: formdata,
+            beforeSend: () => {
+                ClearAll()
+                $("#fillterWebsite").find(".error").text("")
+                $(".error-city").text("")
+                $(".error-service").text("")
+                $(".main-show").html("");
+                $(".Loading").removeClass("d-none")
+            },
+            success: res => {
+                if (res.status == true && res.message.length == 0) {
+                    $(".main-show").html(`<h3 class="text-center m-0">Not Found Data</h3>`);
+                } else if (res.status == true) {
+                    $.each(res.message, (index, value) => {
+                        $(".main-show").css({
+                            padding: "55px 0"
+                        })
+                        if (service == "Doctor") {
+                            Doctor(index, value)
+                        } else if (service == "Diagnostic") {
+                            Diagnostic(index, value)
+                        } else if (service == "Hospital") {
+                            Hospital(index, value)
+                        } else if (service == "Privatecar") {
+                            Privatecar(index, value)
+                        } else {
+                            Ambulance(index, value)
+                        }
+                    })
+                } else {
+                    $(".main-show").html(`<h3 class="text-center m-0">${res.message}</h3>`);
+                }
+            },
+            complete: () => {
+                $(".Loading").addClass("d-none")
+            }
+        })
+    }
 
     function Doctor(index, value) {
         var row = `
@@ -558,108 +533,90 @@
 
     function Diagnostic(index, value) {
         var row = `
-            <div class="col-md-6 col-10 col-sm-6 col-lg-4 diagnosticbody">
-                <div class="card border-0 mb-4" style="background: #ffffff;box-shadow:0px 0px 7px 2px #c1c1c1;">
-                    <div class="img card-img-top m-auto mt-2 w-50 overflow-hidden d-flex justify-content-center border border-2">
-                        <img src="${value.image?value.image:'frontend/img/hospital.jpg'}" style="width: 100%; height:160px;">
+                    <div class="col-md-4 mb-3">
+                        <a href="/single-details-diagnostic/${value.id}" target="_blank" class="text-decoration-none text-secondary" title="${value.name}">
+                            <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
+                                <div class="card-body d-flex position-relative" style="padding: 5px;gap: 8px;">
+                                    ${value.discount_amount > 0 ? '<p style="position: absolute;bottom: 5px;right: 10px;" class="m-0 text-danger">সকল প্রকার সার্ভিসের উপরে <span class="text-decoration-underline">'+value.discount_amount+'%</span> ছাড়।</p>':''}
+                                    <div class="image" style="border: 1px dotted #ababab;height: 110px;margin-top: 4px;">
+                                        <img src="${value.image != '0' ?'/'+value.image: '/frontend/img/diagnostic.png'}" width="100" height="100%">
+                                    </div>
+                                    <div class="info" style="padding-right:5px;">
+                                        <h6>${value.name}</h6>
+                                        <p class="text-capitalize" style="color:#c99913;">${value.diagnostic_type}, ${value.city_name}</p>
+                                        <p style="border-top: 2px dashed #dddddd85;text-align:justify;"><i class="fa fa-map-marker"></i> ${value.address}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
                     </div>
-                    <div class="card-body">
-                        <h5 class="card-title text-center" style="font-size: 15px;">${value.name}</h5>
-                        <p class="card-text text-primary text-center mb-2"><span>${value.diagnostic_type.toUpperCase()}</span> | <span>+880 ${value.phone.substr(1)}</span></p>
-                        <ul style="list-style: none;padding:0 0 0 5px;">
-                            <li><i style="width: 15px;height:15px;" class="fa fa-map-marker text-info"></i> <span style="font-size: 13px;">${value.address}, ${value.city.name}</span></li>
-                            <li><i style="width: 15px;height:15px;font-size:13px;" class="fa fa-envelope-o text-info"></i> <span style="font-size: 13px;">${value.email}</span></li>
-                        </ul>
-                    </div>
-                    <a class="text-decoration-none text-white text-uppercase" target="_blank" href="${'/single-details-diagnostic/'+value.id}">
-                    <div class="card-footer border-0 text-center py-3">
-                        View Details
-                    </div>
-                    </a>
-                    ${value.discount_amount!=0?"<div class='discount'>-"+value.discount_amount+"%</div>":""}
-                </div>
-            </div>
         `;
         $(".main-show").append(row)
     }
 
     function Hospital(index, value) {
         var row = `
-                <div class="col-md-6 col-10 col-sm-6 col-lg-4 hospitalbody">
-                    <div class="card border-0 mb-4" style="background: #ffffff;box-shadow:0px 0px 7px 2px #c1c1c1;">
-                        <div class="img card-img-top m-auto mt-2 w-50 overflow-hidden d-flex justify-content-center border border-2">
-                            <img src="${value.image?value.image:'frontend/img/hospital.jpg'}" style="width: 100%; height:160px;">
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title text-center" style="font-size: 15px;">${value.name}</h5>
-                            <p class="card-text text-primary text-center mb-2"><span>${value.hospital_type.toUpperCase()}</span> | <span>+880 ${value.phone.substr(1)}</span></p>
-                            <ul style="list-style: none;padding:0 0 0 5px;">
-                                <li><i style="width: 15px;height:15px;" class="fa fa-map-marker text-info"></i> <span style="font-size: 13px;">${value.address}, ${value.city.name}</span></li>
-                                <li><i style="width: 15px;height:15px;font-size:13px;" class="fa fa-envelope-o text-info"></i> <span style="font-size: 13px;">${value.email}</span></li>
-                            </ul>
-                        </div>
-                        <a class="text-decoration-none text-white text-uppercase" target="_blank" href="${'/single-details-hospital/'+value.id}">
-                        <div class="card-footer border-0 text-center py-3">
-                            View Details
-                        </div>
+                    <div class="col-md-4 mb-3">
+                        <a href="/single-details-hospital/${value.id}" target="_blank" class="text-decoration-none text-secondary" title="${value.name}">
+                            <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
+                                <div class="card-body d-flex position-relative" style="padding: 5px;gap: 8px;">
+                                    ${value.discount_amount > 0 ? '<p style="position: absolute;bottom: 5px;right: 10px;" class="m-0 text-danger">সকল প্রকার সার্ভিসের উপরে <span class="text-decoration-underline">'+value.discount_amount+'%</span> ছাড়।</p>':''}
+                                    <div class="image" style="border: 1px dotted #ababab;height: 110px;margin-top: 4px;">
+                                        <img src="${value.image != '0' ?'/'+value.image: '/frontend/img/hospital.png'}" width="100" height="100%">
+                                    </div>
+                                    <div class="info" style="padding-right:5px;">
+                                        <h6>${value.name}</h6>
+                                        <p class="text-capitalize" style="color:#c99913;">${value.hospital_type}, ${value.city_name}</p>
+                                        <p style="border-top: 2px dashed #dddddd85;text-align:justify;"><i class="fa fa-map-marker"></i> ${value.address}</p>
+                                    </div>
+                                </div>
+                            </div>
                         </a>
-                        ${value.discount_amount!=0?"<div class='discount'>-"+value.discount_amount+"%</div>":""}
                     </div>
-                </div>
         `;
         $(".main-show").append(row)
     }
 
     function Ambulance(index, value) {
         var row = `
-            <div class="col-md-6 col-10 col-sm-6 col-lg-4 ambulancebody">
-                <div class="card border-0 mb-4" style="background: #ffffff;box-shadow:0px 0px 7px 2px #c1c1c1;height:400px;font-size-adjust: 0.58;">
-                    <div class="img card-img-top m-auto mt-2 w-50 overflow-hidden d-flex justify-content-center border border-2">
-                        <img src="${value.image}" style="width: 100%; height:160px;">
+                    <div class="col-md-4 mb-3">
+                        <a href="/single-details-ambulance/${value.id}" target="_blank" class="text-decoration-none text-secondary" title="${value.name}">
+                            <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
+                                <div class="card-body d-flex" style="padding: 5px;gap: 8px;">
+                                    <div class="image" style="border: 1px dotted #ababab;height: 110px;margin-top: 4px;">
+                                        <img src="${value.image != '0' ? value.image:'/frontend/img/ambulance.png'}" width="100" height="100%">
+                                    </div>
+                                    <div class="info" style="padding-right:5px;">
+                                        <h6>${value.name}</h6>
+                                        <p style="color:#c99913;">${value.ambulance_type}, ${value.city_name}</p>
+                                        <p style="border-top: 2px dashed #dddddd85;text-align:justify;"><i class="fa fa-map-marker"></i> ${value.address}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
                     </div>
-                    <div class="card-body">
-                        <h5 class="card-title text-center" style="font-size: 15px;">${value.name}</h5>
-                        <p class="card-text text-primary text-center mb-2"><span>${value.ambulance_type.replaceAll(",", " | ")}</span></p>
-                        <ul style="list-style: none;padding:0 0 0 5px;">
-                            <li><i style="width: 15px;height:15px;" class="fa fa-phone text-info"></i> <span style="font-size: 13px;">+880 ${value.phone.substr(1)}</span></li>
-                            <li><i style="width: 15px;height:15px;" class="fa fa-map-marker text-info"></i> <span style="font-size: 13px;">${value.address}, ${value.city.name}</span></li>
-                            <li><i style="width: 15px;height:15px;font-size:13px;" class="fa fa-envelope-o text-info"></i> <span style="font-size: 13px;">${value.email}</span></li>
-                        </ul>
-                    </div>
-                    <a href="${'single-details-ambulance/'+value.id}" target="_blank" class="text-uppercase text-white text-decoration-none text-center">
-                        <div class="card-footer border-0 py-3">
-                            View Details
-                        </div>
-                    </a>
-                </div>
-            </div>
         `;
         $(".main-show").append(row)
     }
 
     function Privatecar(index, value) {
         var row = `
-            <div class="col-md-6 col-10 col-sm-6 col-lg-4 privatecarbody">
-                <div class="card border-0 mb-4" style="background: #ffffff;box-shadow:0px 0px 7px 2px #c1c1c1;">
-                    <div class="img card-img-top m-auto mt-2 w-50 overflow-hidden d-flex justify-content-center border border-2">
-                        <img src="${value.image}" style="width: 100%; height:160px;">
+                    <div class="col-md-4 mb-3">
+                        <a href="/single-details-privatecar/${value.privatecar_id}" target="_blank" class="text-decoration-none text-secondary" title="${value.name}">
+                            <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
+                                <div class="card-body d-flex" style="padding: 5px;gap: 8px;">
+                                    <div class="image" style="border: 1px dotted #ababab;height: 110px;margin-top: 4px;">
+                                        <img src="${value.image != '0' ? '/'+value.image:'/frontend/img/privatecar.png'}" width="100" height="100%">
+                                    </div>
+                                    <div class="info" style="padding-right:5px;">
+                                        <h6>${value.name}</h6>
+                                        <p style="color:#c99913;">${value.cartype}, ${value.city_name}</p>
+                                        <p style="border-top: 2px dashed #dddddd85;text-align:justify;"><i class="fa fa-map-marker"></i> ${value.address}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
                     </div>
-                    <div class="card-body">
-                        <h5 class="card-title text-center" style="font-size: 15px;">${value.name}</h5>
-                        <p class="card-text text-primary text-center mb-2"><span>${value.cartype_id.replaceAll(",", " | ")}</span></p>
-                        <ul style="list-style: none;padding:0 0 0 5px;">
-                            <li><i style="width: 15px;height:15px;" class="fa fa-phone text-info"></i> <span style="font-size: 13px;">+880 ${value.phone.substr(1)}</span></li>
-                            <li><i style="width: 15px;height:15px;" class="fa fa-map-marker text-info"></i> <span style="font-size: 13px;">${value.address}, ${value.city.name}</span></li>
-                            <li><i style="width: 15px;height:15px;font-size:13px;" class="fa fa-envelope-o text-info"></i> <span style="font-size: 13px;">${value.email}</span></li>
-                        </ul>
-                    </div>
-                    <a href="${'single-details-privatecar/'+value.id}" target="_blank" class="text-uppercase text-white text-decoration-none text-center">
-                        <div class="card-footer border-0 py-3">
-                            View Details
-                        </div>
-                    </a>
-                </div>
-            </div>
             `;
         $(".main-show").append(row)
 

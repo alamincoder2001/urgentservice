@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DonorController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\HireAmbulanceController;
 use App\Http\Controllers\CompanyContactController;
 
+Auth::routes(['login' => false]);
 // Normal User login
 Route::get("/login", [RegisterController::class, "showlogin"])->name("showlogin")->middleware("user");
 Route::get("/register", [RegisterController::class, "showregister"])->name("showregister")->middleware("user");
@@ -22,7 +24,6 @@ Route::get("/user-profile", function () {
 // Filter route
 Route::post("/filtersingleservice", [FilterController::class, "filtersingleservice"])->name("filtersingleservice");
 Route::post("/city", [FilterController::class, "cityappointment"])->name("filter.cityappoinment");
-Route::post("/filter-city", [FilterController::class, "City"])->name("filter.city");
 Route::post("/filter-hospital", [FilterController::class, "hospital"])->name("filter.hospital");
 Route::post("/filter-hospitaldiagnosticdoctor", [FilterController::class, "hospitaldiagnosticdoctor"])->name("filter.hospitaldiagnosticdoctor");
 Route::post("/filter-doctor", [FilterController::class, "doctor"])->name("filter.doctor");

@@ -29,13 +29,12 @@
                             <div class="col-md-3 col-10">
                                 <div class="form-group mb-4 mb-md-0">
                                     <label for="city" class="d-md-block d-none">City</label>
-                                    <select class="rounded-pill city" name="city" id="city">
+                                    <select class="rounded-pill" name="city" id="city">
                                         <option label="Select City"></option>
                                         @foreach($cities as $city)
                                         <option value="{{$city->id}}">{{$city->name}}</option>
                                         @endforeach
                                     </select>
-                                    <span class="error-city error text-white"></span>
                                 </div>
                             </div>
                             <div class="col-md-3 col-10">
@@ -43,17 +42,18 @@
                                     <label for="ambulance_type" class="d-md-block d-none">Type Of Ambulance</label>
                                     <select class="rounded-pill" name="ambulance_type" id="ambulance_type">
                                         <option label="Select Ambulance Type"></option>
+                                        <option value="ICU">ICU Ambulance</option>
+                                        <option value="NICU">Non ICU Ambulance</option>
+                                        <option value="Freezing">Freezing Ambulance</option>
+                                        <option value="AC">AC Ambulance</option>
+                                        <option value="NON-AC">Non AC Ambulance</option>
                                     </select>
-                                    <span class="error-ambulance_name error text-white"></span>
                                 </div>
                             </div>
                             <div class="col-md-3 col-10">
                                 <div class="form-group">
                                     <label for="ambulance_name" class="d-md-block d-none">Ambulance Name</label>
-                                    <select class="rounded-pill ambulance" name="ambulance_name" id="ambulance_name">
-                                        <option label="Select Ambulance Name"></option>
-                                    </select>
-                                    <span class="error-ambulance_name error text-white"></span>
+                                    <input type="text" name="ambulance_name" id="ambulance_name" autocomplete="off" class="form-control" style="height: 33px;border-radius: 2rem;background: black;border: 0;box-shadow: none;color: #a3a3a3;padding-left: 18px;padding-top: 3px;">
                                 </div>
                             </div>
                             <div class="col-md-3 col-6">
@@ -123,48 +123,18 @@
 
 @push("js")
 <script>
-    $(document).ready(() => {
-        $(".city").select2({
-            placeholder: "Select city"
-        });
-        $(".ambulance").select2({
-            placeholder: "Select Ambulance Name"
-        });
-
-        $("#city").on("change", (event) => {
-            $.ajax({
-                url: "{{route('filter.city')}}",
-                method: "POST",
-                data: {
-                    id: event.target.value,
-                    ambulance: 'ambulance'
-                },
-                beforeSend: () => {
-                    $("#ambulance_name").html(`<option value="">Select Ambulance Name</option>`)
-                },
-                success: (response) => {
-                    if (response.null) {} else {
-                        $.each(response, (index, value) => {
-                            var row = `<option value="${value.name}">${value.name}</option>`;
-                            $("#ambulance_name").append(row)
-                        })
-                    }
-                }
-            })
-        })
-
-        function Row(index, value) {
-            var row = `
+    function Row(index, value) {
+        var row = `
                     <div class="col-12 col-lg-6 mb-3">
                         <a href="/single-details-ambulance/${value.id}" target="_blank" class="text-decoration-none text-secondary" title="${value.name}">
                             <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
                                 <div class="card-body d-flex" style="padding: 5px;gap: 8px;">
                                     <div class="image" style="border: 1px dotted #ababab;height: 110px;margin-top: 4px;">
-                                        <img src="{{asset($item->image != '0' ? $item->image:'/frontend/img/ambulance.png')}}" width="100" height="100%">
+                                        <img src="${value.image != '0' ? value.image:'/frontend/img/ambulance.png'}" width="100" height="100%">
                                     </div>
                                     <div class="info" style="padding-right:5px;">
                                         <h6>${value.name}</h6>
-                                        <p style="color:#c99913;">${value.ambulance_type}, ${value.city.name}</p>
+                                        <p style="color:#c99913;">${value.ambulance_type}, ${value.city_name}</p>
                                         <p style="border-top: 2px dashed #dddddd85;text-align:justify;"><i class="fa fa-map-marker"></i> ${value.address}</p>
                                     </div>
                                 </div>
@@ -172,48 +142,39 @@
                         </a>
                     </div>
             `;
-            $(".ambulancebody").append(row)
+        $(".ambulancebody").append(row)
 
-        }
+    }
 
-        function Error(err) {
-            $.each(err, (index, value) => {
-                $("#filterAmbulance").find(".error-" + index).text(value)
-            })
-        }
-
-        $("#filterAmbulance").on("submit", (event) => {
-            event.preventDefault();
-            var formdata = new FormData(event.target)
-            $.ajax({
-                url: "{{route('filter.ambulance')}}",
-                method: "POST",
-                data: formdata,
-                contentType: false,
-                processData: false,
-                beforeSend: () => {
-                    $("#filterAmbulance").find(".error").text("")
-                    $(".Loading").removeClass("d-none")
-                    $(".ambulancebody").html("")
-                },
-                success: (response) => {
-                    if (response.error) {
-                        $(".ambulancebody").html(`<div class="bg-dark text-white text-center">Not Found Data</div>`)
-                        Error(response.error);
-                    } else {
-                        if (response.null) {
-                            $(".ambulancebody").html(`<div class="bg-dark text-white text-center">${response.null}</div>`)
-                        } else {
-                            $.each(response, (index, value) => {
-                                Row(index, value)
-                            })
-                        }
-                    }
-                },
-                complete: () => {
-                    $(".Loading").addClass("d-none")
+    $("#filterAmbulance").on("submit", event => {
+        event.preventDefault();
+        var formdata = new FormData(event.target)
+        $.ajax({
+            url: "{{route('filter.ambulance')}}",
+            method: "POST",
+            data: formdata,
+            contentType: false,
+            processData: false,
+            beforeSend: () => {
+                $(".Loading").removeClass("d-none")
+                $(".ambulancebody").html("")
+            },
+            success: res => {
+                if (res.status == true && res.message.length == 0) {
+                    $(".totalDoctorcount").find("span").text(res.message.length)
+                    $(".ambulancebody").html(`<div class="bg-dark text-white text-center">Not found Data</div>`)
+                } else if (res.status == true) {
+                    $(".totalDoctorcount").find("span").text(res.message.length)
+                    $.each(res.message, (index, value) => {
+                        Row(index, value)
+                    })
+                } else {
+                    $(".ambulancebody").html(`<div class="bg-dark text-white text-center">${res.message}</div>`)
                 }
-            })
+            },
+            complete: () => {
+                $(".Loading").addClass("d-none")
+            }
         })
     })
 </script>

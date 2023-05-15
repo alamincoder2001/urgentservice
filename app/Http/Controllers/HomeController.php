@@ -121,7 +121,8 @@ class HomeController extends Controller
         } else {
             $data['privatecar'] = CategoryWisePrivatecar::with('privatecar', 'cartype')->paginate(24);
         }
-        return view('privatecar_details', compact("data", "categories", "type_id", "city_id"));
+        $cartypes = Cartype::orderBy("name", "ASC")->get();
+        return view('privatecar_details', compact("data", "cartypes", "categories", "type_id", "city_id"));
     }
 
     // single doctor

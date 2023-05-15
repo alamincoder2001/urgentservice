@@ -35,7 +35,6 @@
                                         <option value="{{$city->id}}">{{$city->name}}</option>
                                         @endforeach
                                     </select>
-                                    <span class="error-city error text-white"></span>
                                 </div>
                             </div>
                             <div class="col-md-3 col-10">
@@ -51,13 +50,6 @@
                                 </div>
                             </div>
                             <div class="col-md-3 col-10">
-                                <div class="form-group d-none doctor-select">
-                                    <label for="doctor_select" class="d-md-block d-none">Doctor Name</label>
-                                    <select class="rounded-pill doctor_select" id="doctor_select">
-                                        <option value="">Select Doctor Name</option>
-                                    </select>
-                                    <span class="error-doctor_select error text-white"></span>
-                                </div>
                                 <div class="form-group doctor_name">
                                     <label for="doctor_name" class="d-md-block d-none">Doctor Name</label>
                                     <input type="text" name="doctor_name" id="doctor_name" class="form-control" style="height: 33px;border-radius: 2rem;background: black;border: 0;box-shadow: none;color: #a3a3a3;padding-left: 18px;padding-top: 3px;">
@@ -139,122 +131,41 @@
 
 @push("js")
 <script>
-    $(document).ready(() => {
-        $(".city").select2({
-            placeholder: "Select city"
-        });
-        $(".department").select2({
-            placeholder: "Select department"
-        });
+    $("#filterDoctor").on("submit", (event) => {
+        event.preventDefault()
+        var formdata = new FormData(event.target)
 
-        $(".doctor_select").select2({
-            placeholder: "Select Doctor Name"
-        });
-
-        $("#city").on("change", (event) => {
-            $.ajax({
-                url: "{{route('filter.city')}}",
-                method: "POST",
-                dataType: "JSON",
-                data: {
-                    id: event.target.value,
-                    doctor: 'doctor'
-                },
-                beforeSend: () => {
-                    $("#doctor_name").html(`<option value="">Select Doctor Name</option>`)
-                },
-                success: (response) => {
-                    if (response.null) {} else {
-                        $.each(response, (index, value) => {
-                            var row = `<option value="${value.name}">${value.name}</option>`;
-                            $("#doctor_name").append(row)
-                        })
+        $.ajax({
+            url: "{{route('filter.doctor')}}",
+            method: "POST",
+            data: formdata,
+            contentType: false,
+            processData: false,
+            beforeSend: () => {
+                $("#filterDoctor").find(".error").text("")
+                $(".doctorbody").html("")
+                $(".Loading").removeClass("d-none")
+            },
+            success: res => {
+                    if (res.null) {
+                        $(".totalDoctorcount span").text(0)
+                        $(".doctorbody").html(`<div class="bg-dark text-white text-center">${res.null}</div>`)
+                    } else {
+                        $(".totalDoctorcount span").text(res.length)
+                        if ($("#city").val()) {
+                            $(".doctor_name").addClass("d-none")
+                            $(".doctor-select").removeClass("d-none")
+                            $.each(res, (index, value) => {
+                                var raw = `<option value="${value.doctor.id}">${value.doctor.name}</option>`;
+                                $(".doctor_select").append(raw)
+                                Row(index, value)
+                            })
                     }
                 }
-            })
-        })
-
-        function Error(err) {
-            $.each(err, (index, value) => {
-                $("#filterDoctor").find(".error-" + index).text(value)
-            })
-        }
-
-        $("#filterDoctor").on("submit", (event) => {
-            event.preventDefault()
-            var formdata = new FormData(event.target)
-            var doctor_name = $("#doctor_name").val()
-            var city = $("#city").val()
-            if (doctor_name !== "" || city !== "") {
-                $.ajax({
-                    url: "{{route('filter.doctor')}}",
-                    method: "POST",
-                    data: formdata,
-                    contentType: false,
-                    processData: false,
-                    beforeSend: () => {
-                        $("#filterDoctor").find(".error").text("")
-                        $(".doctorbody").html("")
-                        $(".Loading").removeClass("d-none")
-                        $(".doctor_select").html(`<option value="">Select Doctor Name</option>`)
-                    },
-                    success: (response) => {
-                        if (response.error) {
-                            Error(response.error);
-                        } else {
-                            if (response.null) {
-                                $(".totalDoctorcount span").text(0)
-                                $(".doctorbody").html(`<div class="bg-dark text-white text-center">${response.null}</div>`)
-                            } else {
-                                $(".totalDoctorcount span").text(response.length)
-                                if ($("#city").val()) {
-                                    $(".doctor_name").addClass("d-none")
-                                    $(".doctor-select").removeClass("d-none")
-                                    $.each(response, (index, value) => {
-                                        var raw = `<option value="${value.doctor.id}">${value.doctor.name}</option>`;
-                                        $(".doctor_select").append(raw)
-                                        Row(index, value)
-                                    })
-                                } else {
-                                    $(".doctor_name").removeClass("d-none")
-                                    $(".doctor-select").addClass("d-none")
-                                    $.each(response, (index, value) => {
-                                        SingleRow(index, value)
-                                    })
-                                }
-                            }
-                        }
-                    },
-                    complete: () => {
-                        $(".Loading").addClass("d-none")
-                    }
-                })
-            } else {
-                $(".error-city").text("Must be fill out one field")
+            },
+            complete: () => {
+                $(".Loading").addClass("d-none")
             }
-        })
-
-        $(".doctor_select").on("change", event => {
-            $.ajax({
-                url: "{{route('filter.doctorsinglechange')}}",
-                method: "POST",
-                data: {
-                    id: event.target.value
-                },
-                beforeSend: () => {
-                    $(".doctorbody").html("")
-                    $(".Loading").removeClass("d-none")
-                },
-                success: (response) => {
-                    console.log(response);
-                    $.each(response, (index, value) => {
-                        SingleRow(index, value);
-                    })
-                },
-                complete: () => {
-                    $(".Loading").addClass("d-none")
-                }
-            })
         })
     })
 
@@ -271,28 +182,6 @@
                                 <h6>${value.doctor.name}</h6>
                                 <p style="color:#c99913;">${value.specialist.name}, ${value.doctor.city.name}</p>
                                 <p style="border-top: 2px dashed #dddddd85;text-align:justify;">${value.doctor.education}</p>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            `;
-        $(".doctorbody").append(row)
-    }
-
-    function SingleRow(index, value) {
-        var row = `
-            <div class="col-12 col-lg-6 mb-3">
-                <a href="/single-details-doctor/${value.id}" target="_blank" class="text-decoration-none text-secondary" title="${value.name}">
-                    <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
-                        <div class="card-body d-flex" style="padding: 5px;gap: 8px;">
-                            <div class="image" style="border: 1px dotted #ababab;height: 110px;margin-top: 4px;">
-                                <img height="100%" src="${value.image != '0'?location.origin+"/"+value.image:location.origin+'/uploads/nouserimage.png'}" width="100">
-                            </div>
-                            <div class="info" style="padding-right:5px;">
-                                <h6>${value.name}</h6>
-                                <p style="color:#c99913;">${value.department[0].specialist.name}, ${value.city.name}</p>
-                                <p style="border-top: 2px dashed #dddddd85;text-align:justify;">${value.education}</p>
                             </div>
                         </div>
                     </div>

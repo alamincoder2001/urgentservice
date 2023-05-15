@@ -53,10 +53,7 @@
                             <div class="col-md-4 col-10 col-sm-10">
                                 <div class="form-group">
                                     <label for="hospital_name" class="d-md-block d-none">Hospital Name</label>
-                                    <select name="hospital_name" id="hospital_name" class="rounded-pill hospital">
-                                        <option label="Select Hospital Name"></option>
-                                    </select>
-                                    <span class="error-hospital_name error text-white"></span>
+                                    <input type="text" name="hospital_name" id="hospital_name" class="form-control" autocomplete="off" style="height: 33px;border-radius: 2rem;background: black;border: 0;box-shadow: none;color: #a3a3a3;padding-left: 18px;padding-top: 3px;">
                                 </div>
                             </div>
                             <div class="col-md-4 col-6">
@@ -123,49 +120,19 @@
 
 @push("js")
 <script>
-    $(document).ready(() => {
-        $(".city").select2({
-            placeholder: "Select city"
-        });
-        $(".hospital").select2({
-            placeholder: "Select Hospital Name"
-        });
-
-        $("#city").on("change", (event) => {
-            $.ajax({
-                url: "{{route('filter.city')}}",
-                method: "POST",
-                dataType: "JSON",
-                data: {
-                    id: event.target.value,
-                    hospital: 'hospital'
-                },
-                beforeSend: () => {
-                    $("#hospital_name").html(`<option value="">Select Hospital Name</option>`)
-                },
-                success: (response) => {
-                    if (response.null) {} else {
-                        $.each(response, (index, value) => {
-                            var row = `<option value="${value.name}">${value.name}</option>`;
-                            $("#hospital_name").append(row)
-                        })
-                    }
-                }
-            })
-        })
-
-        function Row(index, value) {
-            var row = `
-                    <div class="col-12 col-lg-6 mb-3">
+    function Row(index, value) {
+        var row = `
+                    <div class="col-md-6 mb-3">
                         <a href="/single-details-hospital/${value.id}" target="_blank" class="text-decoration-none text-secondary" title="${value.name}">
                             <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
-                                <div class="card-body d-flex" style="padding: 5px;gap: 8px;">
+                                <div class="card-body d-flex position-relative" style="padding: 5px;gap: 8px;">
+                                    ${value.discount_amount > 0 ? '<p style="position: absolute;bottom: 5px;right: 10px;" class="m-0 text-danger">সকল প্রকার সার্ভিসের উপরে <span class="text-decoration-underline">'+value.discount_amount+'%</span> ছাড়।</p>':''}
                                     <div class="image" style="border: 1px dotted #ababab;height: 110px;margin-top: 4px;">
                                         <img src="${value.image != '0' ?'/'+value.image: '/frontend/img/hospital.png'}" width="100" height="100%">
                                     </div>
                                     <div class="info" style="padding-right:5px;">
                                         <h6>${value.name}</h6>
-                                        <p class="text-capitalize" style="color:#c99913;">${value.hospital_type}, ${value.city.name}</p>
+                                        <p class="text-capitalize" style="color:#c99913;">${value.hospital_type}, ${value.city_name}</p>
                                         <p style="border-top: 2px dashed #dddddd85;text-align:justify;"><i class="fa fa-map-marker"></i> ${value.address}</p>
                                     </div>
                                 </div>
@@ -173,48 +140,41 @@
                         </a>
                     </div>
                 `;
-            $(".hospitalbody").append(row)
+        $(".hospitalbody").append(row)
 
-        }
+    }
 
-        function Error(err) {
-            $.each(err, (index, value) => {
-                $("#formHospital").find(".error-" + index).text(value)
-            })
-        }
 
-        $("#formHospital").on("submit", (event) => {
-            event.preventDefault();
-            var formdata = new FormData(event.target)
-            $.ajax({
-                url: "{{route('filter.hospital')}}",
-                method: "POST",
-                data: formdata,
-                contentType: false,
-                processData: false,
-                beforeSend: () => {
-                    $("#formHospital").find(".error").text("")
-                    $(".Loading").removeClass("d-none")
-                    $(".hospitalbody").html("")
-                },
-                success: (response) => {
-                    if (response.error) {
-                        $(".hospitalbody").html(`<div class="col-12 bg-dark text-white text-center">Not Found Data</div>`)
-                        Error(response.error);
-                    } else {
-                        if (response.null) {
-                            $(".hospitalbody").html(`<div class="bg-dark text-white text-center">${response.null}</div>`)
-                        } else {
-                            $.each(response, (index, value) => {
-                                Row(index, value)
-                            })
-                        }
-                    }
-                },
-                complete: () => {
-                    $(".Loading").addClass("d-none")
+    $("#formHospital").on("submit", (event) => {
+        event.preventDefault();
+        var formdata = new FormData(event.target)
+        $.ajax({
+            url: "{{route('filter.hospital')}}",
+            method: "POST",
+            data: formdata,
+            contentType: false,
+            processData: false,
+            beforeSend: () => {
+                $("#formHospital").find(".error").text("")
+                $(".Loading").removeClass("d-none")
+                $(".hospitalbody").html("")
+            },
+            success: res => {
+                if (res.status == true && res.message.length == 0) {
+                    $(".totalDoctorcount").find("span").text(res.message.length)
+                    $(".hospitalbody").html(`<div class="col-12 bg-dark text-white text-center">Not Found Data</div>`)
+                } else if (res.status == true) {
+                    $(".totalDoctorcount").find("span").text(res.message.length)
+                    $.each(res.message, (index, value) => {
+                        Row(index, value)
+                    })
+                } else {
+                    $(".hospitalbody").html(`<div class="col-12 bg-dark text-white text-center">${res.message}</div>`)
                 }
-            })
+            },
+            complete: () => {
+                $(".Loading").addClass("d-none")
+            }
         })
     })
 </script>

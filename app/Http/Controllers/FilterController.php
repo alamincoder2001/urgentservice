@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Devfaysal\BangladeshGeocode\Models\Upazila;
 use Devfaysal\BangladeshGeocode\Models\District;
+use Illuminate\Support\Facades\DB;
 
 class FilterController extends Controller
 {
@@ -31,38 +32,14 @@ class FilterController extends Controller
         }
     }
 
-    public function City(Request $request)
-    {
-        try {
-            if ($request->doctor || $request->service == "Doctor") {
-                $data = Doctor::with("department", "chamber")->where("city_id", $request->id)->orderBy('name')->get();
-            } elseif ($request->hospital || $request->service == "Hospital") {
-                $data = Hospital::with("city")->where("city_id", $request->id)->orderBy('name')->get();
-            } elseif ($request->diagnostic || $request->service == "Diagnostic") {
-                $data = Diagnostic::with("city")->where("city_id", $request->id)->orderBy('name')->get();
-            } elseif ($request->ambulance || $request->service == "Ambulance") {
-                $data = Ambulance::with("city")->where("city_id", $request->id)->orderBy('name')->get();
-            } else {
-                $data = Privatecar::with("city")->where("city_id", $request->id)->orderBy('name')->get();
-            }
-            if (isset($data) !== 0) {
-                return response()->json($data);
-            } else {
-                return response()->json(["null" => "Not Found Data"]);
-            }
-        } catch (\Throwable $e) {
-            return response()->json("Something went wrong");
-        }
-    }
-
     public function doctor(Request $request)
     {
         try {
             if (!empty($request->city) && !empty($request->department)) {
                 $doctor = Specialist::with("doctor", "specialist")->where("department_id", $request->department)->get();
                 $data = [];
-                foreach($doctor as $value) {
-                    if($value->doctor->city_id == $request->city) {
+                foreach ($doctor as $value) {
+                    if ($value->doctor->city_id == $request->city) {
                         array_push($data, $value);
                     }
                 }
@@ -71,8 +48,8 @@ class FilterController extends Controller
             } else {
                 $doctor = Specialist::with("doctor", "specialist")->get();
                 $data = [];
-                foreach($doctor as $value) {
-                    if($value->doctor->city_id == $request->city) {
+                foreach ($doctor as $value) {
+                    if ($value->doctor->city_id == $request->city) {
                         array_push($data, $value);
                     }
                 }
@@ -83,7 +60,7 @@ class FilterController extends Controller
                 return response()->json(["null" => "Not Found Data"]);
             }
         } catch (\Throwable $e) {
-            return response()->json("Something went wrong".$e->getMessage());
+            return response()->json("Something went wrong" . $e->getMessage());
         }
     }
 
@@ -91,117 +68,176 @@ class FilterController extends Controller
     public function doctorsinglechange(Request $request)
     {
         try {
-            $data = Doctor::with("city", "department", "hospital", "diagnostic", "chamber")->where("id", $request->id)->orderBy('name')->get();
-            if (!empty($data)) {
-                return response()->json($data);
-            } else {
-                return response()->json(["null" => "Not Found Data"]);
+            $clauses = "";
+            if (!empty($request->city)) {
+                $clauses .= " AND diag.city_id='$request->city'";
             }
-        } catch (\Throwable $e) {
-            return response()->json("Something went wrong");
+            if (!empty($request->diagnostic_name)) {
+                $clauses .= " AND diag.name LIKE '%$request->diagnostic_name%'";
+            }
+
+            $diagnostic = DB::select("SELECT
+                                        diag.id,
+                                        diag.name,
+                                        diag.username,
+                                        diag.phone,
+                                        diag.address,
+                                        diag.city_id,
+                                        diag.description,
+                                        diag.diagnostic_type,
+                                        diag.email,
+                                        diag.discount_amount,
+                                        diag.image,
+                                    d.name as city_name
+                                    FROM diagnostics diag
+                                    LEFT JOIN districts d ON d.id = diag.city_id 
+                                    WHERE 1 = 1 $clauses ORDER BY diag.name ASC");
+
+            $data = ["status" => true, "message" => $diagnostic];
+            return $data;
+        } catch (\Throwable $th) {
+            $data = ["status" => false, "message" => $th->getMessage()];
+            return $data;
         }
     }
 
     public function diagnostic(Request $request)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                "city" => "required",
-            ]);
-            if ($validator->fails()) {
-                return response()->json(["error" => $validator->errors()]);
-            } else {
-                $dataArry = ["city_id" => $request->city, "name" => $request->diagnostic_name];
-                if (!empty($request->diagnostic_name)) {
-                    $data = Diagnostic::with("city")->where($dataArry)->orderBy('name')->get();
-                } else {
-                    $data = Diagnostic::with("city")->where("city_id", $request->city)->orderBy('name')->get();
-                }
-                if (count($data) !== 0) {
-                    return response()->json($data);
-                } else {
-                    return response()->json(["null" => "Not Found Data"]);
-                }
+            $clauses = "";
+            if (!empty($request->city)) {
+                $clauses .= " AND diag.city_id='$request->city'";
             }
-        } catch (\Throwable $e) {
-            return response()->json("Something went wrong");
+            if (!empty($request->diagnostic_name)) {
+                $clauses .= " AND diag.name LIKE '%$request->diagnostic_name%'";
+            }
+
+            $diagnostic = DB::select("SELECT
+                                        diag.id,
+                                        diag.name,
+                                        diag.username,
+                                        diag.phone,
+                                        diag.address,
+                                        diag.city_id,
+                                        diag.description,
+                                        diag.diagnostic_type,
+                                        diag.email,
+                                        diag.discount_amount,
+                                        diag.image,
+                                    d.name as city_name
+                                    FROM diagnostics diag
+                                    LEFT JOIN districts d ON d.id = diag.city_id 
+                                    WHERE 1 = 1 $clauses ORDER BY diag.name ASC");
+
+            $data = ["status" => true, "message" => $diagnostic];
+            return $data;
+        } catch (\Throwable $th) {
+            $data = ["status" => false, "message" => $th->getMessage()];
+            return $data;
         }
     }
 
     public function ambulance(Request $request)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                "city" => "required",
-            ]);
-            if ($validator->fails()) {
-                return response()->json(["error" => $validator->errors()]);
-            } else {
-                $dataArry = ["city_id" => $request->city, "name" => $request->ambulance_name];
-                if (!empty($request->ambulance_name)) {
-                    $data = Ambulance::with("city")->where($dataArry)->orderBy('name')->get();
-                } else {
-                    $data = Ambulance::with("city")->where("city_id", $request->city)->orderBy('name')->get();
-                }
-                if (count($data) !== 0) {
-                    return response()->json($data);
-                } else {
-                    return response()->json(["null" => "Not Found Data"]);
-                }
+            $clauses = "";
+            if (!empty($request->city)) {
+                $clauses .= " AND amb.city_id='$request->city'";
             }
-        } catch (\Throwable $e) {
-            return response()->json("Something went wrong");
+            if (!empty($request->ambulance_name)) {
+                $clauses .= " AND amb.name LIKE '%$request->ambulance_name%'";
+            }
+            if (!empty($request->ambulance_type)) {
+                $clauses .= " AND amb.ambulance_type='$request->ambulance_type'";
+            }
+
+            $ambulance = DB::select("SELECT
+                                        amb.*,
+                                    d.name as city_name
+                                    FROM ambulances amb
+                                    LEFT JOIN districts d ON d.id = amb.city_id 
+                                    WHERE 1 = 1 $clauses ORDER BY amb.name ASC");
+
+            $data = ["status" => true, "message" => $ambulance];
+            return $data;
+        } catch (\Throwable $th) {
+            $data = ["status" => false, "message" => $th->getMessage()];
+            return $data;
         }
     }
 
     public function privatecar(Request $request)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                "city" => "required",
-            ]);
-            if ($validator->fails()) {
-                return response()->json(["error" => $validator->errors()]);
-            } else {
-                $dataArry = ["city_id" => $request->city, "name" => $request->privatecar_name];
-                if (!empty($request->privatecar_name)) {
-                    $data = Privatecar::with("city", "typewisecategory")->where($dataArry)->orderBy('name')->get();
-                } else {
-                    $data = Privatecar::with("city", "typewisecategory")->where("city_id", $request->city)->orderBy('name')->get();
-                }
-                if (count($data) !== 0) {
-                    return response()->json($data);
-                } else {
-                    return response()->json(["null" => "Not Found Data"]);
-                }
+            $clauses = "";
+            if (!empty($request->city)) {
+                $clauses .= " AND p.city_id='$request->city'";
             }
-        } catch (\Throwable $e) {
-            return response()->json("Something went wrong".$e->getMessage());
+            if (!empty($request->privatecar_name)) {
+                $clauses .= " AND p.name LIKE '%$request->privatecar_name%'";
+            }
+            if (!empty($request->privatecar_type)) {
+                $clauses .= " AND cwp.cartype_id='$request->privatecar_type'";
+            }
+
+            $privatecar = DB::select("SELECT
+                                        cwp.*,
+                                        p.id as privatecar_id,
+                                        p.name,
+                                        p.username,
+                                        p.phone,
+                                        p.email,
+                                        p.city_id,
+                                        p.address,
+                                        p.image,
+                                        ct.name as cartype,
+                                        d.name as city_name
+                                    FROM category_wise_privatecars cwp
+                                    LEFT JOIN privatecars p ON p.id = cwp.privatecar_id
+                                    LEFT JOIN cartypes ct ON ct.id = cwp.cartype_id
+                                    LEFT JOIN districts d ON d.id = p.city_id
+                                    WHERE 1 = 1 $clauses ORDER BY p.name ASC");
+
+            $data = ["status" => true, "message" => $privatecar];
+            return $data;
+        } catch (\Throwable $th) {
+            $data = ["status" => false, "message" => $th->getMessage()];
+            return $data;
         }
     }
     public function hospital(Request $request)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                "city" => "required",
-            ]);
-            if ($validator->fails()) {
-                return response()->json(["error" => $validator->errors()]);
-            } else {
-                $dataArry = ["city_id" => $request->city, "name" => $request->hospital_name];
-                if (!empty($request->hospital_name)) {
-                    $data = Hospital::with("city")->where($dataArry)->orderBy('name')->orderBy('name')->get();
-                } else {
-                    $data = Hospital::with("city")->where("city_id", $request->city)->orderBy('name')->get();
-                }
-                if (count($data) !== 0) {
-                    return response()->json($data);
-                } else {
-                    return response()->json(["null" => "Not Found Data"]);
-                }
+            $clauses = "";
+            if (!empty($request->city)) {
+                $clauses .= " AND hosp.city_id='$request->city'";
             }
-        } catch (\Throwable $e) {
-            return response()->json("Something went wrong");
+            if (!empty($request->hospital_name)) {
+                $clauses .= " AND hosp.name LIKE '%$request->hospital_name%'";
+            }
+
+            $hospital = DB::select("SELECT
+                                        hosp.id,
+                                        hosp.name,
+                                        hosp.username,
+                                        hosp.phone,
+                                        hosp.address,
+                                        hosp.city_id,
+                                        hosp.description,
+                                        hosp.hospital_type,
+                                        hosp.email,
+                                        hosp.discount_amount,
+                                        hosp.image,
+                                    d.name as city_name
+                                    FROM hospitals hosp
+                                    LEFT JOIN districts d ON d.id = hosp.city_id 
+                                    WHERE 1 = 1 $clauses ORDER BY hosp.name ASC");
+
+            $data = ["status" => true, "message" => $hospital];
+            return $data;
+        } catch (\Throwable $th) {
+            $data = ["status" => false, "message" => $th->getMessage()];
+            return $data;
         }
     }
     public function hospitaldiagnosticdoctor(Request $request)
@@ -235,7 +271,7 @@ class FilterController extends Controller
         try {
             if ($request->group) {
                 $data = Donor::with('city', 'group')->where("blood_group", $request->group)->orderBy('name')->get();
-            }elseif($request->city){
+            } elseif ($request->city) {
                 $data = Donor::with('city', 'group')->where('city_id', $request->city)->latest()->get();
             } else {
                 $data = Donor::with('city', 'group')->latest()->get();
