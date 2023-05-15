@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Diagnostic-Login</title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/x-icon" href="{{asset($setting->favicon)}}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style>
         /* Importing fonts from Google */
@@ -129,7 +131,7 @@
 
 
     <div class="wrapper">
-    <h3 class="text-center text-uppercase">{{$setting->name}}</h3>
+        <h3 class="text-center text-uppercase">{{$setting->name}}</h3>
         <div class="mt-4 name d-flex align-items-center gap-2 justify-content-center">
             <i class="fa fa-plus-square"></i>
         </div>
