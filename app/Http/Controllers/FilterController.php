@@ -35,32 +35,41 @@ class FilterController extends Controller
     public function doctor(Request $request)
     {
         try {
-            if (!empty($request->city) && !empty($request->department)) {
-                $doctor = Specialist::with("doctor", "specialist")->where("department_id", $request->department)->get();
-                $data = [];
-                foreach ($doctor as $value) {
-                    if ($value->doctor->city_id == $request->city) {
-                        array_push($data, $value);
-                    }
-                }
-            } else if (!empty($request->doctor_name)) {
-                $data = Doctor::with("city", "time", "department", "hospital", "diagnostic", "chamber")->where('name', 'like', '%' . $request->doctor_name . '%')->orderBy('name', 'ASC')->get();
-            } else {
-                $doctor = Specialist::with("doctor", "specialist")->get();
-                $data = [];
-                foreach ($doctor as $value) {
-                    if ($value->doctor->city_id == $request->city) {
-                        array_push($data, $value);
-                    }
-                }
+            $clauses = "";
+            if (!empty($request->city)) {
+                $clauses .= " AND doc.city_id='$request->city'";
             }
-            if (count($data) !== 0) {
-                return response()->json($data);
-            } else {
-                return response()->json(["null" => "Not Found Data"]);
+            if (!empty($request->doctor_name)) {
+                $clauses .= " AND doc.name LIKE '%$request->doctor_name%'";
             }
-        } catch (\Throwable $e) {
-            return response()->json("Something went wrong" . $e->getMessage());
+
+            if (!empty($request->department)) {
+                $clauses .= " AND sp.department_id LIKE '%$request->department%'";
+            }
+
+            $doctor = DB::select("SELECT
+                                        sp.*,
+                                        doc.name,
+                                        doc.username,
+                                        doc.phone,
+                                        doc.address,
+                                        doc.city_id,
+                                        doc.description,
+                                        doc.email,
+                                        doc.image,
+                                        dept.name as department_name,
+                                        d.name as city_name
+                                    FROM specialists sp
+                                    LEFT JOIN doctors doc ON doc.id = sp.doctor_id
+                                    LEFT JOIN departments dept ON dept.id = sp.department_id
+                                    LEFT JOIN districts d ON d.id = doc.city_id
+                                    WHERE 1 = 1 $clauses ORDER BY doc.name ASC");
+
+            $data = ["status" => true, "message" => $doctor];
+            return $data;
+        } catch (\Throwable $th) {
+            $data = ["status" => false, "message" => $th->getMessage()];
+            return $data;
         }
     }
 
@@ -70,30 +79,31 @@ class FilterController extends Controller
         try {
             $clauses = "";
             if (!empty($request->city)) {
-                $clauses .= " AND diag.city_id='$request->city'";
+                $clauses .= " AND doc.city_id='$request->city'";
             }
-            if (!empty($request->diagnostic_name)) {
-                $clauses .= " AND diag.name LIKE '%$request->diagnostic_name%'";
+            if (!empty($request->doctor_name)) {
+                $clauses .= " AND doc.name LIKE '%$request->doctor_name%'";
             }
 
-            $diagnostic = DB::select("SELECT
-                                        diag.id,
-                                        diag.name,
-                                        diag.username,
-                                        diag.phone,
-                                        diag.address,
-                                        diag.city_id,
-                                        diag.description,
-                                        diag.diagnostic_type,
-                                        diag.email,
-                                        diag.discount_amount,
-                                        diag.image,
-                                    d.name as city_name
-                                    FROM diagnostics diag
-                                    LEFT JOIN districts d ON d.id = diag.city_id 
-                                    WHERE 1 = 1 $clauses ORDER BY diag.name ASC");
+            $doctor = DB::select("SELECT
+                                        sp.*,
+                                        doc.name,
+                                        doc.username,
+                                        doc.phone,
+                                        doc.address,
+                                        doc.city_id,
+                                        doc.description,
+                                        doc.email,
+                                        doc.image,
+                                        dept.name as department_name,
+                                        d.name as city_name
+                                    FROM specialists sp
+                                    LEFT JOIN doctors doc ON doc.id = sp.doctor_id
+                                    LEFT JOIN departments dept ON dept.id = sp.department_id
+                                    LEFT JOIN districts d ON d.id = doc.city_id
+                                    WHERE 1 = 1 $clauses ORDER BY doc.name ASC");
 
-            $data = ["status" => true, "message" => $diagnostic];
+            $data = ["status" => true, "message" => $doctor];
             return $data;
         } catch (\Throwable $th) {
             $data = ["status" => false, "message" => $th->getMessage()];
