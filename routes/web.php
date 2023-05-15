@@ -1,6 +1,4 @@
 <?php
-
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DonorController;
@@ -10,7 +8,6 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\HireAmbulanceController;
 use App\Http\Controllers\CompanyContactController;
 
-// Auth::routes(['login' => false]);
 // Normal User login
 Route::get("/login", [RegisterController::class, "showlogin"])->name("showlogin")->middleware("user");
 Route::get("/register", [RegisterController::class, "showregister"])->name("showregister")->middleware("user");
