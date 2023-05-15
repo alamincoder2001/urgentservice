@@ -17,12 +17,13 @@
                             <th>Age</th>
                             <th>Address</th>
                             <th>Phone</th>
+                            <th>Patient Type</th>
                             <th>Is Appointment</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($appointments as $key => $item)
+                        @foreach($patients as $key => $item)
                         <tr>
                             <td>{{++$key}}</td>
                             <td>{{$item->name}}</td>
@@ -30,13 +31,14 @@
                             <td>{{$item->age}}</td>
                             <td>{{$item->upazila->name}}, {{$item->city->name}}</td>
                             <td>{{$item->contact}}</td>
+                            <td>{{$item->patient_type}}</td>
                             <td>
                                 @if($item->chamber_name != null)
-                                <i class="fa fa-home"></i> {{$item->chamber_name}}
+                                {{$item->chamber_name}} (Chamber)
                                 @elseif($item->hospital != null)
-                                <i class="fa fa-hospital-o"></i> {{$item->hospital->name}}
+                                {{$item->hospital->name}} (Hospital)
                                 @else
-                                <i class="fa fa-plus-square-o"></i> {{$item->diagnostic->name}}
+                                {{$item->diagnostic->name}} (Diagnostic)
                                 @endif
                             </td>
                             <td>

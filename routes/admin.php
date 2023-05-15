@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\DiagnosticController;
 use App\Http\Controllers\Admin\PrivatecarController;
 use App\Http\Controllers\Admin\UserAccessController;
 use App\Http\Controllers\Admin\InvestigationController;
+use App\Http\Controllers\Admin\NotificationController;
 
 //admin authentication
 Route::group(['prefix' => 'admin'], function () {
@@ -44,7 +45,6 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get("/doctor-fetch/{id}", [DoctorController::class, 'fetch'])->name("admin.doctor.fetch");
     Route::post("/doctor-update", [DoctorController::class, 'update'])->name("admin.doctor.update");
     Route::post("/doctor-delete", [DoctorController::class, 'destroy'])->name("admin.doctor.destroy");
-    Route::get("/doctor/appointment/{id}", [DoctorController::class, 'appointment'])->name("admin.doctor.appointment");
     // chamber remove
     Route::get("/doctor/chamber-delete/{id}", [DoctorController::class, 'Chamber_Destroy']);
     // hospital route
@@ -144,4 +144,9 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('/user/delete', [UserAccessController::class, 'destroy'])->name('admin.user.destroy');
     Route::get('/user/permission/{id}', [UserAccessController::class, 'permission_edit'])->name('user.permission');
     Route::post('/store-permission', [UserAccessController::class, 'store_permission'])->name('store.permission');
+
+    // notification
+    Route::get("/patient-notification", [NotificationController::class, 'patient'])->name("admin.patient.notification");
+    Route::get("/ambulance-notification", [NotificationController::class, 'hireAmbulance'])->name("admin.ambulance.notification");
+    Route::get("/privatecar-notification", [NotificationController::class, 'hirePrivatecar'])->name("admin.privatecar.notification");
 });

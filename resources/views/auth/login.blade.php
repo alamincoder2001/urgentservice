@@ -24,6 +24,7 @@
         left: 0;
         border-radius: 50%;
     }
+
     .container {
         padding: 16px;
     }
@@ -43,7 +44,7 @@
                         @csrf
                         <div class="row mb-3">
                             <div class="col-6 offset-md-3">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" style="box-shadow:none;" autocomplete="off" name="email" value="{{ old('email') }}" required placeholder="Email">
+                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" autocomplete="off" name="email" value="{{ old('email') }}" placeholder="Email">
 
                                 @error('email')
                                 <span class="invalid-feedback" role="alert">
@@ -55,7 +56,7 @@
 
                         <div class="row mb-3">
                             <div class="col-6 offset-md-3">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" style="box-shadow:none;" autocomplete="off" name="password" required placeholder="Password">
+                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" style="box-shadow:none;" autocomplete="off" name="password" placeholder="Password">
 
                                 @error('password')
                                 <span class="invalid-feedback" role="alert">

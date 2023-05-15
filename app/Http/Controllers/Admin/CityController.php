@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Carbon\Carbon;
 use App\Models\UserAccess;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

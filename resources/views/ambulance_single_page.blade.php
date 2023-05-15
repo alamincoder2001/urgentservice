@@ -75,7 +75,7 @@
                             <div class="col-md-3">
                                 <div class="form-group my-2">
                                     <label for="departing_date">Departing Date: <span class="text-danger">*</span></label>
-                                    <input type="text" name="departing_date" class="form-control departing_date" value="{{date('d/m/Y')}}">
+                                    <input type="text" name="departing_date" class="form-control departing_date" value="{{date('d-m-Y')}}">
                                     <span class="error-departing_date error text-danger"></span>
                                 </div>
                             </div>

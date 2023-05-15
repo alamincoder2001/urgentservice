@@ -37,18 +37,17 @@
                             <td>{{$item->education}}</td>
                             <td>
                                 @foreach($item->department as $dept)
-                                    {{$dept->specialist->name}},
+                                {{$dept->specialist->name}},
                                 @endforeach
                             </td>
                             <td>{{$item->phone}}</td>
                             <td>{{$item->first_fee}}</td>
-                            <td>{{$item->second_fee}}</td>                            
+                            <td>{{$item->second_fee}}</td>
                             <td>
                                 <img src="{{asset($item->image != '0' ? $item->image : '/uploads/nouserimage.png')}}" width="50">
                             </td>
                             <td>
                                 <div class="d-flex gap-2">
-                                    <a href="{{route('admin.doctor.appointment',$item->id)}}" class="fa fa-eye text-success text-decoration-none"></a>
                                     <a href="{{route('admin.doctor.create',$item->id)}}" class="fa fa-edit text-primary text-decoration-none"></a>
                                     <button class="fa fa-trash text-danger deleteadminDoctor border-0" style="background: none;" value="{{$item->id}}"></button>
                                 </div>

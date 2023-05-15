@@ -10,7 +10,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\HireAmbulanceController;
 use App\Http\Controllers\CompanyContactController;
 
-Auth::routes(['login' => false]);
+// Auth::routes(['login' => false]);
 // Normal User login
 Route::get("/login", [RegisterController::class, "showlogin"])->name("showlogin")->middleware("user");
 Route::get("/register", [RegisterController::class, "showregister"])->name("showregister")->middleware("user");
@@ -18,6 +18,9 @@ Route::post("/register", [RegisterController::class, "create"])->name("register"
 Route::post("/userlogin", [RegisterController::class, "userlogin"])->name("user.login");
 Route::post("/user-update", [RegisterController::class, "userupdate"])->name("user.update");
 Route::delete("/logout", [RegisterController::class, "userlogout"])->name("logout.user");
+Route::get("/user-profile", function () {
+    return view("userprofile");
+})->name("userprofile")->middleware("auth");
 
 // Filter route
 Route::post("/filtersingleservice", [FilterController::class, "filtersingleservice"])->name("filtersingleservice");
@@ -51,18 +54,6 @@ Route::get("/pathology", [HomeController::class, "pathology"])->name("pathology"
 Route::post("/send-prescription", [HomeController::class, "prescription"]);
 Route::get("/donor-list/{any?}", [DonorController::class, "index"])->name("donor");
 Route::post("/donor-store", [DonorController::class, "store"])->name("donor.store");
-
-// about us route
-Route::get("/about-us", function () {
-    return view("aboutus");
-})->name("aboutus");
-Route::get("/user-profile", function () {
-    return view("userprofile");
-})->name("userprofile")->middleware("auth");
-// about us route
-Route::get("/contact-us", function () {
-    return view("contactus");
-})->name("contactus");
 
 // Appointment route
 Route::post("/appointment", [AppoinmentController::class, "appointment"])->name("appointment");

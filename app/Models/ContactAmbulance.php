@@ -22,6 +22,6 @@ class ContactAmbulance extends Model
 
     public function ambulance()
     {
-        return $this->belongsTo(Ambulance::class, "ambulance_id");
+        return $this->belongsTo(Ambulance::class, "ambulance_id", "id");
     }
 }

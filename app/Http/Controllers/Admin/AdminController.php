@@ -40,18 +40,18 @@ class AdminController extends Controller
             return view("admin.unauthorize");
         }
 
-        $data['doctor'] = Doctor::all();
-        $data['hospital'] = Hospital::all();
-        $data['diagnostic'] = Diagnostic::all();
-        $data['ambulance'] = Ambulance::all();
-        $data['privatecar'] = Privatecar::all();
-        $data['department'] = Department::all();
-        $data['test'] = Test::all();
+        $data['doctor']        = Doctor::all();
+        $data['hospital']      = Hospital::all();
+        $data['diagnostic']    = Diagnostic::all();
+        $data['ambulance']     = Ambulance::all();
+        $data['privatecar']    = Privatecar::all();
+        $data['department']    = Department::all();
+        $data['test']          = Test::all();
         $data['investigation'] = Investigation::all();
-        $data['slider'] = Slider::all();
-        $data['donor'] = Donor::all();
-        $data['city'] = District::all();
-        $data['user'] = Admin::where("id", "!=", 1)->get();
+        $data['slider']        = Slider::all();
+        $data['donor']         = Donor::all();
+        $data['city']          = District::all();
+        $data['user']          = Admin::where("id", "!=", 1)->get();
         return view("admin.dashboard", compact("data"));
     }
 
@@ -180,12 +180,12 @@ class AdminController extends Controller
         $data = Prescription::latest()->get();
         return view("admin.prescription.index", compact("data"));
     }
-    
+
     public function deletePrescription(Request $request)
     {
         $data = Prescription::find($request->id);
         $old = $data->image;
-        if(File::exists($old)){
+        if (File::exists($old)) {
             File::delete($old);
         }
         $data->delete();

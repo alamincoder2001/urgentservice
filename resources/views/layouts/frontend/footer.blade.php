@@ -6,8 +6,8 @@
                 <div class="footer-body">
                     <ul>
                         <li><a href="{{route('website')}}">Home</a></li>
-                        <li><a href="{{route('contactus')}}">About us</a></li>
-                        <li><a href="{{route('aboutus')}}">Contact us</a></li>
+                        <li><a href="">About us</a></li>
+                        <li><a href="">Contact us</a></li>
                         <li><a href="#">Terms & conditions</a></li>
                     </ul>
                 </div>

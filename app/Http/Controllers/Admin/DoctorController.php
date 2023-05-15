@@ -2,17 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Test;
 use App\Models\Doctor;
-use App\Models\Chamber;
 use App\Models\UserAccess;
-use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\ChamberDiagnosticHospital;
 use App\Models\DayTime;
-use App\Models\Sittime;
 use App\Models\Specialist;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -263,12 +259,5 @@ class DoctorController extends Controller
         }
     }
 
-    // doctor patient appointment
-    public function appointment($id)
-    {
-        $admin_id = Auth::guard("admin")->user()->id;
-        $tests = Test::where("admin_id", $admin_id)->orderBy("name", "ASC")->get();
-        $appointments = Appointment::with('chamber', 'hospital', 'diagnostic')->where("doctor_id", $id)->get();
-        return view("admin.doctor.appointment", compact("appointments", "tests"));
-    }
+
 }

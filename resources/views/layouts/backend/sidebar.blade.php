@@ -93,6 +93,18 @@ $access = App\Models\UserAccess::where('user_id', Auth::guard('admin')->user()->
                     </ul>
                 </li>
                 @endif
+                <!-- @if(in_array("privatecar.index", $access) || in_array("privatecar.create", $access)) -->
+                <li class="{{Route::is('admin.patient.notification')||Route::is('admin.ambulance.notification')||Route::is('admin.privatecar.notification')?'active-page':''}}">
+                    <a href="#!" class="{{Route::is('admin.patient.notification')||Route::is('admin.ambulance.notification')||Route::is('admin.privatecar.notification')?'active':''}}">
+                        <i class="menu-icon fa fa-bell"></i><span>Notification</span><i class="accordion-icon fa fa-angle-left"></i>
+                    </a>
+                    <ul class="{{Route::is('admin.patient.notification')||Route::is('admin.ambulance.notification')||Route::is('admin.privatecar.notification')?'sub-menu':''}}">
+                        <li class="{{Route::is('admin.patient.notification')?'active':''}}"><a href="{{route('admin.patient.notification')}}">Patient List</a></li>
+                        <li class="{{Route::is('admin.ambulance.notification')?'active':''}}"><a href="{{route('admin.ambulance.notification')}}">Hire Ambulance</a></li>
+                        <li class="{{Route::is('admin.privatecar.notification')?'active':''}}"><a href="{{route('admin.privatecar.notification')}}">Hire Privatecar</a></li>
+                    </ul>
+                </li>
+                <!-- @endif -->
                 @if(in_array("department.index", $access) || in_array("department.create", $access) || in_array("department.edit", $access) || in_array("department.destroy", $access))
                 <li class="{{Route::is('department.index')?'active-page':''}}">
                     <a href="{{route('department.index')}}">
