@@ -9,7 +9,7 @@
         <div class="card">
             <form id="updateImage">
                 <div class="form-group text-center">
-                    <img class="img" src="{{asset(Auth::guard('ambulance')->user()->image)}}" width="100">
+                    <img class="img" src="{{asset(Auth::guard('ambulance')->user()->image != '0' ? Auth::guard('ambulance')->user()->image:'noImage.jpg')}}" width="100">
                 </div>
                 <div class="form-group">
                     <label for="image">Image</label>
@@ -81,7 +81,7 @@
                             $("#updatePassword").find(".error-" + index).text(value);
                         })
                     } else if (response.errors) {
-                        $.notify(response.errors);
+                        $("#updatePassword").find(".error-password").text(response.errors);
                     } else {
                         $("#updatePassword").trigger("reset")
                         $.notify(response, "success");

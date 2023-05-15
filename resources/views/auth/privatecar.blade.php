@@ -107,7 +107,7 @@
             color: #039BE5;
         }
 
-        .fa-ambulance {
+        .fa-car {
             padding: 25px;
             background: #d7d4d4;
             border-radius: 50%;
@@ -129,7 +129,7 @@
     <div class="wrapper">
     <h3 class="text-center text-uppercase">{{$setting->name}}</h3>
         <div class="mt-4 name d-flex align-items-center gap-2 justify-content-center">
-            <i class="fa fa-ambulance"></i>
+            <i class="fa fa-car"></i>
         </div>
 
         <form class="p-3 mt-3" id="privatecar">

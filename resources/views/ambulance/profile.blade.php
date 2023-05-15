@@ -13,7 +13,7 @@
 @section("content")
 <div class="row d-flex justify-content-center">
     <!-- Column -->
-    <div class="col-md-8 col-lg-10 col-xlg-3">
+    <div class="col-md-12">
         <div class="card card-hover">
             <div class="card-heading ambulance-card-heading" style="background: url('{{asset(Auth::guard('ambulance')->user()->image)}}');"></div>
             <div class="box bg-success text-center py-3">
@@ -37,26 +37,31 @@
                                 <span class="error-username error text-danger"></span>
                             </div>
                         </div>
-                        <!--<div class="col-md-6">-->
-                        <!--    <div class="form-group">-->
-                        <!--        <label for="email">Ambulance Email</label>-->
-                        <!--        <input type="email" name="email" id="email" class="form-control" value="{{Auth::guard('ambulance')->user()->email}}">-->
-                        <!--        <span class="error-email error text-danger"></span>-->
-                        <!--    </div>-->
-                        <!--</div>-->
-                        <!--<div class="col-md-6">-->
-                        <!--    <div class="form-group">-->
-                        <!--        <label for="phone">Ambulance Phone</label>-->
-                        <!--        <div class="input-group">-->
-                        <!--            <i class="btn btn-secondary">+88</i><input type="text" name="phone" id="phone" class="form-control" value="{{Auth::guard('ambulance')->user()->phone}}">-->
-                        <!--        </div>-->
-                        <!--        <span class="error-phone error text-danger"></span>-->
-                        <!--    </div>-->
-                        <!--</div>-->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="email">Ambulance Email</label>
+                                <input type="email" name="email" id="email" class="form-control" value="{{Auth::guard('ambulance')->user()->email}}">
+                                <span class="error-email error text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="phone">Phone <i class="fa fa-plus" onclick="phoneAdd()"></i></label>
+                            <div class="phoneadd">
+                                @php
+                                $phone = explode(",", Auth::guard('ambulance')->user()->phone);
+                                @endphp
+                                @foreach($phone as $item)
+                                <div class="input-group">
+                                    <input type="text" id="phone" name="phone[]" class="form-control" value="{{$item}}">
+                                    <button type="button" class="btn btn-danger removePhone">remove</button>
+                                </div>
+                                @endforeach
+                            </div>
+                            <span class="error-phone error text-danger"></span>
+                        </div>
                         <div class="col-md-6">
                             @php
-                            $data = Auth::guard('ambulance')->user();
-                            $ambulance = explode(",", $data->ambulance_type);
+                            $ambulance = explode(",", Auth::guard('ambulance')->user()->ambulance_type);
                             @endphp
                             <div class="form-group">
                                 <label for="ambulance_type">Type Of Ambulance</label>
@@ -72,15 +77,27 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="city_id">City</label>
-                                <select name="city_id" id="city_id" class="form-control select2">
-                                    <option value="">Select City</option>
+                                <label for="city_id">City Name</label>
+                                <select onchange="getUpazila(event)" name="city_id" id="city_id" class="form-control select2">
+                                    <option value="">Select City Name</option>
                                     @foreach($cities as $city)
                                     <option value="{{$city->id}}" {{Auth::guard('ambulance')->user()->city_id==$city->id?"selected":""}}>{{$city->name}}</option>
                                     @endforeach
                                 </select>
-                                <span class="error-city_id error text-danger"></span>
                             </div>
+                            <span class="error-city_id text-danger error"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="upazila_id">Upazila Name</label>
+                                <select name="upazila_id" id="upazila_id" class="form-control">
+                                    <option value="">Select Upazila Name</option>
+                                    @foreach($upazilas as $upazila)
+                                    <option value="{{$upazila->id}}" {{Auth::guard('ambulance')->user()->upazila_id==$upazila->id?"selected":""}}>{{$upazila->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <span class="error-upazila_id text-danger error"></span>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
@@ -115,6 +132,7 @@
 @push("js")
 <script src="https://cdn.ckeditor.com/4.13.0/standard/ckeditor.js"></script>
 <script>
+    $("#ambulance_type").select2();
     CKEDITOR.replace('description');
     $(document).ready(() => {
         $("#updateAmbulance").on("submit", (event) => {
@@ -143,6 +161,35 @@
                 }
             })
         })
+    })
+
+    function getUpazila(event) {
+        $.ajax({
+            url: location.origin + "/getupazila/" + event.target.selectedOptions[0].value,
+            method: "GET",
+            beforeSend: () => {
+                $("#upazila_id").html(`<option value="">Select Upazila Name</option>`)
+            },
+            success: res => {
+                $.each(res, (index, value) => {
+                    $("#upazila_id").append(`<option value="${value.id}">${value.name}</option>`)
+                })
+            }
+        })
+    }
+
+    function phoneAdd() {
+        var row = `
+            <div class="input-group">
+                <input type="text" id="phone" name="phone[]" class="form-control">
+                <button type="button" class="btn btn-danger removePhone">remove</button>
+            </div>
+        `
+        $(".phoneadd").append(row)
+    }
+
+    $(document).on("click", ".removePhone", event => {
+        event.target.offsetParent.remove();
     })
 </script>
 @endpush

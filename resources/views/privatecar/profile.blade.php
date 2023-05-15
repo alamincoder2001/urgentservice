@@ -37,22 +37,22 @@
                                 <span class="error-username error text-danger"></span>
                             </div>
                         </div>
-                        <!--<div class="col-md-6">-->
-                        <!--    <div class="form-group">-->
-                        <!--        <label for="email">Privatecar Email</label>-->
-                        <!--        <input type="email" name="email" id="email" class="form-control" value="{{Auth::guard('privatecar')->user()->email}}">-->
-                        <!--        <span class="error-email error text-danger"></span>-->
-                        <!--    </div>-->
-                        <!--</div>-->
-                        <!--<div class="col-md-6">-->
-                        <!--    <div class="form-group">-->
-                        <!--        <label for="phone">Privatecar Phone</label>-->
-                        <!--        <div class="input-group">-->
-                        <!--            <i class="btn btn-secondary">+88</i><input type="text" name="phone" id="phone" class="form-control" value="{{Auth::guard('privatecar')->user()->phone}}">-->
-                        <!--        </div>-->
-                        <!--        <span class="error-phone error text-danger"></span>-->
-                        <!--    </div>-->
-                        <!--</div>-->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email">Privatecar Email</label>
+                                <input type="email" name="email" id="email" class="form-control" value="{{Auth::guard('privatecar')->user()->email}}">
+                                <span class="error-email error text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="phone">Privatecar Phone</label>
+                                <div class="input-group">
+                                    <i class="btn btn-secondary">+88</i><input type="text" name="phone" id="phone" class="form-control" value="{{Auth::guard('privatecar')->user()->phone}}">
+                                </div>
+                                <span class="error-phone error text-danger"></span>
+                            </div>
+                        </div>
                         <div class="col-md-6">
                             @php
                             $data = Auth::guard('privatecar')->user();
@@ -115,6 +115,7 @@
 @push("js")
 <script src="https://cdn.ckeditor.com/4.13.0/standard/ckeditor.js"></script>
 <script>
+    $("#privatecar_type").select2();
     CKEDITOR.replace('description');
     $(document).ready(() => {
         $("#updatePrivatecar").on("submit", (event) => {

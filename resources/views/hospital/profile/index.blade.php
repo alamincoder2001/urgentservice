@@ -15,7 +15,7 @@
 
 <div class="row d-flex justify-content-center">
     <!-- Column -->
-    <div class="col-md-8 col-lg-10 col-xlg-3">
+    <div class="col-md-10">
         <div class="card card-hover">
             <div class="card-heading hospital-card-heading" style="background: url('{{asset(Auth::guard('hospital')->user()->image != 0 ? Auth::guard('hospital')->user()->image : '/noimage.jpg')}}');"></div>
             <div class="box bg-success text-center py-3">

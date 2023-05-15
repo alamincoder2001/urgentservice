@@ -32,28 +32,30 @@ class AmbulanceController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                "name" => "required",
-                "username" => "required|unique:hospitals,username,".$request->id,
-                "email" => "required|email",
-                "phone" => "required|min:11|max:15",
-                "city_id" => "required",
+                "name"           => "required",
+                "username"       => "required|unique:ambulances,username,".$request->id,
+                "email"          => "required|email",
+                "phone"          => "required",
+                "city_id"        => "required",
+                "upazila_id"     => "required",
                 "ambulance_type" => "required",
-                "address" => "required",
+                "address"        => "required",
             ]);
 
             if ($validator->fails()) {
                 return response()->json(["error" => $validator->errors()]);
             } else {
-                $data = Ambulance::find($request->id);
-                $data->name = $request->name;
-                $data->username = $request->username;
-                $data->email = $request->email;
+                $data                 = Ambulance::find($request->id);
+                $data->name           = $request->name;
+                $data->username       = $request->username;
+                $data->email          = $request->email;
                 $data->ambulance_type = implode(",",$request->ambulance_type);
-                $data->phone = $request->phone;
-                $data->city_id = $request->city_id;
-                $data->address = $request->address;
-                $data->description = $request->description;
-                $data->map_link = $request->map_link;
+                $data->phone          = implode(",", $request->phone);
+                $data->city_id        = $request->city_id;
+                $data->upazila_id     = $request->upazila_id;
+                $data->address        = $request->address;
+                $data->description    = $request->description;
+                $data->map_link       = $request->map_link;
 
                 $data->update();
                 return response()->json("Ambulance updated successfully");
