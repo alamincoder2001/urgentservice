@@ -61,7 +61,7 @@ $contact = \App\Models\Contact::first();
             <div class="col-12 col-lg-8 offset-lg-2">
                 <form class="d-flex" onsubmit="searchSubmit(event)">
                     <div class="input-group">
-                        <select name="service" class="form-control" onchange="changeService(event)" id="services" style="box-shadow: none;border-radius:0;">
+                        <select name="service" class="form-control" id="services" style="box-shadow: none;border-radius:0;">
                             <option value="">Select Service Name</option>
                             <option value="Doctor">Doctor</option>
                             <option value="Hospital">Hospital</option>
@@ -69,7 +69,7 @@ $contact = \App\Models\Contact::first();
                             <option value="Ambulance">Ambulance</option>
                             <option value="Privatecar">Private Car</option>
                         </select>
-                        <select name="name" class="form-control searchName" style="box-shadow: none;border-radius:0;"></select>
+                        <input type="text" name="name" class="form-control searchName" style="box-shadow: none;border-radius:0;" autocomplete="off"/>
                         <button type="submit" class="btn btn-success px-4" style="font-weight:500;box-shadow: none; border-radius:0;">Search</button>
                     </div>
                 </form>

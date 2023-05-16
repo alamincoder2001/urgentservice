@@ -22,7 +22,6 @@ Route::get("/user-profile", function () {
 })->name("userprofile")->middleware("auth");
 
 // Filter route
-Route::post("/filtersingleservice", [FilterController::class, "filtersingleservice"])->name("filtersingleservice");
 Route::post("/city", [FilterController::class, "cityappointment"])->name("filter.cityappoinment");
 Route::post("/filter-hospital", [FilterController::class, "hospital"])->name("filter.hospital");
 Route::post("/filter-hospitaldiagnosticdoctor", [FilterController::class, "hospitaldiagnosticdoctor"])->name("filter.hospitaldiagnosticdoctor");

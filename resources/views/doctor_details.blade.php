@@ -67,8 +67,8 @@
             </div>
         </div>
 
-        <div class="row m-lg-0" style="border: 1px solid #e5e5e5;">
-            <div class="col-12 col-lg-3 p-lg-0">
+        <div class="row m-md-0" style="border: 1px solid #e5e5e5;">
+            <div class="col-md-3 p-md-0 order-md-0 order-last">
                 <div class="card border-0" style="border-radius: 0;height:100%;border-right: 1px solid #e3e3e3 !important;">
                     <div class="card-header" style="border: none;border-radius: 0;background: #e3e3e3;">
                         <h6 class="card-title text-uppercase m-0" style="color:#832a00;">Department List</h6>
@@ -93,12 +93,12 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-lg-9 doctor_details">
+            <div class="col-md-9 doctor_details">
                 <h5 class="m-0 totalDoctorcount" style="text-align: right;font-family: auto;font-style: italic;">Total: <span>{{\App\Models\Doctor::all()->count()}}</span></h5>
                 <div class="row py-2 doctorbody">
 
                     @foreach($data['specialist'] as $item)
-                    <div class="col-12 col-lg-6 mb-3">
+                    <div class="col-md-6 mb-3">
                         <a href="{{route('singlepagedoctor', $item->doctor->id)}}" target="_blank" class="text-decoration-none text-secondary" title="{{$item->doctor->name}}">
                             <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
                                 <div class="card-body d-flex" style="padding: 5px;gap: 8px;">
@@ -165,7 +165,7 @@
 
     function Row(index, value) {
         var row = `
-                <div class="col-12 col-lg-6 mb-3">
+                <div class="col-md-6 mb-3">
                     <a href="/single-details-doctor/${value.doctor_id}" target="_blank" class="text-decoration-none text-secondary" title="${value.name}">
                         <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
                             <div class="card-body d-flex" style="padding: 5px;gap: 8px;">

@@ -79,7 +79,7 @@
     </div>
     @include("layouts.frontend.navbar")
     <div class="container searchshow mt-4 d-none">
-        <div class="row d-flex justify-content-center">
+        <div class="row d-flex justify-content-center doctor_details">
         </div>
     </div>
     <main>
@@ -111,53 +111,60 @@
     </script>
 
     <script>
-        function changeService(event) {
-            $.ajax({
-                url: location.origin + "/filtersingleservice",
-                method: "POST",
-                dataType: "JSON",
-                data: {
-                    service: event.target.value
-                },
-                beforeSend: () => {
-                    $(".ShowSearchBtn").find(".searchName").html(`<option value="">Select Name</option>`)
-                },
-                success: res => {
-                    $.each(res, (index, value) => {
-                        $(".ShowSearchBtn").find(".searchName").append(`<option value="${value.id}">${value.name}</option>`)
-                    })
-                }
-            })
-        }
-
         function searchSubmit(event) {
             event.preventDefault();
             var formdata = new FormData(event.target)
-            var selectName = $("#services option:selected").val();
+            var selectName = $("#services").val();
+            if (selectName == '') {
+                alert("Must be select service")
+                return
+            }
+            var url;
+            var formdata;
+            if (selectName == "Doctor") {
+                url = "{{route('filter.doctor')}}"
+                formdata = {
+                    doctor_name: $(".searchName").val()
+                }
+            } else if (selectName == "Hospital") {
+                url = "{{route('filter.hospital')}}"
+                formdata = {
+                    hospital_name: $(".searchName").val()
+                }
+            } else if (selectName == "Diagnostic") {
+                url = "{{route('filter.diagnostic')}}"
+                formdata = {
+                    diagnostic_name: $(".searchName").val()
+                }
+            } else if (selectName == "Ambulance") {
+                url = "{{route('filter.ambulance')}}"
+                formdata = {
+                    ambulance_name: $(".searchName").val()
+                }
+            } else {
+                url = "{{route('filter.privatecar')}}"
+                formdata = {
+                    privatecar_name: $(".searchName").val()
+                }
+            }
 
             $.ajax({
-                url: location.origin + "/filtersingleservice",
+                url: url,
                 method: "POST",
-                dataType: "JSON",
                 data: formdata,
-                contentType: false,
-                processData: false,
                 beforeSend: () => {
-                    $(".error").text("")
                     $("main").html("");
                     $(".searchshow").removeClass("d-none")
                     $(".Loading").removeClass("d-none")
                     $(".searchshow").find(".row").html("")
                 },
                 success: res => {
-                    if (res.error) {
-                        $.each(res.error, (index, value) => {
-                            $(".error-" + index).text(value)
-                        })
-                    } else {
-                        $.each(res, (index, value) => {
+                    if (res.status == true && res.message.length == 0) {
+                        $(".searchshow").find('.row').html(`<h3 class="text-center m-0">Not Found Data</h3>`)
+                    } else if (res.status == true) {
+                        $.each(res.message, (index, value) => {
                             if (selectName == "Doctor") {
-                                AllDoctor(index, value);
+                                Doctor(index, value);
                             } else if (selectName == "Hospital") {
                                 Hospitals(index, value);
                             } else if (selectName == "Diagnostic") {
@@ -168,6 +175,8 @@
                                 Privatecars(index, value);
                             }
                         })
+                    } else {
+                        $(".searchshow").find('.row').html(`<h3 class="text-center m-0">${res.message}</h3>`)
                     }
                 },
                 complete: () => {
@@ -178,125 +187,107 @@
 
         function Diagnostics(index, value) {
             var row = `
-            <div class="col-md-6 col-10 col-sm-6 col-lg-4 diagnosticbody">
-                <div class="card border-0 mb-4" style="background: #ffffff;box-shadow:0px 0px 7px 2px #c1c1c1;">
-                    <div class="img card-img-top m-auto mt-2 w-50 overflow-hidden d-flex justify-content-center border border-2">
-                        <img src="${value.image != '0'? location.origin+"/"+value.image : 'frontend/img/hospital.png'}" style="width: 100%; height:160px;">
+                    <div class="col-md-4 mb-3">
+                        <a href="/single-details-diagnostic/${value.id}" target="_blank" class="text-decoration-none text-secondary" title="${value.name}">
+                            <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
+                                <div class="card-body d-flex position-relative" style="padding: 5px;gap: 8px;">
+                                    ${value.discount_amount > 0 ? '<p style="position: absolute;bottom: 5px;right: 10px;" class="m-0 text-danger">সকল প্রকার সার্ভিসের উপরে <span class="text-decoration-underline">'+value.discount_amount+'%</span> ছাড়।</p>':''}
+                                    <div class="image" style="border: 1px dotted #ababab;height: 110px;margin-top: 4px;">
+                                        <img src="${value.image != '0' ?'/'+value.image: '/frontend/img/diagnostic.png'}" width="100" height="100%">
+                                    </div>
+                                    <div class="info" style="padding-right:5px;">
+                                        <h6>${value.name}</h6>
+                                        <p class="text-capitalize" style="color:#c99913;">${value.diagnostic_type}, ${value.city_name}</p>
+                                        <p style="border-top: 2px dashed #dddddd85;text-align:justify;"><i class="fa fa-map-marker"></i> ${value.address}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
                     </div>
-                    <div class="card-body">
-                        <h5 class="card-title text-center" style="font-size: 15px;">${value.name}</h5>
-                        <p class="card-text text-primary text-center mb-2"><span>${value.diagnostic_type.toUpperCase()}</span> | <span>+880 ${value.phone.substr(1)}</span></p>
-                        <ul style="list-style: none;padding:0 0 0 5px;">
-                            <li><i style="width: 15px;height:15px;" class="fa fa-map-marker text-info"></i> <span style="font-size: 13px;">${value.address}, ${value.city.name}</span></li>
-                            <li><i style="width: 15px;height:15px;font-size:13px;" class="fa fa-envelope-o text-info"></i> <span style="font-size: 13px;">${value.email}</span></li>
-                        </ul>
-                    </div>
-                    <a class="text-decoration-none text-white text-uppercase" target="_blank" href="${'/single-details-diagnostic/'+value.id}">
-                    <div class="card-footer border-0 text-center py-3">
-                        View Details
-                    </div>
-                    </a>
-                    ${value.discount_amount!=0?"<div class='discount'>-"+value.discount_amount+"%</div>":""}
-                </div>
-            </div>
         `;
             $(".searchshow").find('.row').append(row)
         }
 
         function Hospitals(index, value) {
             var row = `
-                <div class="col-md-6 col-10 col-sm-6 col-lg-4 hospitalbody">
-                    <div class="card border-0 mb-4" style="background: #ffffff;box-shadow:0px 0px 7px 2px #c1c1c1;">
-                        <div class="img card-img-top m-auto mt-2 w-50 overflow-hidden d-flex justify-content-center border border-2">
-                            <img src="${value.image != '0'?location.origin+"/"+value.image : 'frontend/img/hospital.png'}" style="width: 100%; height:160px;">
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title text-center" style="font-size: 15px;">${value.name}</h5>
-                            <p class="card-text text-primary text-center mb-2"><span>${value.hospital_type.toUpperCase()}</span> | <span>${value.phone}</span></p>
-                            <ul style="list-style: none;padding:0 0 0 5px;">
-                                <li><i style="width: 15px;height:15px;" class="fa fa-map-marker text-info"></i> <span style="font-size: 13px;">${value.address}, ${value.city.name}</span></li>
-                                <li><i style="width: 15px;height:15px;font-size:13px;" class="fa fa-envelope-o text-info"></i> <span style="font-size: 13px;">${value.email}</span></li>
-                            </ul>
-                        </div>
-                        <a class="text-decoration-none text-white text-uppercase" target="_blank" href="${'/single-details-hospital/'+value.id}">
-                        <div class="card-footer border-0 text-center py-3">
-                            View Details
-                        </div>
+                    <div class="col-md-4 mb-3">
+                        <a href="/single-details-hospital/${value.id}" target="_blank" class="text-decoration-none text-secondary" title="${value.name}">
+                            <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
+                                <div class="card-body d-flex position-relative" style="padding: 5px;gap: 8px;">
+                                    ${value.discount_amount > 0 ? '<p style="position: absolute;bottom: 5px;right: 10px;" class="m-0 text-danger">সকল প্রকার সার্ভিসের উপরে <span class="text-decoration-underline">'+value.discount_amount+'%</span> ছাড়।</p>':''}
+                                    <div class="image" style="border: 1px dotted #ababab;height: 110px;margin-top: 4px;">
+                                        <img src="${value.image != '0' ?'/'+value.image: '/frontend/img/hospital.png'}" width="100" height="100%">
+                                    </div>
+                                    <div class="info" style="padding-right:5px;">
+                                        <h6>${value.name}</h6>
+                                        <p class="text-capitalize" style="color:#c99913;">${value.hospital_type}, ${value.city_name}</p>
+                                        <p style="border-top: 2px dashed #dddddd85;text-align:justify;"><i class="fa fa-map-marker"></i> ${value.address}</p>
+                                    </div>
+                                </div>
+                            </div>
                         </a>
-                        ${value.discount_amount!=0?"<div class='discount'>-"+value.discount_amount+"%</div>":""}
                     </div>
-                </div>
         `;
             $(".searchshow").find('.row').append(row)
         }
 
         function Ambulances(index, value) {
             var row = `
-            <div class="col-md-6 col-10 col-sm-6 col-lg-4 ambulancebody">
-                <div class="card border-0 mb-4" style="background: #ffffff;box-shadow:0px 0px 7px 2px #c1c1c1;height:400px;font-size-adjust: 0.58;">
-                    <div class="img card-img-top m-auto mt-2 w-50 overflow-hidden d-flex justify-content-center border border-2">
-                        <img src="${value.image != '0'?location.origin+"/"+value.image : 'frontend/img/ambulance.png'}" style="width: 100%; height:160px;">
+                    <div class="col-md-4 mb-3">
+                        <a href="/single-details-ambulance/${value.id}" target="_blank" class="text-decoration-none text-secondary" title="${value.name}">
+                            <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
+                                <div class="card-body d-flex" style="padding: 5px;gap: 8px;">
+                                    <div class="image" style="border: 1px dotted #ababab;height: 110px;margin-top: 4px;">
+                                        <img src="${value.image != '0' ? value.image:'/frontend/img/ambulance.png'}" width="100" height="100%">
+                                    </div>
+                                    <div class="info" style="padding-right:5px;">
+                                        <h6>${value.name}</h6>
+                                        <p style="color:#c99913;">${value.ambulance_type}, ${value.city_name}</p>
+                                        <p style="border-top: 2px dashed #dddddd85;text-align:justify;"><i class="fa fa-map-marker"></i> ${value.address}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
                     </div>
-                    <div class="card-body">
-                        <h5 class="card-title text-center" style="font-size: 15px;">${value.name}</h5>
-                        <p class="card-text text-primary text-center mb-2"><span>${value.ambulance_type.replaceAll(",", " | ")}</span></p>
-                        <ul style="list-style: none;padding:0 0 0 5px;">
-                            <li><i style="width: 15px;height:15px;" class="fa fa-phone text-info"></i> <span style="font-size: 13px;">+880 ${value.phone}</span></li>
-                            <li><i style="width: 15px;height:15px;" class="fa fa-map-marker text-info"></i> <span style="font-size: 13px;">${value.address}, ${value.city.name}</span></li>
-                            <li><i style="width: 15px;height:15px;font-size:13px;" class="fa fa-envelope-o text-info"></i> <span style="font-size: 13px;">${value.email}</span></li>
-                        </ul>
-                    </div>
-                    <a href="${'single-details-ambulance/'+value.id}" target="_blank" class="text-uppercase text-white text-decoration-none text-center">
-                        <div class="card-footer border-0 py-3">
-                            View Details
-                        </div>
-                    </a>
-                </div>
-            </div>
         `;
             $(".searchshow").find('.row').append(row)
         }
 
         function Privatecars(index, value) {
             var row = `
-            <div class="col-md-6 col-10 col-sm-6 col-lg-4 privatecarbody">
-                <div class="card border-0 mb-4" style="background: #ffffff;box-shadow:0px 0px 7px 2px #c1c1c1;">
-                    <div class="img card-img-top m-auto mt-2 w-50 overflow-hidden d-flex justify-content-center border border-2">
-                        <img src="${value.image != '0'?location.origin+"/"+value.image : 'frontend/img/privatecar.png'}" style="width: 100%; height:160px;">
+                    <div class="col-md-4 mb-3">
+                        <a href="/single-details-privatecar/${value.privatecar_id}" target="_blank" class="text-decoration-none text-secondary" title="${value.name}">
+                            <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
+                                <div class="card-body d-flex" style="padding: 5px;gap: 8px;">
+                                    <div class="image" style="border: 1px dotted #ababab;height: 110px;margin-top: 4px;">
+                                        <img src="${value.image != '0' ? '/'+value.image:'/frontend/img/privatecar.png'}" width="100" height="100%">
+                                    </div>
+                                    <div class="info" style="padding-right:5px;">
+                                        <h6>${value.name}</h6>
+                                        <p style="color:#c99913;">${value.cartype}, ${value.city_name}</p>
+                                        <p style="border-top: 2px dashed #dddddd85;text-align:justify;"><i class="fa fa-map-marker"></i> ${value.address}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
                     </div>
-                    <div class="card-body">
-                        <h5 class="card-title text-center" style="font-size: 15px;">${value.name}</h5>
-                        <p class="card-text text-primary text-center mb-2"><span>${value.cartype_id.replaceAll(",", " | ")}</span></p>
-                        <ul style="list-style: none;padding:0 0 0 5px;">
-                            <li><i style="width: 15px;height:15px;" class="fa fa-phone text-info"></i> <span style="font-size: 13px;">+880 ${value.phone.substr(1)}</span></li>
-                            <li><i style="width: 15px;height:15px;" class="fa fa-map-marker text-info"></i> <span style="font-size: 13px;">${value.address}, ${value.city.name}</span></li>
-                            <li><i style="width: 15px;height:15px;font-size:13px;" class="fa fa-envelope-o text-info"></i> <span style="font-size: 13px;">${value.email}</span></li>
-                        </ul>
-                    </div>
-                    <a href="${'single-details-privatecar/'+value.id}" target="_blank" class="text-uppercase text-white text-decoration-none text-center">
-                        <div class="card-footer border-0 py-3">
-                            View Details
-                        </div>
-                    </a>
-                </div>
-            </div>
             `;
             $(".searchshow").find('.row').append(row)
         }
 
-        function AllDoctor(index, value) {
+        function Doctor(index, value) {
             var row = `
-                    <div class="col-12 col-lg-4 mb-3 doctor_details">
-                        <a href="/single-details-doctor/${value.id}" target="_blank" class="text-decoration-none text-secondary" title="${value.name}">
-                            <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:150px;">
+                    <div class="col-md-4 mb-3">
+                        <a href="/single-details-doctor/${value.doctor_id}" target="_blank" class="text-decoration-none text-secondary" title="${value.name}">
+                            <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
                                 <div class="card-body d-flex" style="padding: 5px;gap: 8px;">
                                     <div class="image" style="border: 1px dotted #ababab;height: 110px;margin-top: 4px;">
-                                        <img height="100%" src="${value.image != '0'?location.origin+"/"+value.image:location.origin+'/uploads/nouserimage.png'}" width="100">
+                                        <img height="100%" src="${value.image != '0'?value.image:'/uploads/nouserimage.png'}" width="100">
                                     </div>
                                     <div class="info" style="padding-right:5px;">
                                         <h6>${value.name}</h6>
-                                        <p style="color:#c99913;">${value.department.length > 0 ? value.department[0].specialist.name:''}, ${value.city.name}</p>
-                                        <p style="border-top: 2px dashed #dddddd85;text-align:justify;">${value.education.substring(0, 100)}</p>
+                                        <p style="color:#c99913;">${value.department_name}, ${value.city_name}</p>
+                                        <p style="border-top: 2px dashed #dddddd85;text-align:justify;">${value.education}</p>
                                     </div>
                                 </div>
                             </div>
@@ -306,6 +297,9 @@
             $(".searchshow").find('.row').append(row)
         }
     </script>
+
+
+
 
     <!--Start of Tawk.to Script-->
     <script type="text/javascript">

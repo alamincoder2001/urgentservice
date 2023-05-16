@@ -392,31 +392,7 @@
 @push("js")
 <script>
     $(document).on("change", ".service", event => {
-        if (event.target.value) {
-            $.ajax({
-                url: "{{route('filter.city')}}",
-                method: "POST",
-                data: {
-                    id: $("#city").val(),
-                    service: $(".service").val()
-                },
-                beforeSend: () => {
-                    $(".Name").html(`<option value="">Select ${event.target.value} Name</option>`)
-                    $("#Name").html(event.target.value)
-                },
-                success: (response) => {
-                    if (response.null) {} else {
-                        $.each(response, (index, value) => {
-                            var row = `<option value="${value.name}">${value.name}</option>`;
-                            $(".Name").append(row)
-                        })
-                    }
-                }
-            })
-        } else {
-            $("#Name").html(event.target.value)
-            $(".Name").html(`<option value="">Select ${event.target.value} Name</option>`)
-        }
+        $("#Name").html(event.target.value)
     })
 
     $("#fillterWebsite").on("submit", (event) => {
@@ -511,17 +487,17 @@
 
     function Doctor(index, value) {
         var row = `
-                <div class="col-12 col-lg-4 mb-3">
-                    <a href="/single-details-doctor/${value.id}" target="_blank" class="text-decoration-none text-secondary" title="${value.name}">
-                        <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:150px;">
+                <div class="col-md-4 mb-3">
+                    <a href="/single-details-doctor/${value.doctor_id}" target="_blank" class="text-decoration-none text-secondary" title="${value.name}">
+                        <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
                             <div class="card-body d-flex" style="padding: 5px;gap: 8px;">
                                 <div class="image" style="border: 1px dotted #ababab;height: 110px;margin-top: 4px;">
-                                    <img height="100%" src="${value.image != 0?location.origin+"/"+value.image:location.origin+'/uploads/nouserimage.png'}" width="100">
+                                    <img height="100%" src="${value.image != '0'?value.image:'/uploads/nouserimage.png'}" width="100">
                                 </div>
                                 <div class="info" style="padding-right:5px;">
                                     <h6>${value.name}</h6>
-                                    <p style="color:#c99913;">${value.department.length > 0 ? value.department[0].specialist.name:''}, ${value.city.name}</p>
-                                    <p style="border-top: 2px dashed #dddddd85;text-align:justify;">${value.education.substring(0, 100)}</p>
+                                    <p style="color:#c99913;">${value.department_name}, ${value.city_name}</p>
+                                    <p style="border-top: 2px dashed #dddddd85;text-align:justify;">${value.education}</p>
                                 </div>
                             </div>
                         </div>
