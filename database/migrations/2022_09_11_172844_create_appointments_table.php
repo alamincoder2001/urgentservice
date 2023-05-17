@@ -23,6 +23,7 @@ class CreateAppointmentsTable extends Migration
             $table->bigInteger('diagnostic_id')->unsigned()->nullable();
             $table->foreign('diagnostic_id')->references('id')->on('diagnostics')->onDelete('cascade');
             $table->text("problem")->nullable();
+            $table->string("patient_type", 50)->nullable();
             $table->string("name");
             $table->string("age");
             $table->string("district");
