@@ -322,7 +322,7 @@
         <div class="row">
             @foreach($departments as $item)
             <div class="col-6 col-lg-2">
-                <a href="{{url('/doctor-details', $item->name)}}" class="text-decoration-none">
+                <a href="{{route('doctor.details', ['department', 'name' => strtolower($item->name)])}}" class="text-decoration-none">
                     <div class="card department mb-4 position-relative" style="background: url({{asset($item->image != null ? $item->image:'uploads/nouserimage.png')}}) center no-repeat;background-size: cover;">
                         <p style="position: absolute;top: -15px;right: 0;background: #ff0000;padding: 4px 10px;border-radius: 50%;font-size: 12px;color:white;">{{$item->specialistdoctor->count()}}</p>
                         <div class="card-body d-flex align-items-center">
