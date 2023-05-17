@@ -100,7 +100,7 @@
                     @foreach($data['specialist'] as $item)
                     <div class="col-md-6 mb-3">
                         <a href="{{route('singlepagedoctor', $item->doctor->id)}}" target="_blank" class="text-decoration-none text-secondary" title="{{$item->doctor->name}}">
-                            <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
+                            <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;overflow:hidden;">
                                 <div class="card-body d-flex" style="padding: 5px;gap: 8px;">
                                     <div class="image" style="border: 1px dotted #ababab;height: 110px;margin-top: 4px;">
                                         <img src="{{asset($item->doctor->image? $item->doctor->image:'/uploads/nouserimage.png')}}" width="100" height="100%">
@@ -167,7 +167,7 @@
         var row = `
                 <div class="col-md-6 mb-3">
                     <a href="/single-details-doctor/${value.doctor_id}" target="_blank" class="text-decoration-none text-secondary" title="${value.name}">
-                        <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
+                        <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;overflow:hidden;">
                             <div class="card-body d-flex" style="padding: 5px;gap: 8px;">
                                 <div class="image" style="border: 1px dotted #ababab;height: 110px;margin-top: 4px;">
                                     <img height="100%" src="${value.image != '0'?value.image:'/uploads/nouserimage.png'}" width="100">

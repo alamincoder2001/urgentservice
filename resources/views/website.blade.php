@@ -61,21 +61,21 @@
     .department {
         border: none;
         border-radius: 15px;
-        width: 100%;
         height: 110px;
         display: flex;
         align-items: center;
-        background: #050d6ceb;
         text-align: center;
-        color: white;
         cursor: pointer;
         text-transform: uppercase;
         font-family: sans-serif;
-        transition: all ease-in-out;
+        transition: 0.5s ease-in-out;
     }
 
     .department:hover {
         background: linear-gradient(201deg, #0694cb, #09581edb) !important;
+    }
+    .department:hover p{
+        color: white !important;
     }
 
     /* service section design */
@@ -315,7 +315,7 @@
 
 <!-- doctor section -->
 
-<section style="padding:55px 0; background: #f7f7f7;">
+<section id="specialist" style="padding:55px 0; background: #f7f7f7;">
     <div class="container">
         <div class="doctor-header text-center">
             <h2 class="text-uppercase mb-5">Specialist Wise Doctor</h2>
@@ -324,10 +324,10 @@
             @foreach($departments as $item)
             <div class="col-6 col-lg-2">
                 <a href="{{url('/doctor-details', $item->name)}}" class="text-decoration-none">
-                    <div class="card department mb-4 position-relative">
-                        <span style="position: absolute;top: -15px;right: 0;background: #ff0000;padding: 3px 6px;border-radius: 50%;font-size: 12px;">{{$item->specialistdoctor->count()}}</span>
+                    <div class="card department mb-4 position-relative" style="background: url({{asset($item->image != null ? $item->image:'noImage.jpg')}}) center no-repeat;background-size: cover;">
+                        <p style="position: absolute;top: -15px;right: 0;background: #ff0000;padding: 4px 10px;border-radius: 50%;font-size: 12px;color:white;">{{$item->specialistdoctor->count()}}</p>
                         <div class="card-body d-flex align-items-center">
-                            <p>{{$item->name}}</p>
+                            <p class="text-dark" style="font-weight: 900;">{{$item->name}}</p>
                         </div>
                     </div>
                 </a>
@@ -341,7 +341,7 @@
 </section>
 
 <!-- all Donor -->
-<section id="corporate" style="padding: 55px 0;background:#ffffff;">
+<section id="blood-donor" style="padding: 55px 0;background:#ffffff;">
     <div class="container blooddonor">
         <div class="doctor-header text-center">
             <h2 class="text-uppercase mb-5">Blood Donor</h2>
@@ -486,10 +486,11 @@
     }
 
     function Doctor(index, value) {
+        console.log(value);
         var row = `
                 <div class="col-md-4 mb-3">
                     <a href="/single-details-doctor/${value.doctor_id}" target="_blank" class="text-decoration-none text-secondary" title="${value.name}">
-                        <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
+                        <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;overflow:hidden;">
                             <div class="card-body d-flex" style="padding: 5px;gap: 8px;">
                                 <div class="image" style="border: 1px dotted #ababab;height: 110px;margin-top: 4px;">
                                     <img height="100%" src="${value.image != '0'?value.image:'/uploads/nouserimage.png'}" width="100">
@@ -601,9 +602,10 @@
     function ClearAll() {
         $("#service").addClass("d-none")
         $("#doctor").addClass("d-none")
-        $("#facilities").addClass("d-none")
-        $("#testmonial").addClass("d-none")
+        $("#partner").addClass("d-none")
+        $("#specialist").addClass("d-none")
         $("#corporate").addClass("d-none")
+        $("#blood-donor").addClass("d-none")
     }
 </script>
 @endpush

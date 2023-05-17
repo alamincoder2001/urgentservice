@@ -164,7 +164,7 @@
                     } else if (res.status == true) {
                         $.each(res.message, (index, value) => {
                             if (selectName == "Doctor") {
-                                Doctor(index, value);
+                                Doctors(index, value);
                             } else if (selectName == "Hospital") {
                                 Hospitals(index, value);
                             } else if (selectName == "Diagnostic") {
@@ -275,11 +275,11 @@
             $(".searchshow").find('.row').append(row)
         }
 
-        function Doctor(index, value) {
+        function Doctors(index, value) {
             var row = `
                     <div class="col-md-4 mb-3">
                         <a href="/single-details-doctor/${value.doctor_id}" target="_blank" class="text-decoration-none text-secondary" title="${value.name}">
-                            <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;">
+                            <div class="card" style="border-radius: 0;border: 0;font-family: auto;box-shadow: 0px 0px 8px 0px #bfbfbfbf;height:130px;overflow:hidden;">
                                 <div class="card-body d-flex" style="padding: 5px;gap: 8px;">
                                     <div class="image" style="border: 1px dotted #ababab;height: 110px;margin-top: 4px;">
                                         <img height="100%" src="${value.image != '0'?value.image:'/uploads/nouserimage.png'}" width="100">
