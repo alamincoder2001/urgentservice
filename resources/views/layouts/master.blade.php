@@ -89,7 +89,7 @@
     @include("layouts.frontend.footer")
 
     @include("layouts.frontend.script")
-    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script src="{{asset('frontend')}}/js/translate.js"></script>
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({
