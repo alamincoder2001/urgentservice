@@ -28,7 +28,7 @@ class PrivatecarController extends Controller
             return view("admin.unauthorize");
         }
 
-        $privatecars = Privatecar::with('upazila')->latest()->get();
+        $privatecars = Privatecar::with('upazila', 'typewisecategory')->latest()->get();
         return view("admin.privatecar.index", compact("privatecars"));
     }
 
@@ -80,7 +80,7 @@ class PrivatecarController extends Controller
                 foreach ($request->cartype_id as $item) {
                     $categorywiseprivate                = new CategoryWisePrivatecar;
                     $categorywiseprivate->privatecar_id = $data->id;
-                    $categorywiseprivate->cartype_id    = $item->id;
+                    $categorywiseprivate->cartype_id    = $item;
                     $categorywiseprivate->save();
                 }
                 return response()->json("Privatecar added successfully");
@@ -153,7 +153,7 @@ class PrivatecarController extends Controller
                 return response()->json("Privatecar updated successfully");
             }
         } catch (\Throwable $e) {
-            return response()->json("something went wrong".$e->getMessage());
+            return response()->json("something went wrong" . $e->getMessage());
         }
     }
 
@@ -169,6 +169,7 @@ class PrivatecarController extends Controller
         try {
             $data = Privatecar::find($request->id);
             $old  = $data->image;
+            CategoryWisePrivatecar::where("privatecar_id", $request->id)->delete();
             if (File::exists($old)) {
                 File::delete($old);
             }

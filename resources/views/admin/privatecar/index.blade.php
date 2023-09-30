@@ -38,7 +38,9 @@
                                 <td>{{$item->email}}</td>
                                 <td>{{$item->phone}}</td>
                                 <td>
-                                    {{$item->cartype_id}}
+                                    @foreach($item->typewisecategory as $cat)
+                                        {{$cat->cartype->name}}, 
+                                    @endforeach
                                 </td>
                                 <td>{{$item->upazila ? $item->upazila->name: ''}}</td>
                                 <td>{{$item->address}}</td>
